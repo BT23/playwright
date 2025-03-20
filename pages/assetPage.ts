@@ -15,7 +15,7 @@ export class AssetPage {
         if (assetsImage !== null) {
             const isVisible = await assetsImage.isVisible();
             if (isVisible) {
-            console.log('Assets element is visible');
+            console.log('Main Menu Assets icon is visible');
             await this.page.waitForTimeout(1000);
             await assetsImage.click();
             console.log('Assets element clicked');
@@ -36,8 +36,9 @@ export class AssetPage {
             } else {
             console.log('Assets element is not visible');
             }
+       
         } else {
-            console.log('Assets element not found');
+            console.log('Main Menu Assets icon not found');
         }
     }
 
@@ -60,9 +61,9 @@ export class AssetPage {
                 newLevel1Button.click();
 
                 //Fill in the asset details
-                await this.page.fill(this.assetNumber, 'Auto Test 3');
+                await this.page.fill(this.assetNumber, 'Auto Test 5');
                 //await this.page.waitForTimeout(1000);
-                await this.page.fill(this.assetDesc, 'Playwright Auto Test 3');
+                await this.page.fill(this.assetDesc, 'Playwright Auto Test 5');
 
                 // Locate and click the "Create" button
                 const createButton = this.page.locator('span.inline-block.text-center:has-text("Create")');

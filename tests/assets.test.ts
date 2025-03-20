@@ -18,12 +18,10 @@ test.describe('Asset Module Tests', () => {
     test('Open Asset Module', async ({ page }) => {
         // Wait for the "Assets" image to be visible
         await page.waitForSelector('img[src="/_content/Mex.Blazor/images/Assets.png"]', { state: 'visible' });
-
         await assetPage.openAssetModule();
     });
 
-    test.only('Create New Asset', async ({ page }) => {
-        await assetPage.openAssetModule();
+    test('Create New Asset', async ({ page }) => {
         await assetPage.createNewAsset();
     });
 });
