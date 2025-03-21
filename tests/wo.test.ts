@@ -23,7 +23,7 @@ test.describe('WO Module Tests', () => {
 
 
     test('Create New WO', async ({ page }) => {
-        await woPage.openWOModule();
-        await woPage.createWO();
+        await page.waitForSelector('img[src="/_content/Mex.Blazor/images/WorkOrders.png"]', { state: 'visible' });
+        await woPage.createNewWO();
     });
 });

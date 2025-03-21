@@ -41,18 +41,18 @@ export class LoginPage {
       //Click the Ok.png image
       await okImage.click();
 
-      await this.page.waitForSelector('#Skip', { state: 'visible' });
+      //await this.page.waitForSelector('#Skip', { state: 'visible' });
 
       //Locate the Skip button on MEX Introduction Video form
-      const skipButton = await this.page.$('#Skip');
+      //const skipButton = await this.page.$('#Skip');
       // Check if the "Skip" button exists and click it if found 
-      if (skipButton !== null) { 
-        await skipButton.click(); 
-        console.log('Skip button clicked');
-        await this.page.waitForTimeout(1000); 
-      } else { 
-        console.log('Skip button not found');
-      }
+      //if (skipButton !== null) { 
+      //  await skipButton.click(); 
+      //  console.log('Skip button clicked');
+      //  await this.page.waitForTimeout(1000); 
+      //} else { 
+      //  console.log('Skip button not found');
+      //}
     } 
 
     async performInvalidLogins(): Promise<void> {

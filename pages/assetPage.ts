@@ -28,8 +28,9 @@ export class AssetPage {
             
             if (assetRegisterHeader !== null){
                 const assetHeaderisVisible = await assetRegisterHeader.isVisible();
-                if (assetHeaderisVisible)
-                    console.log('Asset Register Header is visible');
+                if (assetHeaderisVisible){
+                    console.log('Asset Register opened');
+                }
                 else
                     console.log('Asset Register Header is NOT visible');
             }
@@ -47,6 +48,7 @@ export class AssetPage {
 
     async createNewAsset(): Promise<void> {
         await this.openAssetModule();
+
         // Wait for the "New Level 1" button to be visible
         await this.page.waitForSelector('div.flex.flex-col.flex-shrink-0.cursor-pointer span.inline-block.text-center.whitespace-pre:has-text("New Level 1")', { state: 'visible' });
 
@@ -61,9 +63,9 @@ export class AssetPage {
                 newLevel1Button.click();
 
                 //Fill in the asset details
-                await this.page.fill(this.assetNumber, 'Auto Test 5');
-                //await this.page.waitForTimeout(1000);
-                await this.page.fill(this.assetDesc, 'Playwright Auto Test 5');
+                await this.page.fill(this.assetNumber, 'Auto Test 3');
+                await this.page.waitForTimeout(1000);
+                await this.page.fill(this.assetDesc, 'Playwright Auto Test 3');
 
                 // Locate and click the "Create" button
                 const createButton = this.page.locator('span.inline-block.text-center:has-text("Create")');
