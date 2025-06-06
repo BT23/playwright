@@ -24,8 +24,10 @@ export class LoginPage {
   async login(username: string, password: string) {
     await this.page.fill(this.usernameInput, username);
     await this.page.fill(this.passwordInput, password);
-    // Wait for the "Skip" button to be visible 
-    await this.page.waitForFunction(() => typeof grecaptcha.execute !== 'undefined');
+
+    // Grecaptcha handling
+    //await this.page.waitForFunction(() => typeof grecaptcha.execute !== 'undefined');
+
     await this.page.waitForSelector('#loginButton', { state: 'visible' });
     await this.page.click(this.loginButton);
   }
@@ -38,8 +40,9 @@ export class LoginPage {
       //Locate the img element with src containing "Ok.png"
       const okImage = this.page.locator('img[src*="Ok.png"]');
 
-      //Click the Ok.png image
+      //Click the Ok.png image (i.e. Select button on language form)
       await okImage.click();
+
 
       //await this.page.waitForSelector('#Skip', { state: 'visible' });
 

@@ -7,6 +7,12 @@ export class WoPage {
         this.page = page;
     }
 
+    /*
+    ************************
+    * Open Work Order Module
+    ************************
+    */
+
     async openWOModule(): Promise<void> {
         // Locate the "WorkOrders.png" element
         const woImage = await this.page.$('img[src="/_content/Mex.Blazor/images/WorkOrders.png"]');
@@ -29,8 +35,14 @@ export class WoPage {
         }
     }
 
+    /*
+    ************************
+    * Create New Work Order
+    ************************
+    */
+
     private woDesc = 'textarea#Description';
-    private woAsset = '#main-content > article > div > div.fixed.top-\\[32px\\].left-0.bottom-0.right-0.flex.flex-col.items-center.justify-center.text-primary > div.relative.flex.flex-col.border.border-alternate.bg-secondary.max-w-\\[95\\%\\].max-h-\\[95\\%\\].shadow-xl.dark\\:shadow-black > div > div.flex-1.overflow-auto > div > div > div > div.bg-secondary.grid.grid-cols-\\[auto_1fr\\].gap-2.p-4 > div:nth-child(6) > div > div > div > div.grid.grow > div > div > div > input';
+    private woAsset = 'input.h-8.outline-none.w-full.h-\\[30px\\][tabindex="0"]';
 
     async createNewWO(): Promise<void> {
         await this.openWOModule();
@@ -54,34 +66,20 @@ export class WoPage {
             newWOButton.click();
 
             //Fill in the WO Description and WO Asset
-            await this.page.fill(this.woDesc, 'WO - Auto Test 4');
+            await this.page.fill(this.woDesc, 'WO - Auto Test');
 
-            // Ensure the woAsset input is visible and interactable
+            // Wait for the WO Asset input to be visible
             await this.page.waitForSelector(this.woAsset, { state: 'visible' });
-            await this.page.waitForTimeout(500); // Additional wait to ensure stability
+            await this.page.waitForTimeout(500);
 
-                // Retry mechanism for filling the woAsset input
-                for (let attempt = 0; attempt < 3; attempt++) {
-                    try {
-                        await this.page.fill(this.woAsset, 'Auto Test 1');
-                        await this.page.waitForTimeout(500); // Wait to ensure the input is populated
-
-                        // Press Arrow Down and Enter keys
-                        const woAssetInput = await this.page.$(this.woAsset);
-                        if (woAssetInput !== null) {
-                            await woAssetInput.press('ArrowDown');
-                            await woAssetInput.press('Enter');
-                            console.log('Arrow Down and Enter keys pressed');
-                        } else {
-                            console.log('WO Asset input not found');
-                        }
-                        break; // Exit the loop if successful
-                    } catch (error) {
-                        console.log(`Attempt ${attempt + 1} failed: ${error}`);
-                        if (attempt === 2) throw error; // Rethrow after final attempt
-                    }
-                }
-
+            // Try both inputs if needed        
+            const woAssetInput = this.page.locator(this.woAsset).nth(2);
+            await woAssetInput.click();
+            await woAssetInput.fill('house');
+            await this.page.waitForTimeout(500); // Wait for dropdown/autocomplete
+            await woAssetInput.press('ArrowDown');
+            await woAssetInput.press('Enter');                
+             
             // Locate and click the "Create" button
             const createButton = this.page.locator('span.inline-block.text-center:has-text("Create")');
             await  createButton.click();
@@ -92,4 +90,22 @@ export class WoPage {
             console.log('New WO button not found'); 
         }
     }
+
+    /*
+    ************************
+    * Add Work Order Spare
+    ************************
+    */
+
+    async addWOSpare(): Promise<void> {
+        // Locate the "Work Order Header Title.png" element
+        const woTitle = await this.page.$("span.inline-block.text-5\\.5.text-secondary:has-text('Work Order')");
+
+        // Wait for the "Spares" tab and locate it
+        var sparesTab = await this.page.waitForSelector("span.inline-block.sm\\:text-right.whitespace-pre:has-text('Spares')", { state: 'visible' });
+        await sparesTab.click();
+
+        // Close the browser
+        await this.page.close();
+    }    
 }

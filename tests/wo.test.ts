@@ -26,4 +26,10 @@ test.describe('WO Module Tests', () => {
         await page.waitForSelector('img[src="/_content/Mex.Blazor/images/WorkOrders.png"]', { state: 'visible' });
         await woPage.createNewWO();
     });
+
+    test('Add WO Spares', async ({ page }) => {
+        await page.waitForSelector('img[src="/_content/Mex.Blazor/images/WorkOrders.png"]', { state: 'visible' });
+        await woPage.createNewWO();
+        await woPage.addWOSpare();
+    });
 });
