@@ -98,14 +98,92 @@ export class WoPage {
     */
 
     async addWOSpare(): Promise<void> {
-        // Locate the "Work Order Header Title.png" element
-        const woTitle = await this.page.$("span.inline-block.text-5\\.5.text-secondary:has-text('Work Order')");
+        await this.openWOModule();
 
-        // Wait for the "Spares" tab and locate it
-        var sparesTab = await this.page.waitForSelector("span.inline-block.sm\\:text-right.whitespace-pre:has-text('Spares')", { state: 'visible' });
+        // Wait for any data row to be visible
+        //await this.page.locator('tr.row').first().waitFor({ state: 'visible' });
+
+        // Option 1: Click the first data row
+        //await this.page.locator('tr.row').first().click();
+
+        // Wait for any data row to be visible
+        await this.page.locator('tr.row').first().waitFor({ state: 'visible' });
+
+        // Click the row containing the actual text you want
+        await this.page.locator('tr.row:has-text("apples")').first().click();
+
+        // Wait for the Details button (image) to be visible and click it
+        const detailsButton = this.page.locator('img[src="/_content/Mex.Blazor/images/Details.png"]');
+        await detailsButton.waitFor({ state: 'visible' });
+        await detailsButton.click();
+
+        // Wait for the Spares tab to be visible
+        const sparesTab = this.page.locator('span.inline-block.whitespace-pre', { hasText: 'Spares' });
+        await sparesTab.waitFor({ state: 'visible' });
+
+        // Click the Spares tab
         await sparesTab.click();
 
-        // Close the browser
-        await this.page.close();
+       // Wait for the Add button to be visible
+        const addButton = this.page.locator('div#Add:has-text("Add")');
+        await addButton.waitFor({ state: 'visible' });
+
+        // Click the Add button
+        await addButton.click();        
+
+        // Wait for the last row (the newly added row) to appear
+        const newRow = this.page.locator('tr.row').last();
+
+        /*
+        * Enter Catalogue item
+        */
+
+        // Wait for the first editable cell in the new row to be visible
+        const firstCell = newRow.locator('td.grid-cell:not(.readonly):not(.disabled)').first();
+        await firstCell.waitFor({ state: 'visible' });
+
+        // Click the first cell
+        await firstCell.click();
+
+        // Wait for the input to appear inside the cell
+        const cellInput = firstCell.locator('input');
+        await cellInput.waitFor({ state: 'visible' });
+
+        // Fill in the value
+        await cellInput.fill('Plush Pluto');
+
+        // Wait for the dropdown option to appear and select it
+        const dropdownOption = this.page.locator('label.my-auto', { hasText: 'Plush Pluto Rope Ball' });
+        await dropdownOption.waitFor({ state: 'visible' });
+        await dropdownOption.click();
+
+        // Tab off the field
+        await cellInput.press('Tab');
+
+        /*
+        * Enter Estimated Quantity
+        */
+
+        // Find the cell with the input (adjust nth if needed)
+        const estQtyCell = newRow.locator('td.grid-cell').nth(3); // or use the correct index if not the first
+
+        // Click the cell to activate the input (if needed)
+        await estQtyCell.click();
+
+        // Locate the input by class (since type is empty)
+        const estQtyInput = estQtyCell.locator('input.h-8.outline-none.w-full.h-\\[30px\\]').first();
+        await estQtyInput.waitFor({ state: 'visible' });
+
+        // Fill in "2"
+        await estQtyInput.fill('2');
+        await estQtyInput.press('Tab');
+
+        /*
+        * Close WO Details form
+        */
+        // Wait for any visible mex close button with × and click it
+        const closeButton = this.page.locator('button.mex-close-button:visible', { hasText: '×' }).first();
+        await closeButton.waitFor({ state: 'visible', timeout: 10000 });
+        await closeButton.click();
     }    
 }

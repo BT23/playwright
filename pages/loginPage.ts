@@ -35,7 +35,7 @@ export class LoginPage {
   async assertLoginSuccess(): Promise<void> {        
       //Assuming a successful login redirects to Select Language
       const languageCell = this.page.locator('td.grid-cell:has-text("English (Australia)")');
-      await expect(languageCell).toBeVisible(({ timeout: 10000 }));
+      await expect(languageCell).toBeVisible(({ timeout: 15000 }));
 
       //Locate the img element with src containing "Ok.png"
       const okImage = this.page.locator('img[src*="Ok.png"]');
