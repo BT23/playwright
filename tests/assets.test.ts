@@ -15,21 +15,19 @@ test.describe('Asset Module Tests', () => {
         await loginPage.assertLoginSuccess();
     });
 
-    test('Open Asset Module', async ({ page }) => {
-        // Wait for the "Assets" image to be visible
-        await page.waitForSelector('img[src="/_content/Mex.Blazor/images/Assets.png"]', { state: 'visible' });
+    test('Open Asset Module', async () => {
         await assetPage.openAssetModule();
     });
 
-    test('Create New Asset', async ({ page }) => {
-        // Wait for the "Assets" image to be visible
-        await page.waitForSelector('img[src="/_content/Mex.Blazor/images/Assets.png"]', { state: 'visible' });
+    test('Create New Asset', async () => {
         await assetPage.createNewAsset();
     });
 
-    test('Expand Tree Nodes', async ({ page }) => {
-        // Wait for the "Assets" image to be visible
-        await page.waitForSelector('img[src="/_content/Mex.Blazor/images/Assets.png"]', { state: 'visible' });
-        await assetPage.expandTreeNodeByLabel('Admin');
-    });    
+    test('ExpandTreeNode', async () => {
+        await assetPage.expandTreeNodeByName("Admin");
+    })  
+
+    test('Open Asset Details', async () => {
+        await assetPage.openAssetDetailsByRightClick();
+    });
 });

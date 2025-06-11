@@ -14,21 +14,15 @@ test.describe('WO Module Tests', () => {
         await loginPage.assertLoginSuccess();
     });
 
-    test.only('Open WO Module', async ({ page }) => {
-        // Wait for the "Work Orders" image to be visible
-        await page.waitForSelector('img[src="/_content/Mex.Blazor/images/WorkOrders.png"]', { state: 'visible' });
-
+    test('Open WO Module', async () => {
         await woPage.openWOModule();
     });
 
-
-    test('Create New WO', async ({ page }) => {
-        await page.waitForSelector('img[src="/_content/Mex.Blazor/images/WorkOrders.png"]', { state: 'visible' });
+    test('Create New WO', async () => {
         await woPage.createNewWO();
     });
 
-    test('Add WO Spare', async ({ page }) => {
-        await page.waitForSelector('img[src="/_content/Mex.Blazor/images/WorkOrders.png"]', { state: 'visible' });
+    test('Add WO Spare', async () => {
         await woPage.addWOSpare();
-    });
+    });    
 });
