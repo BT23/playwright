@@ -26,4 +26,10 @@ test.describe('Asset Module Tests', () => {
         await page.waitForSelector('img[src="/_content/Mex.Blazor/images/Assets.png"]', { state: 'visible' });
         await assetPage.createNewAsset();
     });
+
+    test('Expand Tree Nodes', async ({ page }) => {
+        // Wait for the "Assets" image to be visible
+        await page.waitForSelector('img[src="/_content/Mex.Blazor/images/Assets.png"]', { state: 'visible' });
+        await assetPage.expandTreeNodeByLabel('Admin');
+    });    
 });

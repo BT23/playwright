@@ -73,5 +73,22 @@ export class AssetPage {
         const createButton = this.page.locator('span.inline-block.text-center:has-text("Create")');
         await createButton.click();
     }
+
+   /*
+    ************************
+    * Expand Tree Nodes Test
+    * **********************
+    */
+    async expandTreeNodeByLabel(label: string): Promise<void> {
+        await this.openAssetModule();
+
+        // Locate the tree node row where the first column label matches (e.g., "House")
+        const treeRow = this.page.locator('tr.row', {has: this.page.locator('td.grid-cell:first-child label', { hasText: 'Admin' })}).first();
+
+        // Click the expander icon in the first column of that row
+        const expander = treeRow.locator('td.grid-cell:first-child span.expander');
+        await expander.click();
+
+    }    
 }
 
