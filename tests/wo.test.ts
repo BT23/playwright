@@ -14,7 +14,7 @@ test.describe('WO Module Tests', () => {
         await loginPage.assertLoginSuccess();
     });
 
-    test.only('Open WO Module', async ({ page }) => {
+    test('Open WO Module @smoke', async ({ page }) => {
         // Wait for the "Work Orders" image to be visible
         await page.waitForSelector('img[src="/_content/Mex.Blazor/images/WorkOrders.png"]', { state: 'visible' });
 
@@ -22,12 +22,12 @@ test.describe('WO Module Tests', () => {
     });
 
 
-    test('Create New WO', async ({ page }) => {
+    test('Create New WO @smoke', async ({ page }) => {
         await page.waitForSelector('img[src="/_content/Mex.Blazor/images/WorkOrders.png"]', { state: 'visible' });
         await woPage.createNewWO();
     });
 
-    test('Add WO Spare', async ({ page }) => {
+    test('Add WO Spare @regression', async ({ page }) => {
         await page.waitForSelector('img[src="/_content/Mex.Blazor/images/WorkOrders.png"]', { state: 'visible' });
         await woPage.addWOSpare();
     });
