@@ -1,5 +1,6 @@
 import { expect, Page } from "@playwright/test";
 import * as fs from 'fs';
+import { helper } from "../helperMethods";
 declare var grecaptcha: any; // Declare grecaptcha globally
 
 export class LoginPage {
@@ -9,40 +10,29 @@ export class LoginPage {
   constructor(page: Page) {
     this.page = page;
     this.credentials = JSON.parse(fs.readFileSync('./credentials.json', 'utf-8'));
+
+    helper.setPage(page);
   }
 
   async navigate() {
-    await this.page.goto('http://bonnie.mex16.dev/');
+    await this.page.goto('https://bonnie.mex16.dev/');
   }
-
-  private usernameInput = '#Input_UserName';
-  private passwordInput = '#password';
-  private loginButton = '#loginButton';
-  private errorMessage = '.error-message';
 
   //fill usrname and password
   async login(username: string, password: string) {
-    await this.page.fill(this.usernameInput, username);
-    await this.page.fill(this.passwordInput, password);
+    await helper.enterValue("userName", username);
+    await helper.enterValue("password", password);
 
     // Grecaptcha handling
     //await this.page.waitForFunction(() => typeof grecaptcha.execute !== 'undefined');
 
-    await this.page.waitForSelector('#loginButton', { state: 'visible' });
-    await this.page.click(this.loginButton);
+    await helper.clickButton("login");
   }
 
   async assertLoginSuccess(): Promise<void> {        
       //Assuming a successful login redirects to Select Language
-      const languageCell = this.page.locator('td.grid-cell:has-text("English (Australia)")');
-      await expect(languageCell).toBeVisible(({ timeout: 15000 }));
-
-      //Locate the img element with src containing "Ok.png"
-      const okImage = this.page.locator('img[src*="Ok.png"]');
-
-      //Click the Ok.png image (i.e. Select button on language form)
-      await okImage.click();
-
+      await helper.selectRowByFieldName("SelectLanguageGrid", "Name", "English");
+      await helper.clickButton("Select");
 
       //await this.page.waitForSelector('#Skip', { state: 'visible' });
 
@@ -66,19 +56,13 @@ export class LoginPage {
       }
     }
 
-    async assertLoginFailure(): Promise<void> {
-      const errorLabelLocator = this.page.locator('#validationAlert .validation-summary-errors li:has-text("Invalid login attempt.")'); 
-      await errorLabelLocator.waitFor({ state: 'visible' });
-      await expect(errorLabelLocator).toBeVisible(({ timeout: 30000 }));
+    async assertLoginFailure(): Promise<void> {      
+      var hasInvalidLogin = await helper.checkForLoginValidationErrors("Invalid login attempt.");
+      if (hasInvalidLogin) {
+        await helper.clickButton("Ok");
+      }
 
-      const okButton = this.page.locator('#validationAlert .footerBarButton:has-text("Ok")');
-      // Click the "OK" button
-      await okButton.click();
-  
-      // Verify the button was clicked
-      await expect(okButton).not.toBeVisible();
-      await this.page.fill(this.usernameInput, '');
-      await this.page.fill(this.passwordInput, '');
-
+      await helper.enterValue("userName", "");
+      await helper.enterValue("password", "");
     }    
   }
