@@ -15,9 +15,11 @@ export class WoPage {
     * Open Work Order Module
     ************************
     */
-
     async openWOModule(): Promise<void> {
+        // Click on the Work Orders button to open the Work Order module
         await helper.clickButton("WorkOrders");
+
+        // Verify that the Work Order Listing header is displayed
         await helper.checkHeader("WorkOrderListingHeader");
     }
 
@@ -26,15 +28,22 @@ export class WoPage {
     * Create New Work Order
     ************************
     */
-    async createNewWO(): Promise<void> {
+    async createWorkOrder(data: { assetNumber: string, workorderDesc: string }): Promise<void> {
         await this.openWOModule();
 
+        // click the New button to create a new Work Order
         await helper.clickButton("New");
-        await helper.enterValue("Description", "WO - Auto Test");        
-        //If you want, you could create a helper method that will enterValue and select the firstListItem
-        //or just leave them seperate. Up to you.
-        await helper.enterValue("Asset", "Asset #1");
+
+        // Fill in the Work Order details from the createWorkOrderData.json file
+        await helper.enterValue("Description", data.workorderDesc);        
+        await helper.enterValue("Asset", data.assetNumber);
+        
+        await this.page.waitForTimeout(1000);
+
+        // Select the first item from the Asset list
         await helper.selectFirstListItem();
+        
+        // Click the Create button to save the new Work Order
         await helper.clickButton("Create");
     }
 

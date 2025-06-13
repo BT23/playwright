@@ -7,6 +7,21 @@ class HelperMethods {
     this.page = page;
   }
 
+  async checkHeader(name: string) {
+    const header = this.page.locator(`[automation-header="${name}"]`);
+    await expect(header).toBeVisible();
+  }
+
+  async checkForLoginValidationErrors(expectedError: string): Promise<boolean> {
+    const validationErrors = this.page.locator('[automation-list="validationErrors"]');
+    if (!(await validationErrors.isVisible())) {
+      return false;
+    }
+
+    const matchingItem = validationErrors.locator(`[automation-label]:has-text("${expectedError}")`);
+    return await matchingItem.count() > 0;
+  }
+
   async clickButton(name: string, shouldForce = false) {
     const button = this.page.locator(`[automation-button="${name}"]`).first();
     await button.click({ force: shouldForce });
@@ -17,41 +32,132 @@ class HelperMethods {
     await button.click({ force: shouldForce });
   }
 
-  async selectTab(name: string, shouldForce = false) {
-    const tab = this.page.locator(`[automation-tab="${name}"]`);
-    await tab.click({ force: shouldForce });
+  /* Enter Value helper methods
+  * These methods are used to enter values into input fields, either in the main page or within a dialog.
+  * They can also enter values in a specific cell of a grid.
+  */
+  async enterValue(fieldName: string, value: string, shouldPressTab = false) {
+    const input = this.page.locator(`[automation-input="${fieldName}"]`);
+    await input.click();
+    await input.fill(value);
+    if (shouldPressTab) {
+      await input.press('Tab');
+    }    
   }
 
-  async selectFirstRow(gridName: string, shouldForce = false) {
+  async enterValueInDialog(dialogName: string, fieldName: string, value: string, shouldPressTab = false) {
+    const dialog = this.page.locator(`[automation-dialog="${dialogName}"]`);
+    const input = dialog.locator(`[automation-input="${fieldName}"]`);
+    await input.click();
+    await input.fill(value);
+    if (shouldPressTab) {
+      await input.press('Tab');
+    }
+  }
+
+  async enterValueInCell(row: Locator, name: string, value: string, shouldPressTab = false) {
+    const columnCell = row.locator(`[automation-col="${name}"]`);
+    await columnCell.click();
+    await this.enterValue(name, value, shouldPressTab);
+  }
+
+  /*
+  * Get Field Value helper methods
+  * These methods are used to retrieve the value of an input field by its name.
+  * They can locate the field by its automation-input attribute, id, or name.
+  * */
+  async getFieldValue(fieldName: string): Promise<string> {
+      // Try to locate by automation-input, id, or name
+      const field = this.page.locator(
+          `[automation-input="${fieldName}"], #${fieldName}, [name="${fieldName}"]`
+      );
+      await field.waitFor({ state: 'visible' });
+      return await field.inputValue();
+  }
+
+ /*
+  * Locate Tree Node by Name
+  * This method searches for a tree node by its name, expanding nodes as necessary.
+  * It will click the node if found.
+  * It will return true if the node is found and clicked, or false if not found.
+  * */
+  async locateTreeNodeByName(name: string): Promise<boolean> {
+     await this.page.waitForTimeout(500);
+
+    // Convert the search name to lower case for case-insensitive comparison
+    const searchName = name.toLowerCase();
+
+    while (true) {
+        // Find all label elements and check their text content case-insensitively
+        const assetLabels = this.page.locator('label');
+        const count = await assetLabels.count();
+
+        for (let i = 0; i < count; i++) {
+            const label = assetLabels.nth(i);
+            const labelText = (await label.textContent())?.trim().toLowerCase();
+            if (labelText === searchName && await label.isVisible()) {
+                await label.click();
+                return true;
+            }
+        }
+
+        // Look for all visible, collapsed expanders
+        const collapsedExpanders = this.page.locator('[automation-expander-button].expander-right');
+        const expanderCount = await collapsedExpanders.count();
+
+        if (expanderCount === 0) {
+            break;
+        }
+
+        let expanded = false;
+
+        // Try expanding each one and checking again
+        for (let i = 0; i < expanderCount; i++) {
+            const expander = collapsedExpanders.nth(i);
+
+            // Click expander
+            await expander.click();
+            await this.page.waitForTimeout(250);
+
+            // After expanding, re-check all labels
+            const assetLabelsAfterExpand = this.page.locator('label');
+            const countAfterExpand = await assetLabelsAfterExpand.count();
+
+            for (let j = 0; j < countAfterExpand; j++) {
+                const label = assetLabelsAfterExpand.nth(j);
+                const labelText = (await label.textContent())?.trim().toLowerCase();
+                if (labelText === searchName && await label.isVisible()) {
+                    await label.click();
+                    return true;
+                }
+            }
+
+            expanded = true;
+        }
+
+        if (!expanded) {
+            throw new Error(`Asset "${name}" not found and nothing was expanded.`);
+        }
+    }
+    // Node not found after all attempts
+    return false;
+  }
+
+  /*
+  * Grid helper methods
+  * These methods are used to interact with grids, such as clicking on the grid, selecting rows, and right-clicking.
+  * They can also select a grid by its name.
+  * */
+  async rightClickGrid(gridName: string) {
     const grid = this.page.locator(`[automation-grid="${gridName}"]`).first();
-    const row = grid.locator('[automation-row]').first();
-    await row.click({ force: shouldForce, timeout: 0 });
-    return row;
+    await grid.click({ button: 'right' });
   }
 
-  async selectLastRow(gridName: string, shouldForce = false) {
-    const grid = this.page.locator(`[automation-grid="${gridName}"]`).first();
-    const row = grid.locator('[automation-row]').last();
-    await row.click({ force: shouldForce, timeout: 0 });
-    return row;
-  }
-
-  async selectRowByIndex(gridName: string, index: number, shouldForce = false) {
-    const grid = this.page.locator(`[automation-grid="${gridName}"]`).first();
-    const row = grid.locator(`[automation-row="${index}"]`);
-    await row.click({ force: shouldForce, timeout: 0 });
-    return row;
-  }
-
-  async selectRowByFieldName(gridName: string, columnName: string, fieldName: string, shouldForce = false) {
-    const grid = this.page.locator(`[automation-grid="${gridName}"]`).first();
-    const row = grid.locator('[automation-row]').filter({
-      has: this.page.locator(`[automation-col="${columnName}"]:has-text("${fieldName}")`)
-    }).first();
-    await row.click({ force: shouldForce, timeout: 0 });
-    return row;
-  }
-
+   /* List helper methods
+   * These methods are used to select items in a list by various criteria.
+    * They can select the first item, last item, or an item by index.
+    * They can also force the selection if needed.
+    * */
   async selectFirstListItem(shouldForce = false) {
     const item = this.page.locator('[automation-list-item]').first();
     await item.click({ force: shouldForce });
@@ -67,32 +173,44 @@ class HelperMethods {
     await row.click({ force: shouldForce });
   }  
 
-  async enterValue(fieldName: string, value: string, shouldPressTab = false) {
-    const input = this.page.locator(`[automation-input="${fieldName}"]`);
-    await input.click();
-    await input.fill(value);
-    if (shouldPressTab) {
-      await input.press('Tab');
-    }    
+  /*
+  * Select Row helper methods
+  * These methods are used to select rows in a grid by various criteria.
+  **/
+  async selectFirstRow(gridName: string, shouldForce = false) {
+    const grid = this.page.locator(`[automation-grid="${gridName}"]`).first();
+    const row = grid.locator('[automation-row]').first();
+    await row.click({ force: shouldForce, timeout: 0 });
+    return row;
   }
 
-  async enterValueInCell(row: Locator, name: string, value: string, shouldPressTab = false) {
-    const columnCell = row.locator(`[automation-col="${name}"]`);
-    await columnCell.click();
-    await this.enterValue(name, value, shouldPressTab);
+  async selectLastRow(gridName: string, shouldForce = false) {
+    const grid = this.page.locator(`[automation-grid="${gridName}"]`).first();
+    const row = grid.locator('[automation-row]').last();
+    await row.click({ force: shouldForce, timeout: 0 });
+    return row;
   }
 
-  async selectEllipse(name: string, shouldForce = false) {
-    const button = this.page.locator(`[automation-ellipse-button="${name}"]`).first();
-    await button.click({ force: shouldForce });
+  async selectRowByFieldName(gridName: string, columnName: string, fieldName: string, shouldForce = false) {
+    const grid = this.page.locator(`[automation-grid="${gridName}"]`).first();
+    const row = grid.locator('[automation-row]').filter({
+      has: this.page.locator(`[automation-col="${columnName}"]:has-text("${fieldName}")`)
+    }).first();
+    await row.click({ force: shouldForce, timeout: 0 });
+    return row;
   }
 
-  async selectEllipseInColumn(row: Locator, columnName: string, shouldForce = false) {
-    const columnCell = row.locator(`[automation-col="${columnName}"]`);
-    await columnCell.click();
-    await this.selectEllipse(columnName, shouldForce);
+  async selectRowByIndex(gridName: string, index: number, shouldForce = false) {
+    const grid = this.page.locator(`[automation-grid="${gridName}"]`).first();
+    const row = grid.locator(`[automation-row="${index}"]`);
+    await row.click({ force: shouldForce, timeout: 0 });
+    return row;
   }
 
+  /*
+  * Drop Down helper methods
+  * These methods are used to select a drop-down menu by its name or in a specific column of a grid.
+  **/
   async selectDropDown(name: string, shouldForce = false) {
     const dropDown = this.page.locator(`[automation-dropdown="${name}"]`).first();
     await dropDown.click({ force: shouldForce });
@@ -104,71 +222,28 @@ class HelperMethods {
     await this.selectDropDown(columnName, shouldForce);
   }
 
-  async checkHeader(name: string) {
-    const header = this.page.locator(`[automation-header="${name}"]`);
-    await expect(header).toBeVisible();
+  /*
+  * Ellipse helper methods
+  * These methods are used to select an ellipse button by its name or in a specific column of a grid.
+  * */
+  async selectEllipse(name: string, shouldForce = false) {
+    const button = this.page.locator(`[automation-ellipse-button="${name}"]`).first();
+    await button.click({ force: shouldForce });
   }
 
-  async rightClickGrid(gridName: string) {
-    const grid = this.page.locator(`[automation-grid="${gridName}"]`).first();
-    await grid.click({ button: 'right' });
+  async selectEllipseInColumn(row: Locator, columnName: string, shouldForce = false) {
+    const columnCell = row.locator(`[automation-col="${columnName}"]`);
+    await columnCell.click();
+    await this.selectEllipse(columnName, shouldForce);
   }
 
-  async expandTreeNodeByName(name: string) {
-    await this.page.waitForTimeout(500);
-
-    while (true) {
-      const assetLabel = this.page.locator(`label:text-is("${name}")`);
-
-      if (await assetLabel.count() > 0 && await assetLabel.first().isVisible()) {
-          await assetLabel.first().click();
-          return;
-      }
-
-      // Look for all visible, collapsed expanders
-      const collapsedExpanders = this.page.locator('[automation-expander-button].expander-right');
-      const count = await collapsedExpanders.count();
-
-      if (count === 0) {
-          break;
-      }
-
-      let expanded = false;
-
-      // Try expanding each one and checking again
-      for (let i = 0; i < count; i++) {
-          const expander = collapsedExpanders.nth(i);
-
-          // Click expander
-          await expander.click();
-          await this.page.waitForTimeout(250);
-
-          // Check if the name we're looking for is now loaded
-          const match = this.page.locator(`label:text-is("${name}")`);
-
-          if (await match.count() > 0 && await match.first().isVisible()) {
-              await match.first().click();
-              return;
-          }
-
-          expanded = true;
-      }
-
-      if (!expanded) {
-        throw new Error(`Asset "${name}" not found and nothing was expanded.`);
-      }
-    }
-  }
-
-  async checkForLoginValidationErrors(expectedError: string): Promise<boolean> {
-    const validationErrors = this.page.locator('[automation-list="validationErrors"]');
-    if (!(await validationErrors.isVisible())) {
-      return false;
-    }
-
-    const matchingItem = validationErrors.locator(`[automation-label]:has-text("${expectedError}")`);
-    return await matchingItem.count() > 0;
+ /* * Tab helper methods
+  * These methods are used to select a tab by its name.
+  * They can also force the selection if needed.
+  * */
+  async selectTab(name: string, shouldForce = false) {
+    const tab = this.page.locator(`[automation-tab="${name}"]`);
+    await tab.click({ force: shouldForce });
   }
 }
-
 export const helper = new HelperMethods();

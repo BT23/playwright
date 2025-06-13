@@ -1,0 +1,10 @@
+{
+  "assetNumber": "House",
+  "assetDesc": "House",
+  "details": {
+    "Contractor": "Bakers EA Baker and C",
+    "Customer": "BES",
+    "BarcodeNumber": "9876543210",
+    "Criticality": "Safety"
+  }
+}

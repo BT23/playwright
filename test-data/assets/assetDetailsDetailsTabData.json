@@ -1,0 +1,27 @@
+{
+  "assetNumber": "House",
+  "assetDesc": "House",
+  "details": {
+    "Description": "House",
+    "AssetType": "burner",
+    "Manufacturer": "cummins",
+    "ModelNumber": "vl98",
+    "AccountCode": "123.456.789",
+    "Supplier": "Bakers EA Baker and Co",
+    "Department": "mech",
+    "Comments": "this is a test asset for automation purposes.",
+    "Status": "sold",
+    "SerialNumber": "sn-123456",
+    "WarrantyStart": "2024-06-10",
+    "WarrantyFinish": "2025-06-10",
+    "ReadingType": "Hours",
+    "SafetyNotes": "Ensure safety protocols are followed.",
+    "AddressLine1": "123 Main St",
+    "AddressLine2": "Suite 100", 
+    "City": "Springfield",
+    "State": "IL",  
+    "PostCode": "4000",
+    "Customer": "BES Building & Engineering Services",
+    "Critcality": "Safety"
+  }
+}
