@@ -27,6 +27,12 @@ class HelperMethods {
     await button.click({ force: shouldForce });
   }
 
+  async clickButtonInDialog(dialogName: string, fieldName: string, shouldPressTab = false) {
+    const dialog = this.page.locator(`[automation-dialog="${dialogName}"]`);
+    const input = dialog.locator(`[automation-button="${fieldName}"]`);
+    await input.click();
+  }
+
   async closePage(shouldForce = false) {
     const button = this.page.locator(`[automation-button="closePage"]`).first();
     await button.click({ force: shouldForce });
@@ -36,6 +42,7 @@ class HelperMethods {
   * These methods are used to enter values into input fields, either in the main page or within a dialog.
   * They can also enter values in a specific cell of a grid.
   */
+
   async enterValue(fieldName: string, value: string, shouldPressTab = false) {
     const input = this.page.locator(`[automation-input="${fieldName}"]`);
     await input.click();
@@ -55,10 +62,49 @@ class HelperMethods {
     }
   }
 
+  async enterValueInFilterDialog(formName: string, fieldName: string, value: string, shouldPressTab = false) {
+    const dialog = this.page.locator(`[form-name="${formName}"]`);
+    const input = dialog.locator(`[automation-input="${fieldName}"]`);
+    await input.click();
+    await input.fill(value);
+    if (shouldPressTab) {
+      await input.press('Tab');
+    }
+  }
+
   async enterValueInCell(row: Locator, name: string, value: string, shouldPressTab = false) {
     const columnCell = row.locator(`[automation-col="${name}"]`);
     await columnCell.click();
     await this.enterValue(name, value, shouldPressTab);
+  }
+
+  /*
+  * Fill Form Fields helper methods
+  * These methods are used to fill in form fields with values from a details object.
+  * They can map field names to UI field names, apply value transformations, and handle select list fields.
+  * The method iterates through the details object and fills in the corresponding fields.
+  * @param details - An object containing field names and their corresponding values.
+  * @param fieldMapping - An optional mapping of field names to UI field names.
+  * @param fillValueMapping - An optional mapping of field names to functions that transform the values before filling.
+  * @param selectListFields - An optional array of field names that should trigger a selection of the first list item after filling.
+  */
+  async fillFormFields(
+      details: Record<string, string>,
+      fieldMapping: Record<string, string> = {},
+      fillValueMapping: Record<string, (value: string) => string> = {},
+      selectListFields: string[] = []
+  ): Promise<void> {
+      for (const [field, value] of Object.entries(details)) {
+          const uiField = fieldMapping[field] || field;
+          if (typeof value === 'string' && value.trim() !== '') {
+              const fillValue = fillValueMapping[field] ? fillValueMapping[field](value) : value;
+              await this.enterValue(uiField, fillValue);
+              if (selectListFields.includes(uiField)) {
+                  await this.selectFirstListItem();
+              }
+              await this.page.waitForTimeout(500);
+          }
+      }
   }
 
   /*
@@ -245,5 +291,59 @@ class HelperMethods {
     const tab = this.page.locator(`[automation-tab="${name}"]`);
     await tab.click({ force: shouldForce });
   }
+
+  /***
+   * Verification helper methods
+   * These methods are used to verify the visibility of elements, such as headers, buttons, and lists.
+   */
+
+  /*
+  * Verify Dialog Box Visible 
+  */
+
+  async verifyDialogVisible(dialogName: string): Promise<void> {
+      const dialog = this.page.locator(`[automation-dialog="${dialogName}"]`);
+      await expect(dialog).toBeVisible();
+  }
+
+  /*
+  * Verify Dialog Box Visible and Click OK button
+  */
+async verifyDialogVisibleAndClickOk(dialogName: string): Promise<void> {
+    const dialog = this.page.locator(`[automation-dialog="${dialogName}"]`);
+    await expect(dialog).toBeVisible();
+    // Click the Ok button inside the dialog
+    const okButton = dialog.locator('[automation-button="Ok"]');
+    await okButton.click();
 }
+
+
+  /*******
+   * Code to verify fields
+    * This method verifies that the values of specified fields match the expected values.
+    * It retrieves the actual value of each field and compares it to the expected value.
+    * If the actual value does not match the expected value, an assertion error will be thrown.
+    * @param expected - An object containing the expected values for each field.
+    * @param fieldsToVerify - An array of field names to verify.
+    * * Usage:
+    * const expectedValues = { field1: 'value1', field2: 'value2' };
+    * const fieldsToVerify = ['field1', 'field2'];
+    * helper.verifyFields(expectedValues, fieldsToVerify);
+    * @returns {Promise<void>}
+    * @throws {Error} If the actual value of a field does not match the expected value.
+    *
+   */
+async verifyFields(
+      expected: Record<string, string>,
+      fieldsToVerify: string[]
+    ): Promise<void> {
+      for (const field of fieldsToVerify) {
+          const expectedValue = expected[field];
+          if (expectedValue !== undefined) {
+              const actual = await this.getFieldValue(field);
+              expect(actual.trim().toLowerCase()).toBe(expectedValue.trim().toLowerCase());
+          }
+      }
+    }
+  }
 export const helper = new HelperMethods();

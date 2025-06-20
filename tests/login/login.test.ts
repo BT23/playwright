@@ -1,5 +1,5 @@
 import {test, expect} from '@playwright/test';
-import {LoginPage} from '../pages/loginPage';
+import {LoginPage} from '../../pages/login/loginPage';
 import { only } from 'node:test';
 
 // test.describe is a function that groups tests together
@@ -19,4 +19,8 @@ test.describe('Login Tests', () =>{
     test ('invalid login', async () => {
         await loginPage.performInvalidLogins();
     });   
+
+    test ('Contractor User login', async () => {
+        await loginPage.contractorUserLogin();
+    }); 
 }); 

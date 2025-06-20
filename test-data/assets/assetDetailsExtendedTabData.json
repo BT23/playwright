@@ -1,9 +1,9 @@
 {
-  "assetNumber": "House",
-  "assetDesc": "House",
+  "assetNumber": "Helper",
+  "assetDesc": "Helper",
   "details": {
     "Contractor": "Bakers EA Baker and C",
-    "Customer": "BES",
+    "Customer": "BES Building & Engineering Services",
     "BarcodeNumber": "9876543210",
     "Criticality": "Safety"
   }

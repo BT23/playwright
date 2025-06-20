@@ -1,0 +1,14 @@
+{
+  "case1": {
+    "assetNumber": "AssetWarranty4",
+    "assetDesc": "Test Work Order Asset Warranty",
+    "readingValue": "100",
+    "workorderDesc": "Verify Asset Warranty shows after entering Asset Warranty Reading"
+  },
+  "case2": {
+    "assetNumber": "Asset456",
+    "assetDesc": "Another Asset",
+    "readingValue": "200",
+    "workorderDesc": "Verify Asset Warranty for another scenario"
+  }
+}

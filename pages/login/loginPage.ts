@@ -1,11 +1,11 @@
 import { expect, Page } from "@playwright/test";
 import * as fs from 'fs';
-import { helper } from "../helperMethods";
+import { helper } from "../../helperMethods";
 declare var grecaptcha: any; // Declare grecaptcha globally
 
 export class LoginPage {
   private page: Page;
-  public credentials: { validCredentials: {username: string; password: string;}; invalidCredentials: { username: string, password: string }[] };
+  public credentials: { validCredentials: {username: string; password: string;}; contractorCredentials: {username: string; password: string;}; invalidCredentials: { username: string, password: string }[] };
 
   constructor(page: Page) {
     this.page = page;
@@ -27,6 +27,28 @@ export class LoginPage {
     //await this.page.waitForFunction(() => typeof grecaptcha.execute !== 'undefined');
 
     await helper.clickButton("login");
+  }
+
+  
+  async contractorUserLogin() {
+    await helper.enterValue("userName", this.credentials.contractorCredentials.username);
+    console.log("Enter: userName" + this.credentials.contractorCredentials.username);
+    await helper.enterValue("password", this.credentials.contractorCredentials.password);
+    console.log("Enter: password" + this.credentials.contractorCredentials.password);
+
+    // Grecaptcha handling
+    await this.page.waitForFunction(() => typeof grecaptcha.execute !== 'undefined');
+
+    await helper.clickButton("login");
+    console.log("Login button is clicked");
+  }
+
+  async logout() {
+    await helper.clickButton("logout");
+    await this.page.waitForTimeout(1000);
+    // Verify the login form is shown by checking the login button appears
+    await expect(this.page.locator('[automation-button="login"]')).toBeVisible();    
+    
   }
 
   async assertLoginSuccess(): Promise<void> {        

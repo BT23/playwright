@@ -1,8 +1,8 @@
 import { test, expect } from '@playwright/test';
-import { LoginPage } from '../pages/loginPage';
-import { WoPage } from '../pages/woPage';
+import { LoginPage } from '../../pages/login/loginPage';
+import { WoPage } from '../../pages/workorders/woPage';
 
-import createWorkOrderData from '../test-data/work-orders/createWorkOrderData.json';
+import createWorkOrderData from '../../test-data/work-orders/createWorkOrderData.json';
 
 test.describe('WO Module Tests', () => {
     let loginPage: LoginPage;
@@ -39,12 +39,29 @@ test.describe('WO Module Tests', () => {
     * Expected Result: New WO created successfully and appears in the WO Listing
     * Custom tags: @smoke
     */    
-    test.only('Create New WO @smoke', async () => {
+    test('Create New WO @smoke', async () => {
 
         await woPage.createWorkOrder({
             assetNumber: createWorkOrderData.Asset,
             workorderDesc: createWorkOrderData.Description
         });
+    });
+
+   /*
+    * Test Case: Fill in WO Details - Details Tab
+    * This test fills in the details tab of the WO details form
+    * Preconditions: User is logged in
+    * Steps:
+    * 1. Open Work Orders
+    * 2. Open the details of an existing WO
+    * 3. Fill in all fields in the Details tab
+    * 4. Save the changes
+    * Expected Result: All fields in the Details tab are filled in successfully
+    * The WO details are saved without errors
+    * Custom tags: @regression
+    * */  
+    test('Fill WO Details Details Tab @regression', async () => {
+        await woPage.workOrderDetails_DetailsTab_FillAllFields();
     });
 
     /*
@@ -62,5 +79,19 @@ test.describe('WO Module Tests', () => {
     */    
     test('Add WO Spare @regression', async () => {
         await woPage.addWOSpare();
+    });
+
+
+    test.only('verify WO Requester', async ({ page }) => {
+        await woPage.openWOModule();
+        await woPage.reopenWOFromListing();
+        await woPage.verifyWORequester("Toby Tang");
+    });  
+
+
+    test('openFirstRecordOnListing', async ({ page }) => {
+        await woPage.openWOModule();
+        await woPage.reopenWOFromListing();
     });    
+
 });

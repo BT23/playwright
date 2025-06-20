@@ -1,0 +1,28 @@
+{
+  "case1": {
+    "assetNumber": "CPO1",
+    "assetDesc": "Contractor WO PO Due Start Date Check",
+    "contractorworkOrderDesc": "Verify Contractor PO Due Start Date Autofill",
+    "contractor": "Bakers EA Baker and Co"
+  },
+  "case2": {
+    "assetNumber": "CPO2",
+    "assetDesc": "Contractor WO PO Quote No Check",
+    "contractorworkOrderDesc": "Verify Contractor PO Quote Number Autofill",
+    "contractor": "Bakers EA Baker and Co",
+    "QuoteNo": "QQ-1234"
+  },
+  "case3": {
+    "assetNumber": "CPO3",
+    "assetDesc": "Contractor WO PO Transactions Check",
+    "contractorworkOrderDesc": "Verify Contractor WO PO Transactions after submitting and approving invoice",
+    "contractor": "Bakers EA Baker and Co"
+  },
+    "case4": {
+    "assetNumber": "PO 19",
+    "assetDesc": "Contractor WO PO Transactions Check",
+    "contractorworkOrderDesc": "Verify Contractor User Portal - unapproval Contractor WO ",
+    "contractor": "Contractor User Portal"
+  }  
+
+}

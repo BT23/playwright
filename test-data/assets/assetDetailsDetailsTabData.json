@@ -1,8 +1,8 @@
 {
-  "assetNumber": "House",
-  "assetDesc": "House",
+  "assetNumber": "Helper",
+  "assetDesc": "Helper",
   "details": {
-    "Description": "House",
+    "Description": "Helper",
     "AssetType": "burner",
     "Manufacturer": "cummins",
     "ModelNumber": "vl98",
@@ -20,8 +20,6 @@
     "AddressLine2": "Suite 100", 
     "City": "Springfield",
     "State": "IL",  
-    "PostCode": "4000",
-    "Customer": "BES Building & Engineering Services",
-    "Critcality": "Safety"
+    "PostCode": "4000"
   }
 }

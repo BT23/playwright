@@ -1,18 +1,24 @@
 import { test, expect } from '@playwright/test';
-import { LoginPage } from '../pages/loginPage';
-import { AssetPage } from '../pages/assetPage';
+import { LoginPage } from '../../pages/login/loginPage';
+import { AssetPage } from '../../pages/assets/assetPage';
+import {ReadingPage} from '../../pages/readings/readingPage';
+import { WoPage } from '../../pages/workorders/woPage';
 
-import createAssetData from '../test-data/assets/createAssetData.json';
-import assetDetailsDetailsTabData from '../test-data/assets/assetDetailsDetailsTabData.json';
-import assetDetailsExtendedTabData from '../test-data/assets/assetDetailsExtendedTabData.json';
+import createAssetData from '../../test-data/assets/createAssetData.json';
+import assetDetailsDetailsTabData from '../../test-data/assets/assetDetailsDetailsTabData.json';
+import assetDetailsExtendedTabData from '../../test-data/assets/assetDetailsExtendedTabData.json';
 
 test.describe('Asset Module Tests', () => {
     let loginPage: LoginPage;
     let assetPage: AssetPage;
+    let readingPage: ReadingPage;
+    let woPage: WoPage;
 
     test.beforeEach(async ({ page }) => {
         loginPage = new LoginPage(page);
         assetPage = new AssetPage(page);
+        readingPage = new ReadingPage(page);
+        woPage = new WoPage(page);
 
         await loginPage.navigate();
         await loginPage.login(loginPage.credentials.validCredentials.username, loginPage.credentials.validCredentials.password);
@@ -93,21 +99,6 @@ test.describe('Asset Module Tests', () => {
     });
 
    /*
-    * Test Case: Verify entered values populate in the Asset Register Details tab
-    * Preconditions: 
-    * - User is logged in
-    * - Asset Details - Details Tab has been filled in
-    * Steps:
-    * 1. Open Asset Register
-    * 2. Locate the asset created in the previous test
-    * Expected Result: Some values entered in the Details tab should be visible in the Asset Register Details tab
-    * Custom tags: @regression
-    */
-    test.only('Verify Asset Details Details Tab Information Populate @regression', async () => {
-        await assetPage.verifyAssetRegisterDetailsTabInfo(assetDetailsDetailsTabData.assetNumber);
-    });
-
-   /*
     * Test Case: Fill in Asset Details - Extended Tab
     * This test fills in the details tab of the asset details form
     * Preconditions: User is logged in
@@ -137,5 +128,43 @@ test.describe('Asset Module Tests', () => {
     */
     test('LocateTreeNode @regression', async () => {
         await assetPage.locateTreeNodeByName("Admin");
-    }); 
+    });
+
+    /*
+    ***********************
+    **  VERIFICATION TESTS
+    ***********************
+     */
+
+   /*
+    * Test Case: Verify entered values populate in the Asset Register Details tab
+    * Preconditions: 
+    * - User is logged in
+    * - Asset Details - Details Tab has been filled in
+    * Steps:
+    * 1. Open Asset Register
+    * 2. Locate the asset created in the previous test
+    * Expected Result: Some values entered in the Details tab should be visible in the Asset Register Details tab
+    * Custom tags: @regression
+    */
+    test('Verify Asset Details Details Tab Information Populate @regression', async () => {
+        await assetPage.verifyAssetRegisterDetailsTabInfo(assetDetailsDetailsTabData.assetNumber);
+    });
+
+    /*
+    * Test Case: Verify entered values populate in the Asset Register Details tab - EXTENDED Information
+    * This test verifies that the values entered in the Extended tab of the asset details are visible in the Asset Register Details tab
+    * Preconditions: 
+    * - User is logged in
+    * - Asset Details - Extended Tab has been filled in
+    * Steps:
+    * 1. Open Asset Register
+    * 2. Locate the asset created in the previous test
+    * Expected Result: Some values entered in the Details tab should be visible in the Asset Register Details tab
+    * Custom tags: @regression
+    */
+    test('Verify Asset Details Details Tab Extended Information Populate @regression', async () => {
+        await assetPage.verifyAssetRegisterDetailsTabExtendedInfo(assetDetailsExtendedTabData.assetNumber);
+    });
+
 });
