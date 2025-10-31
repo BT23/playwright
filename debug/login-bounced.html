@@ -1,0 +1,165 @@
+<!DOCTYPE html><html lang="en" class="bg-primary"><head><meta http-equiv="origin-trial" content="A7vZI3v+Gz7JfuRolKNM4Aff6zaGuT7X0mf3wtoZTnKv6497cVMnhy03KDqX7kBz/q/iidW7srW31oQbBt4VhgoAAACUeyJvcmlnaW4iOiJodHRwczovL3d3dy5nb29nbGUuY29tOjQ0MyIsImZlYXR1cmUiOiJEaXNhYmxlVGhpcmRQYXJ0eVN0b3JhZ2VQYXJ0aXRpb25pbmczIiwiZXhwaXJ5IjoxNzU3OTgwODAwLCJpc1N1YmRvbWFpbiI6dHJ1ZSwiaXNUaGlyZFBhcnR5Ijp0cnVlfQ==">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/_content/Mex.Blazor/css/app.css" asp-append-version="true">
+	<title>MEX Login</title>
+</head>
+<body class="h-full">
+    <main b-a3rit7stt5="" role="main">
+        
+
+<div class="min-h-screen flex items-center justify-center border-primary
+            bg-primary
+            md:bg-[url('/_content/Mex.Blazor/images/backgroundblue.png')]
+            dark:md:bg-[url('/_content/Mex.Blazor/images/backgroundgreyred.png')]
+            md:bg-cover md:bg-center md:bg-no-repeat">
+    <div class="animate-fade-in w-full max-w-md">
+    
+        <form method="post" id="loginForm" class="relative w-full max-w-md bg-primary p-8 md:shadow rounded-xl">
+            <div class="flex justify-center mb-6">
+                <img src="/_content/Mex.Blazor/images/mexlogovertical.png" alt="MEX Logo" class="w-36 block dark:hidden">
+
+                <!-- Dark mode logo -->
+                <img src="/_content/Mex.Blazor/images/mexlogoverticaldark.png" alt="MEX Logo" class="w-36 hidden dark:block">            
+            </div>
+
+                <div id="validationAlert" class="mb-4 bg-primary border border-primary text-secondary px-4 py-3 rounded relative text-sm" role="alert" automation-popup="">
+                    <div class="flex justify-between items-center mb-2">
+                        <span class="font-semibold">There was a problem</span>
+                        <button type="button" class="text-xl font-bold leading-none hover:text-red-900 focus:outline-none" onclick="validationAlertCloseClick()" automation-button="closeValidation">
+                            ×
+                        </button>
+                    </div>
+                    <div class="space-y-1">
+                            <ul class="list-disc list-inside text-primary" automation-list="validationErrors">
+                                        <li automation_label="0">The maximum number of allowed logons to MEX has already been reached!
+               You can view the Current Sessions, alternatively contact your database Administrator to confirm that all registered users are actually using MEX.</li>
+                            </ul>
+                    </div>
+                    <div class="mt-4 flex justify-end gap-2">
+                                <button type="submit" name="action" value="viewCurrentSessions" class="bg-button-primary hover:bg-button-primary-hover border border-red-400 text-xs px-3 py-1 rounded" automation-button="viewCurrentSessions">
+                                    View Current Sessions
+                                </button>
+                        <button type="button" onclick="validationAlertCloseClick()" class="bg-button-primary hover:bg-button-primary-hover text-xs px-3 py-1 rounded" automation-button="Ok">
+                            Ok
+                        </button>
+                    </div>
+                </div>
+
+            <div class="w-full border border-solid border-secondary bg-primary rounded mb-4 py-1 text-primary">
+                <input placeholder="User name" class="text-sm w-full px-2 focus:outline-none focus:ring-0 placeholder-gray-400 dark:placeholder-gray-500" aria-required="true" automation-input="userName" type="text" id="Input_UserName" name="Input.UserName" value="toby" style="">
+            </div>
+
+            <div class="relative w-full border border-solid border-secondary bg-primary rounded mb-4 py-1 text-primary">
+                <input id="password" type="password" placeholder="Password" class="text-sm w-full px-2 pr-10 focus:outline-none focus:ring-0 placeholder-gray-400 dark:placeholder-gray-500" aria-required="true" automation-input="password" name="Input.Password" style="">
+
+                <button type="button" onclick="togglePasswordVisibility()" class="absolute inset-y-1 right-0 flex items-center px-3 cursor-pointer" automation-button="showPassword">
+                    <!-- Light mode icon -->
+                    <img id="passwordToggleIconLight" src="/_content/Mex.Blazor/images/eye_blue.svg" alt="Show password" class="h-10 w-6 opacity-50 hover:opacity-100 transition block dark:hidden">
+                    <!-- Dark mode icon -->
+                    <img id="passwordToggleIconDark" src="/_content/Mex.Blazor/images/eye.svg" alt="Show password" class="h-10 w-6 opacity-50 dark:opacity-90 hover:opacity-100 transition hidden dark:block">
+                </button>
+            </div>
+
+
+            <div class="flex items-center justify-between mb-4 text-[13px]">
+                <label class="flex items-center space-x-2">
+                    <input type="checkbox" automation-input="rememberMe" data-val="true" data-val-required="The RememberMe field is required." id="Input_RememberMe" name="Input.RememberMe" value="true" style="">
+                    <span class="text-primary">Remember me</span>
+                </label>
+                <a class="hover:underline dark:text-blue-400" automation-button="forgotPassword" href="/Account/ForgotPassword">Forgot password?</a>
+            </div>
+
+            <button id="loginButton" class="w-full bg-button-primary hover:bg-button-primary-hover rounded-lg border-solid border-mex-red py-2 px-4 mb-2" data-sitekey="6LfME-ErAAAAAMGD0xI-MqKKpRkzp2BPFx9gaqnX" data-action="Login" automation-button="login">
+                Login
+            </button>
+
+
+            <input type="hidden" data-val="true" data-val-required="The IsFromMauiClient field is required." id="IsFromMauiClient" name="IsFromMauiClient" value="False" style="">
+            <input type="hidden" id="g-recaptcha-v3-response" name="g-recaptcha-v3-response" style="">
+        <input name="__RequestVerificationToken" type="hidden" value="CfDJ8ADMg_ZIzndKrWSxq6bdYuNKyTqx2o5w8sMABz9a1CGyhpgeV1RCDVsfdxXyFavoKsXZZGf1iYbJwKqSn5Uiu1ug1YUFvkGOY_cNALTkfvsmgyBJhg2jm-a2Surfq6p9QDkShRuJvDfXsEEBfnZhw94" style=""><input name="Input.RememberMe" type="hidden" value="false" style=""></form>
+    </div>
+</div>
+
+
+    </main>
+
+    <script type="text/javascript" async="" charset="utf-8" src="https://www.gstatic.com/recaptcha/releases/-PgDGgfmUF0ySmnjMTJjzqak/recaptcha__en.js" crossorigin="anonymous" integrity="sha384-H0mK+IQhANprBblOQEFWq1PDr55lbDWwZEd/GMAA78NROK5AjZuV3DFPdQEXCj2o"></script><script>
+        function togglePasswordVisibility() {
+            const input = document.getElementById('password');
+            if (!input) return;
+
+            const show = input.type === 'password';
+            input.type = show ? 'text' : 'password';
+
+            const lightIcon = document.getElementById('passwordToggleIconLight');
+            const darkIcon = document.getElementById('passwordToggleIconDark');
+
+            const alt = show ? 'Hide password' : 'Show password';
+            const lightSrc = `/_content/Mex.Blazor/images/${show ? 'eyeoff_blue' : 'eye_blue'}.svg`;
+            const darkSrc  = `/_content/Mex.Blazor/images/${show ? 'eyeoff' : 'eye'}.svg`;
+
+            if (lightIcon) { lightIcon.src = lightSrc; lightIcon.alt = alt; }
+            if (darkIcon)  { darkIcon.src  = darkSrc;  darkIcon.alt  = alt; }
+        }
+
+        function setupTheme() {
+            document.documentElement.classList.remove('dark');
+            const prefersDark = window.matchMedia?.('(prefers-color-scheme: dark)').matches;
+            if (prefersDark) {
+                document.documentElement.classList.add('dark');
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', setupTheme);
+    </script>
+
+    <script src="https://www.google.com/recaptcha/api.js?render=6LfME-ErAAAAAMGD0xI-MqKKpRkzp2BPFx9gaqnX"></script>    
+
+    <script>
+        function executeRecaptchaAndSubmit(formId, siteKey, action) {
+            const v2 = document.getElementById('recaptchaV2');
+            if (v2 && v2.style.display !== 'none') {
+                document.getElementById(formId).submit();
+            } else {
+                grecaptcha.execute(siteKey, { action }).then(token => {
+                    document.getElementById('g-recaptcha-v3-response').value = token;
+                    document.getElementById(formId).submit();
+                });
+            }
+        }
+
+        function showRecaptchaV2(formId) {
+            const el = document.getElementById('recaptchaV2');
+            if (!el) return;
+
+            el.style.display = 'flex';
+            el.setAttribute('data-theme', 'light');
+            if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                el.setAttribute('data-theme', 'dark');
+            }
+
+            // Optional: Resize form if needed
+            const form = document.getElementById(formId);
+            if (form) form.style.height = '313px';
+        }
+
+        function validationAlertCloseClick() {
+            const el = document.getElementById('validationAlert');
+            if (el) el.remove();
+        }
+    </script>
+
+    
+    <script>
+        document.getElementById('loginButton')?.addEventListener('click', function (event) {
+            event.preventDefault();
+            const siteKey = this.getAttribute('data-sitekey');
+            const action = this.getAttribute('data-action');
+            executeRecaptchaAndSubmit('loginForm', siteKey, action);
+        });
+    </script>
+
+
+
+<div><div class="grecaptcha-badge" data-style="bottomright" style="width: 256px; height: 60px; display: block; transition: right 0.3s; position: fixed; bottom: 14px; right: -186px; box-shadow: gray 0px 0px 5px; border-radius: 2px; overflow: hidden;"><div class="grecaptcha-logo"><iframe title="reCAPTCHA" width="256" height="60" role="presentation" name="a-mfykspc4r4z1" frameborder="0" scrolling="no" sandbox="allow-forms allow-popups allow-same-origin allow-scripts allow-top-navigation allow-modals allow-popups-to-escape-sandbox allow-storage-access-by-user-activation" src="https://www.google.com/recaptcha/api2/anchor?ar=1&amp;k=6LfME-ErAAAAAMGD0xI-MqKKpRkzp2BPFx9gaqnX&amp;co=aHR0cHM6Ly9ib25uaWUubWV4LmNvbS5hdTo0NDM.&amp;hl=en&amp;v=-PgDGgfmUF0ySmnjMTJjzqak&amp;size=invisible&amp;anchor-ms=20000&amp;execute-ms=15000&amp;cb=3yzik873lrql"></iframe></div><div class="grecaptcha-error"></div><textarea id="g-recaptcha-response-100000" name="g-recaptcha-response" class="g-recaptcha-response" style="width: 250px; height: 40px; border: 1px solid rgb(193, 193, 193); margin: 10px 25px; padding: 0px; resize: none; display: none;"></textarea></div><iframe style="display: none;"></iframe></div></body></html>

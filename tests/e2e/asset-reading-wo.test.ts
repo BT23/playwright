@@ -43,10 +43,11 @@ test.describe('Asset Reading WorkOrder Tests', () => {
     test('Work Order Asset Warranty - Case 1 @bug @regression', async () => {
         const data = testData.case1;
         await assetPage.createNewAsset(data.assetNumber, data.assetDesc);
-        await assetPage.addWarrantyAndReadingType(data.assetNumber);
+        await assetPage.addWarrantyAndReadingType(data.assetNumber);    
         await readingPage.openReadingsModule();
         await readingPage.locateAndAddAssetReading(data.assetNumber, data.readingValue);
         await woPage.verifyWorkOrderAssetWararnty(data.assetNumber, data.workorderDesc);    
+
     });
 
     /**

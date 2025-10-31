@@ -45,7 +45,7 @@ test.describe('Contractor Work Orders PO Tests', () => {
     */    
     test('Contractor WO PO Due Start Date autofill - Case 1 @bug @regression @contractorwo @PO', async () => {
         const data = testData.case1;
-        await assetPage.createNewAsset(data.assetNumber, data.assetDesc, 2);
+        await assetPage.createNewAsset(data.assetNumber, data.assetDesc);
         await contractorwoPage.createContractorWO(data.contractorworkOrderDesc, data.assetNumber, data.contractor);
         const dueStart: string = await contractorwoPage.setContractorDueStartDate();
         await contractorwoPage.clickAddPOBtn();
@@ -69,7 +69,7 @@ test.describe('Contractor Work Orders PO Tests', () => {
     */    
     test('Contractor WO PO Quote Number autofill - Case 2 @bug @regression @contractorwo @PO', async () => {
         const data = testData.case2;
-        await assetPage.createNewAsset(data.assetNumber, data.assetDesc, 2);
+        await assetPage.createNewAsset(data.assetNumber, data.assetDesc);
         await contractorwoPage.createContractorWO(data.contractorworkOrderDesc, data.assetNumber, data.contractor);
         await contractorwoPage.setQuoteNumber(data.QuoteNo);
         await contractorwoPage.clickAddPOBtn();
@@ -94,7 +94,7 @@ test.describe('Contractor Work Orders PO Tests', () => {
     */    
     test('Contractor WO PO Transaction after subimitting and approving invoice - Case 3 @bug @regression @contractorwo @PO', async () => {
         const data = testData.case3;
-        await assetPage.createNewAsset(data.assetNumber, data.assetDesc, 2);
+        await assetPage.createNewAsset(data.assetNumber, data.assetDesc);
         await contractorwoPage.createContractorWO(data.contractorworkOrderDesc, data.assetNumber, data.contractor);
         await contractorwoPage.clickAddPOBtn();  
         await contractorwoPage.clickPOHyperlink();
@@ -129,7 +129,7 @@ test.describe('Contractor Work Orders PO Tests', () => {
     */    
     test.only('Contractor User Portal - Case 4 @bug @regression @contractorwo @PO', async () => {
         const data = testData.case4;
-        await assetPage.createNewAsset(data.assetNumber, data.assetDesc, 2);
+        await assetPage.createNewAsset(data.assetNumber, data.assetDesc);
         await contractorwoPage.createContractorWO(data.contractorworkOrderDesc, data.assetNumber, data.contractor);
         await contractorwoPage.clickAddPOBtn();
         const poNumber: string = await contractorwoPage.getContractorWODetailsPONumber();

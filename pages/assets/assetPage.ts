@@ -40,7 +40,7 @@ export class AssetPage {
     * Create New Asset Test
     * **********************
     */
-   async createNewAsset(assetNumber: string, assetDesc: string, closeCount: number =1 ): Promise<void> {
+   async createNewAsset(assetNumber: string, assetDesc: string): Promise<void> {
         await this.openAssetModule();
 
         await helper.clickButton("NewLevel1");
@@ -54,10 +54,10 @@ export class AssetPage {
 
         // closeCount = 1 - close Asset Details form
         // closeCount = 2 - close Asset Details form and then close Asset Register
-        for (let i = 0; i < closeCount; i++) {
+        //for (let i = 0; i < closeCount; i++) {
         await helper.closePage();
         await this.page.waitForTimeout(1000);
-        }
+        //}
     }
 
     /*****************************************
@@ -103,10 +103,7 @@ export class AssetPage {
         await this.page.waitForTimeout(1000);
         // Click the X button to close Asset Details
         await helper.closePage();
-
         await this.page.waitForTimeout(1000);
-        // Click the X button to close Asset Register
-        await helper.closePage();
     }
 
     /*

@@ -7,6 +7,44 @@ class HelperMethods {
     this.page = page;
   }
 
+    /*
+    ****************************
+    * Add Module To Menu
+    ****************************
+    */
+
+  async addModuleToMenu(moduleName:string): Promise<void> {
+      await helper.clickUserActionsContextMenu("ChangeMenuLayout");
+      await expect(this.page.locator('[automation-dialog="ChangeMenuLayout"]').first()).toBeVisible();
+
+      const row = await this.page.locator('[automation-grid="SetupMenuItemsGrid"] [automation-row]')
+          .filter({ has: this.page.locator(`[automation-col="Name"]:has-text("${moduleName}")`) })
+          .first();
+
+      // Find the checkbox in the same row
+      const checkbox = row.locator('input[automation-input="Selected"]');
+
+      // Click the checkbox if not already checked
+      if (await checkbox.isVisible() && await checkbox.isEnabled()) {
+          if (!await checkbox.isChecked()) {
+              try {
+                  await checkbox.click({ force: true });
+              } catch {
+                  // Fallback: click using JS if covered
+                  const handle = await checkbox.elementHandle();
+                 if (handle) {
+                      await this.page.evaluate(el => (el as HTMLElement).click(), handle);
+                  }
+              }
+          }
+      }
+
+      await this.page.waitForTimeout(1000);
+
+      await helper.closeDialog();
+      await this.page.waitForTimeout(1000);
+  }
+  
   async checkHeader(name: string) {
     const header = this.page.locator(`[automation-header="${name}"]`);
     await expect(header).toBeVisible();
@@ -22,20 +60,41 @@ class HelperMethods {
     return await matchingItem.count() > 0;
   }
 
+
+  async clickButton(name: string, shouldForce = false) {
+      const button = this.page.locator(`[automation-button="${name}"]`).first();
+      await expect(button).toBeVisible({ timeout: 5000 });
+      await button.click({ force: shouldForce });
+  }
+
+
+  /* Tyler code
   async clickButton(name: string, shouldForce = false) {
     const button = this.page.locator(`[automation-button="${name}"]`).first();
     await button.click({ force: shouldForce });
   }
+  */
 
   async clickButtonInDialog(dialogName: string, fieldName: string, shouldPressTab = false) {
     const dialog = this.page.locator(`[automation-dialog="${dialogName}"]`);
     const input = dialog.locator(`[automation-button="${fieldName}"]`);
     await input.click();
   }
+  async closeDialog(shouldForce = false) {
+    const button = this.page.locator(`[automation-button="closeDialog"]`).first();
+    await button.click({ force: shouldForce });
+  }
 
   async closePage(shouldForce = false) {
-    const button = this.page.locator(`[automation-button="closePage"]`).first();
+    const button = this.page.locator(`[automation-button="Back"]`).first();
     await button.click({ force: shouldForce });
+  }
+
+  async clickUserActionsContextMenu(contextMenuName: string, shouldForce = false) {
+    const userActionButton = this.page.locator(`[automation-button="userActions"]`).first();
+    await userActionButton.click();
+    const menuItem = userActionButton.locator(`[automation-context-menu-item="${contextMenuName}"]`).first();
+    await menuItem.click({ force: shouldForce });
   }
 
   /* Enter Value helper methods
@@ -55,10 +114,45 @@ class HelperMethods {
   async enterValueInDialog(dialogName: string, fieldName: string, value: string, shouldPressTab = false) {
     const dialog = this.page.locator(`[automation-dialog="${dialogName}"]`);
     const input = dialog.locator(`[automation-input="${fieldName}"]`);
-    await input.click();
+    
+    await input.waitFor({ state: 'visible' });
+
+    if (!(await input.isEnabled()) || !(await input.isEditable())) {
+      throw new Error(`Input "${fieldName}" is not interactable`);
+    }
+
+    await input.click({ force: true });
     await input.fill(value);
+    await this.page.waitForTimeout(500); // Allow dropdown to populate
+
+    // Optionally press Tab to move focus
     if (shouldPressTab) {
       await input.press('Tab');
+    }
+  }
+
+  async enterEllipseValueInDialog(dialogName: string, fieldName: string, value: string, shouldPressTab = false) {
+    const dialog = this.page.locator(`[automation-dialog="${dialogName}"]`);
+    const input = dialog.locator(`[automation-input="${fieldName}"]`);
+    
+    await input.waitFor({ state: 'visible' });
+
+    if (!(await input.isEnabled()) || !(await input.isEditable())) {
+      throw new Error(`Input "${fieldName}" is not interactable`);
+    }
+
+    await input.click({ force: true });
+    await this.page.waitForTimeout(200); // Small delay to ensure focus
+    await input.fill(value);
+    await this.page.waitForTimeout(500); // Allow dropdown to populate
+
+    await this.selectListItemByIndex(0);
+    await this.page.waitForTimeout(500); // Allow dropdown to populate
+
+    // Optionally press Tab to move focus
+    if (shouldPressTab) {
+      await input.press('Tab');
+      await this.page.waitForTimeout(300); // Allow any blur events to trigger
     }
   }
 
@@ -120,6 +214,12 @@ class HelperMethods {
       await field.waitFor({ state: 'visible' });
       return await field.inputValue();
   }
+
+    async getCellValue(row: Locator, name: string): Promise<string> {
+      const columnCell = row.locator(`[automation-col="${name}"]`);
+      await columnCell.waitFor({ state: 'visible' });
+      return (await columnCell.textContent())?.trim() ?? '';
+    }
 
  /*
   * Locate Tree Node by Name
@@ -237,6 +337,89 @@ class HelperMethods {
     return row;
   }
 
+async selectRowByFieldName(gridName: string, columnName: string, fieldName: string, shouldForce = true) {
+  if (!this.page) throw new Error('selectRowByFieldName: page not set');
+  const timeout = 10000;
+  const start = Date.now();
+  const poll = 200;
+
+  const writeDebug = async (reason: string) => {
+    try {
+      const fs = require('fs').promises;
+      await fs.mkdir('debug', { recursive: true });
+      await this.page.screenshot({ path: `debug/selectRow-${Date.now()}.png`, fullPage: true }).catch(()=>{});
+      await fs.writeFile(`debug/selectRow-${Date.now()}.reason.txt`, reason, 'utf-8').catch(()=>{});
+    } catch {}
+  };
+
+  const tryRecoverPage = async (): Promise<boolean> => {
+    try {
+      const ctx = this.page.context();
+      const pages = ctx.pages();
+      for (const p of pages) {
+        if (!p.isClosed?.() && p !== this.page) {
+          // prefer a non-blank page with a URL
+          const url = p.url?.() || '';
+          if (url && url !== 'about:blank') {
+            this.page = p;
+            return true;
+          }
+        }
+      }
+    } catch {}
+    return false;
+  };
+
+  while (Date.now() - start < timeout) {
+    // If page was closed, try to recover to another open page in the context
+    if (this.page.isClosed && this.page.isClosed()) {
+      const recovered = await tryRecoverPage();
+      if (!recovered) {
+        await writeDebug('page closed and no recovery page found');
+        // give caller information instead of throwing a generic stale error
+        throw new Error('selectRowByFieldName: page was closed and could not be recovered');
+      }
+      // continue with recovered page
+    }
+
+    try {
+      // re-query each loop to avoid stale locators across navigations
+      const grid = this.page.locator(`[automation-grid="${gridName}"]`).first();
+      const row = grid.locator('[automation-row]').filter({
+        has: this.page.locator(`[automation-col="${columnName}"]:has-text("${fieldName}")`)
+      }).first();
+
+      await row.waitFor({ state: 'visible', timeout: 2000 }).catch(()=>null);
+
+      // Protect against clicks that trigger navigation
+      const navPromise = this.page.waitForNavigation({ waitUntil: 'load', timeout: 5000 }).catch(()=>null);
+      await Promise.all([
+        row.click({ force: shouldForce }).catch(()=>{}),
+        navPromise
+      ]);
+
+      // confirm row exists and return
+      if (await row.count() > 0) return row;
+    } catch (err:any) {
+      // transient (navigation/stale) errors -> try to recover and retry
+      if (this.page.isClosed && this.page.isClosed()) {
+        const recovered = await tryRecoverPage();
+        if (!recovered) {
+          await writeDebug('page closed during selection and recovery failed');
+          throw new Error('selectRowByFieldName: page closed during retry');
+        }
+        // recovered, continue loop
+      }
+    }
+
+    await this.page.waitForTimeout(poll);
+  }
+
+  await writeDebug('timeout selecting row');
+  throw new Error(`selectRowByFieldName: timed out finding ${fieldName} in ${gridName}`);
+}
+
+ /** Tyler Code 
   async selectRowByFieldName(gridName: string, columnName: string, fieldName: string, shouldForce = false) {
     const grid = this.page.locator(`[automation-grid="${gridName}"]`).first();
     const row = grid.locator('[automation-row]').filter({
@@ -245,7 +428,7 @@ class HelperMethods {
     await row.click({ force: shouldForce, timeout: 0 });
     return row;
   }
-
+*/
   async selectRowByIndex(gridName: string, index: number, shouldForce = false) {
     const grid = this.page.locator(`[automation-grid="${gridName}"]`).first();
     const row = grid.locator(`[automation-row="${index}"]`);
@@ -307,6 +490,15 @@ class HelperMethods {
   }
 
   /*
+  * Verify Create Dialog Box Visible 
+  */
+
+  async verifyCreateDialogVisible(titleName: string): Promise<void> {
+      const dialogTitle = this.page.locator(`[automation-label="${titleName}"]`);
+      await expect(dialogTitle).toBeVisible();
+  }
+
+  /*
   * Verify Dialog Box Visible and Click OK button
   */
 async verifyDialogVisibleAndClickOk(dialogName: string): Promise<void> {
@@ -344,6 +536,45 @@ async verifyFields(
               expect(actual.trim().toLowerCase()).toBe(expectedValue.trim().toLowerCase());
           }
       }
+    }
+
+
+/**
+ * Verifies that the actual cell values in a given grid row match the expected values.
+ *
+ * This function iterates over a set of column-value pairs and checks that each cell
+ * in the specified row contains the expected text content. It trims both actual and
+ * expected values before comparison to avoid whitespace mismatches.
+ *
+ * Use this when asserting PO item such as SupplierStockNumber, Quantity, etc.
+ * 
+ * @param row - The Playwright Locator representing the row to verify.
+ * @param expectedValues - An object where keys are column names (matching `automation-col` attributes)
+ *                         and values are the expected cell contents.
+ */
+
+async verifyRowCellValues(row: Locator, expectedValues: Record<string, string>): Promise<void> {
+    const mismatches: string[] = [];
+
+    for (const [columnName, expectedValue] of Object.entries(expectedValues)) {
+      const actualValue = await this.getCellValue(row, columnName);
+      const actualTrimmed = actualValue.trim().toLowerCase();
+      const expectedTrimmed = expectedValue.trim().toLowerCase();
+
+      console.log(`Verifying column "${columnName}": actual="${actualValue}", expected="${expectedValue}"`);
+
+      if (actualTrimmed !== expectedTrimmed) {
+        mismatches.push(
+          `❌ Column "${columnName}": Expected "${expectedValue}", but got "${actualValue}"`
+        );
+      }
+    }
+
+    // ✅ Throw error if any mismatches were found
+    if (mismatches.length > 0) {
+      throw new Error(`PO Item Cell Verification Failed:\n${mismatches.join('\n')}`);
+    }
+
     }
   }
 export const helper = new HelperMethods();

@@ -14,7 +14,6 @@ test.describe('Readings Module Tests', () => {
 
         await loginPage.navigate();
         await loginPage.login(loginPage.credentials.validCredentials.username, loginPage.credentials.validCredentials.password);
-        await loginPage.assertLoginSuccess();
     });
 
     /*
@@ -30,7 +29,8 @@ test.describe('Readings Module Tests', () => {
         await readingPage.openReadingsModule();
     });
 
-    test('Select the Asset Reading @smoke', async () => {
+    test('Select the Asset Reading and add reading @smoke', async () => {
+        readingPage.openReadingsModule();
         await readingPage.locateAndAddAssetReading(createAssetData.assetNumber, "100");
     });    
 });

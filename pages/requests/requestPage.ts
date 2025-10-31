@@ -19,6 +19,13 @@ export class RequestPage {
     */
 
     async openRequestsModule(): Promise<void> {
+        // Check if the "Requests" button is visible
+        const requestsButton = this.page.locator('[automation-button="Requests"]');
+        if (!(await requestsButton.isVisible())) {
+            await helper.addModuleToMenu("Requests");
+            await this.page.waitForTimeout(1000);
+        }
+
         await helper.clickButton("Requests");
         await helper.checkHeader("RequestListingHeader");
     }
@@ -29,7 +36,7 @@ export class RequestPage {
     ************************
     */
     
-    async createRequest(jobDesc: string ): Promise<void> {
+    async createRequest(jobDesc: string, assetNumber: string, inDialog:boolean = false ): Promise<void> {
     
         await this.openRequestsModule();
      
@@ -37,10 +44,14 @@ export class RequestPage {
         await helper.clickButton("New");
 
         await helper.enterValueInDialog("CreateRequest", "JobDescription", jobDesc);
-        await this.page.waitForTimeout(1000);    
-        
+        await this.page.waitForTimeout(1000);
+
+       await this.setRequestAsset(assetNumber, inDialog);
+
         // Click the Create button to save the new Work Order
         await helper.clickButton("Create");
+
+        await this.page.waitForTimeout(1000);        
     }
 
     /*
@@ -113,18 +124,15 @@ export class RequestPage {
     * This method enters the given asset number into the Asset field,
     * waits for the asset list to populate, and selects the first item from the list.
     * It uses a value mapping to handle cases where only the first word of the asset number is needed.
-    * @param assetNumber - The asset number to enter in the Asset field.
+    * @param inDialog = true, uses enterValueInDialog. Otherwise, normal input.
     ***************************************************************************************************
     */
     
-    async setRequestAsset(assetNumber: string ): Promise<void> {
+    async setRequestAsset(assetNumber: string, inDialog:boolean = false ): Promise<void> {
 
-        const fillValueMapping: Record<string, (value: string) => string> = {
-        // For Asset, use the first word as the short name for filling
-        assetNumber: (value: string) => value.split(' ')[0]
-        };
+        const shortAssetNumber = assetNumber.split(' ')[0];
 
-        await helper.enterValue("Asset", assetNumber);
+        await helper.enterValueInDialog("CreateRequest", "Asset", shortAssetNumber);
 
         await this.page.waitForTimeout(1000);
 

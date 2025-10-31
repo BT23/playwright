@@ -40,9 +40,8 @@ test.describe('Requests Work Orders Tests', () => {
     */    
     test('Request Work Order Requester autofill - Case 1 @bug @regression @asset @WO', async () => {
         const data = testData.case1;
-        await assetPage.createNewAsset(data.assetNumber, data.assetDesc, 2);
-        await requestPage.createRequest(data.requestJobDesc);
-        await requestPage.setRequestAsset(data.assetNumber);
+        await assetPage.createNewAsset(data.assetNumber, data.assetDesc);
+        await requestPage.createRequest(data.requestJobDesc, data.assetNumber, true);
         await requestPage.approveRequestAndClickOK();
         const requester = await requestPage.createRequestWorkOrder();
         await woPage.verifyWORequester(requester);

@@ -20,9 +20,15 @@ export class WoPage {
     ************************
     */
     async openWOModule(): Promise<void> {
+        // Check if the "History" button is visible
+        const historyButton = this.page.locator('[automation-button="WorkOrders"]');
+        if (!(await historyButton.isVisible())) {
+            await helper.addModuleToMenu("WorkOrders");
+            await this.page.waitForTimeout(1000);
+        }
+
         // Click on the Work Orders button to open the Work Order module
         await helper.clickButton("WorkOrders");
-
         // Verify that the Work Order Listing header is displayed
         await helper.checkHeader("WorkOrderListingHeader");
     }
@@ -62,27 +68,6 @@ export class WoPage {
         // Click the Create button to save the new Work Order
         await helper.clickButton("Create");
     }
-    /*
-    async createWorkOrder(data: { assetNumber: string; workorderDesc: string; }): Promise<void> {
-    
-        await this.openWOModule();
-
-        // click the New button to create a new Work Order
-        await helper.clickButton("New");
-
-        // Fill in the Work Order details from the createWorkOrderData.json file
-        await helper.enterValue("Description", workorderDesc);        
-        await helper.enterValue("Asset", assetNumber);
-        
-        await this.page.waitForTimeout(1000);
-
-        // Select the first item from the Asset list
-        await helper.selectFirstListItem();
-        
-        // Click the Create button to save the new Work Order
-        await helper.clickButton("Create");
-    }
-    */
 
    /*
     *************************************
@@ -150,11 +135,34 @@ export class WoPage {
     }    
 
     /*
-     *
+    ***************************
+    * Open Specified Opened WO
+    ***************************
     */
-    /************************
-    * Verify Warranty Checkbox
-    ************************
+    async openClosedWOByWONumber(woNumber: string): Promise<void> {
+        await helper.selectRowByFieldName("WorkOrderListingGrid","W/ONo", woNumber);
+        await this.page.waitForTimeout(1000);
+        await helper.clickButton("Details");
+        await this.page.waitForTimeout(1000);
+    }
+
+    /*
+    ******************
+    * Print WO Report
+    ******************
+    */
+    async printWOPrint(woNumber: string): Promise<void> {
+        await helper.selectRowByFieldName("WorkOrderListingGrid","W/ONo", woNumber);
+        await this.page.waitForTimeout(1000);
+        await helper.clickButton("Print");
+        await this.page.waitForTimeout(1000);
+        await helper.clickButtonInDialog("WorkOrderPrint","Print");
+        await this.page.waitForTimeout(1000);
+    }
+
+    /*************************************
+    * Verify WO Asset Warranty Message box
+    **************************************
     */
     async verifyWorkOrderAssetWararnty(
         assetNumberOrData: string | { assetNumber: string; workorderDesc: string }, workorderDesc?: string): Promise<void> {
@@ -187,11 +195,19 @@ export class WoPage {
         await helper.verifyDialogVisible("AssetWarranty");
     }
 
+    /******************************
+    * Verify WO Requester Populated
+    *******************************
+    */
    async verifyWORequester(expectedRequester: string): Promise<void>{
         const actualRequester = await this.page.locator('[automation-input="Requester"]').inputValue();
         expect(actualRequester.trim()).toBe(expectedRequester.trim());
    }
 
+    /**********************************
+    * RMC and click Add Listing Columns
+    ***********************************
+    */
     async clickAddListingColumns(): Promise<void> {
         await this.openWOModule();
 
@@ -205,6 +221,10 @@ export class WoPage {
         await addListingColumns.click();
     }
 
+    /***********************
+    * Reopen WO From Listing
+    ************************
+    */
     async reopenWOFromListing(): Promise<void> {
         await helper.selectFirstRow("WorkOrderListingGrid");
         await this.page.waitForTimeout(1000);

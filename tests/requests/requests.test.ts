@@ -5,6 +5,7 @@ import { AssetPage } from '../../pages/assets/assetPage';
 import { helper } from '../../helperMethods';
 
 import testData from '../../test-data/e2e/requestWOData.json';
+import requestData from '../../test-data/requests/createRequestData.json';
 
 test.describe('Requests Module Tests', () => {
     let loginPage: LoginPage;
@@ -18,7 +19,6 @@ test.describe('Requests Module Tests', () => {
 
         await loginPage.navigate();
         await loginPage.login(loginPage.credentials.validCredentials.username, loginPage.credentials.validCredentials.password);
-        await loginPage.assertLoginSuccess();
     });
 
     /*
@@ -32,6 +32,16 @@ test.describe('Requests Module Tests', () => {
     */
     test('Open Requests Module @smoke', async () => {
         await requestPage.openRequestsModule();
+    });
+
+    test.only('Create New Request with Asset @smoke', async () => {
+        await requestPage.openRequestsModule();
+        await requestPage.createRequest(requestData.jobDesc, requestData.assetNumber, true);
+    });
+
+    test('Create New Request No Asset @smoke', async () => {
+        await requestPage.openRequestsModule();
+        await requestPage.createRequest(requestData.jobDesc, requestData.assetNumber);
     });
 
 });

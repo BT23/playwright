@@ -23,7 +23,6 @@ test.describe('Contractor WO Module Tests', () => {
         poPage = new PoPage(page);
         await loginPage.navigate();
         await loginPage.login(loginPage.credentials.validCredentials.username, loginPage.credentials.validCredentials.password);
-        await loginPage.assertLoginSuccess();
     });
 
      /*

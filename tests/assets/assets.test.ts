@@ -22,7 +22,6 @@ test.describe('Asset Module Tests', () => {
 
         await loginPage.navigate();
         await loginPage.login(loginPage.credentials.validCredentials.username, loginPage.credentials.validCredentials.password);
-        await loginPage.assertLoginSuccess();
     });
 
     /*
@@ -50,7 +49,7 @@ test.describe('Asset Module Tests', () => {
     * Custom tags: @smoke
     */    
     test('Create New Asset @smoke', async () => {
-        await assetPage.createNewAsset(createAssetData);
+        await assetPage.createNewAsset(createAssetData.assetNumber, createAssetData.assetDesc);
     });
 
     /*

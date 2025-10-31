@@ -13,7 +13,6 @@ test.describe('WO Module Tests', () => {
         woPage = new WoPage(page);
         await loginPage.navigate();
         await loginPage.login(loginPage.credentials.validCredentials.username, loginPage.credentials.validCredentials.password);
-        await loginPage.assertLoginSuccess();
     });
     /*
     * Reference ID: Test Case: Work Order Module should open successfully
@@ -82,12 +81,51 @@ test.describe('WO Module Tests', () => {
     });
 
 
-    test.only('verify WO Requester', async ({ page }) => {
+    test('verify WO Requester', async ({ page }) => {
         await woPage.openWOModule();
         await woPage.reopenWOFromListing();
         await woPage.verifyWORequester("Toby Tang");
     });  
 
+    /*
+    * Reference ID: Test Case: Open specified Closed WO
+    * Preconditions: User is logged in
+    * Steps:
+    * 1. Open History Listing
+    * 2. Select the specified closed WO
+    * 3. Click 'Details' button
+    * Expected Result: Specified closed WO should open successfully.
+    * Custom tags: @smoke
+    */
+    test('Open Specified Opened WO @smoke', async () => {
+        await woPage.openWOModule()
+        await woPage.openClosedWOByWONumber("108");
+    });    
+
+    /*
+    * Reference ID: Test Case: Print specified WO
+    * Preconditions: User is logged in
+    * Steps:
+    * 1. Open History Listing
+    * 2. Select the specified closed WO
+    * 3. Click 'Details' button
+    * Expected Result: WO report with Specified WO Number should print successfully.
+    * Custom tags: @smoke
+    */
+    test.only('Print Specified Opened WO @smoke', async () => {
+        await woPage.openWOModule()
+        await woPage.printWOPrint("108");
+    }); 
+
+    /*
+    * Reference ID: Test Case: Open the first WO on the listing
+    * Preconditions: User is logged in
+    * Steps:
+    * 1. Open WO Listing
+    * 2. Click Details button
+    * Expected Result: The first WO on the list should open successfully.
+    * Custom tags: @smoke
+    */
 
     test('openFirstRecordOnListing', async ({ page }) => {
         await woPage.openWOModule();

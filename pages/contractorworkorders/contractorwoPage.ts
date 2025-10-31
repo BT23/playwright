@@ -17,6 +17,13 @@ export class ContractorWOPage {
     ************************************
     */
     async openContractorWOListing(): Promise<void> {
+        // Check if the "History" button is visible
+        const woButton = this.page.locator('[automation-button="WorkOrders"]');
+        if (!(await woButton.isVisible())) {
+            await helper.addModuleToMenu("WorkOrders");
+            await this.page.waitForTimeout(1000);
+        }
+        
         // Click on the Work Orders button to open the Work Order module
         await helper.clickButton("WorkOrders");
 
