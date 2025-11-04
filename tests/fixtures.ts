@@ -2,14 +2,24 @@ import path from 'path';
 import { writeFileSync, readFileSync } from 'fs';
 import { test as baseTest } from '@playwright/test';
 import { LoginPage } from '../pages/login/loginPage';
+import { WoPage } from '../pages/workorders/woPage';
 import { PoPage } from '../pages/purchaseorder/poPage';
+
+import createWorkOrderData from '../test-data/work-orders/createWorkOrderData.json';
+import addWOSpareData from '../test-data/work-orders/woSparesTabData.json';
 import createPurchaseOrderData from '../test-data/purchase-orders/createPurchaseOrderData.json';
 
 type MyFixtures = {
     loginPage: LoginPage;
+    woPage: WoPage;
     poPage: PoPage;
-    testData: typeof createPurchaseOrderData;
+    poTestData: typeof createPurchaseOrderData;
+    woTestData: {
+        details: typeof createWorkOrderData;
+        spares: typeof addWOSpareData;
+    };
     poDataFilePath: string;
+    woDataFilePath: string;
 };
 
 export const test = baseTest.extend<MyFixtures>({
@@ -24,6 +34,13 @@ export const test = baseTest.extend<MyFixtures>({
         await use(loginPage);
     },
 
+    woPage: async ({ page, loginPage }, use) => {
+        console.log('📦 Opening WO Module...');
+        const woPage = new WoPage(page);
+        await woPage.openWOModule();
+        await use(woPage);
+    },
+
     poPage: async ({ page, loginPage }, use) => {
         console.log('📦 Opening PO Module...');
         const poPage = new PoPage(page);
@@ -31,12 +48,26 @@ export const test = baseTest.extend<MyFixtures>({
         await use(poPage);
     },
 
-    testData: async ({}, use) => {
+    woTestData: async ({}, use) => {
+        const combinedData = {
+            details: createWorkOrderData,
+            spares: addWOSpareData,
+        };
+        await use(combinedData);
+    },
+
+    poTestData: async ({}, use) => {
         await use(createPurchaseOrderData);
     },
+
+    woDataFilePath: async ({}, use) => {
+        const filePath = path.resolve(__dirname, '../test-data/work-orders/woTempData.json');
+        await use(filePath);
+    },
+
     poDataFilePath: async ({}, use) => {
         const filePath = path.resolve(__dirname, '../test-data/purchase-orders/poTempData.json');
         await use(filePath);
     }
-   
+
 });

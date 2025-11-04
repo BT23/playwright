@@ -1,3 +1,4 @@
+import { readFileSync } from 'fs';
 import { test } from '../fixtures'
 
     /*
@@ -12,8 +13,13 @@ import { test } from '../fixtures'
     * Custom tags: @smoke @feature-po
     */ 
 
-test('Verify PO Transaction using fixture data @smoke @feature-po', async ({ poPage, testData }) => {
-        await poPage.clickPODetailsBtn();
-        await poPage.clickPOTransactionsTab();
-        await poPage.verifyPOContractorInvoiceTransactions();
+test('Verify PO Transaction using fixture data @smoke @feature-po', async ({ poPage, testData, poDataFilePath }) => {
+    await poPage.openListingFilter();    
+    await poPage.enabledFilterPOStatusAllReceived();
+    await poPage.closeListingFilter();
+    const specificPONumber = JSON.parse(readFileSync(poDataFilePath, 'utf-8'));    
+    await poPage.selectSpecificedPO(specificPONumber.poNumber);   
+    await poPage.clickPODetailsBtn();
+    await poPage.clickPOTransactionsTab();
+    await poPage.verifyPOContractorInvoiceTransactions();
 });

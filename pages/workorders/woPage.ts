@@ -1,8 +1,9 @@
+import { writeFileSync, readFileSync } from 'fs';
 import { expect, Page } from '@playwright/test';
 import { helper } from '../../helperMethods';
 
-import createWorkOrderData from '../../test-data/work-orders/createWorkOrderData.json';
-import workOrderDetailsDetailsTabData from '../../test-data/work-orders/workOrderDetailsDetailsTabData.json';
+
+import woDetailsTabData from '../../test-data/work-orders/woDetailsTabData.json';
 
 export class WoPage {
 
@@ -20,17 +21,14 @@ export class WoPage {
     ************************
     */
     async openWOModule(): Promise<void> {
-        // Check if the "History" button is visible
-        const historyButton = this.page.locator('[automation-button="WorkOrders"]');
-        if (!(await historyButton.isVisible())) {
-            await helper.addModuleToMenu("WorkOrders");
-            await this.page.waitForTimeout(1000);
-        }
+        // Wait for the Work Orders button to become visible
+        await this.page.waitForSelector('[automation-button="NavItemWorkOrders"]', { state: 'visible', timeout: 5000 });
 
         // Click on the Work Orders button to open the Work Order module
-        await helper.clickButton("WorkOrders");
+        await helper.clickButton("NavItemWorkOrders");
+
         // Verify that the Work Order Listing header is displayed
-        await helper.checkHeader("WorkOrderListingHeader");
+        await this.page.waitForSelector('[automation-header="WorkOrderListingHeader"] span', { state: 'visible', timeout: 5000 });        
     }
 
     /*
@@ -38,111 +36,192 @@ export class WoPage {
     * Create New Work Order
     ************************
     */
-    async createWorkOrder(
-        assetNumberOrData: string | { assetNumber: string; workorderDesc: string }, workorderDesc?: string): Promise<void> {
-        let assetNumber: string;
-        let desc: string;
-
-        if (typeof assetNumberOrData === 'object') {
-            assetNumber = assetNumberOrData.assetNumber;
-            desc = assetNumberOrData.workorderDesc;
-        } else {
-            assetNumber = assetNumberOrData;
-            desc = workorderDesc!;
-        }
-
-        await this.openWOModule();
-
-        // click the New button to create a new Work Order
+    async createWO(woAsset: string, woDesc:string, filePath?: string): Promise<string|null> {
+         // Click the New button to create a new Work Order
         await helper.clickButton("New");
 
-        // Fill in the Work Order details
-        await helper.enterValue("Description", desc);        
-        await helper.enterValue("Asset", assetNumber);
-
+        // Enter Work Order Description
+        await helper.enterValueInDialog("CreateWorkOrder", "Description", woDesc);
         await this.page.waitForTimeout(1000);
 
-        // Select the first item from the Asset list
-        await helper.selectFirstListItem();
+        // Enter the asset short name in the dialog/list
+        const assetShortName = woAsset.split(' ')[0].substring(0, 2);
+        await helper.enterEllipseValueInDialog("CreateWorkOrder", "Asset", assetShortName);      
+        await this.page.waitForTimeout(1000);
 
-        // Click the Create button to save the new Work Order
+        // Click the Create button to save the new Purchase Order
         await helper.clickButton("Create");
+
+        // Wait until the WO Header is visible before clicking
+        const woHeader = this.page.locator('[automation-header="WorkOrderHeader"]');
+        await woHeader.waitFor({ state: 'visible', timeout: 5000 });        
+
+        // Locate the element using its class
+        const workOrderElement = await this.page.locator('div.ml-2.text-5\\.5.text-secondary');
+        // Get the text content
+        const woNumber = await workOrderElement.textContent();
+        console.log('Work Order Number:', woNumber?.trim());
+
+        // Write the WO number to a JSON file if filePath is provided in fixtures.ts
+        if (filePath) {
+            // Save
+            writeFileSync(filePath, JSON.stringify({ woNumber }, null, 2));
+        }
+        return woNumber;
     }
 
-   /*
-    *************************************
-    * Fill in WO Details - Details Tab
-    * ***********************************
+    /*
+    ************************
+    * WO Details Tab
+    ************************
     */
-   async workOrderDetails_DetailsTab_FillAllFields(): Promise<void> {
-        await this.openWOModule();
+    /*
+    ************************
+    * Click Details tab
+    ************************
+    */    
+  async clickDetailsTab(): Promise<void> {
+        await helper.selectTab("DetailsTab");
+        await this.page.waitForTimeout(1000);
+  }
 
-        /*
-        * Fill in the Details tab of the Work Order details form
-        */
-        await helper.selectFirstRow("WorkOrderListingGrid");
+    /*
+    ************************
+    * Click Spares tab
+    ************************
+    */    
+  async clickSparesTab(): Promise<void> {
+        await helper.selectTab("SparesTab");
+        await this.page.waitForTimeout(1000);
+  }
 
-        await helper.clickButton("Details");
-        
-        // Use all fields from your JSON file
-        const details = workOrderDetailsDetailsTabData;
+    /*
+    ************************
+    * Enter Account Code
+    ************************
+    */    
+  async enterAccountCode(): Promise<void> {
+        // Enter Account Code
+        const accountCodeShortName = woDetailsTabData.AccountCode.split(' ')[0].substring(0, 2);  
+        await helper.enterValue("AccountCode", accountCodeShortName);
+        await helper.selectFirstListItem();
+        await this.page.waitForTimeout(1000);
+  }
 
-        const fillValueMapping: Record<string, (value: string) => string> = {
-            // For priority, use the first word as the short name for filling
-            Priority: (value: string) => value.split(' ')[0]
-        };
+    /*
+    ************************
+    * Enter Job Type
+    ************************
+    */    
+  async enterJobType(): Promise<void> {
+        // Enter Job Code
+        const jobTypeShortName = woDetailsTabData.JobType.split(' ')[0].substring(0, 2);
+        await helper.enterValueByIndex("JobType", jobTypeShortName);
+        await helper.selectFirstListItem();
+        await this.page.waitForTimeout(1000);
+  }
 
-        // Only these fields require selectFirstListItem
-        const selectListFields = [
-            "AccountCode",
-            "JobType",
-            "Department",
-            "ComponentCode"
-        ];
+    /*
+    ************************
+    * Enter Department
+    ************************
+    */    
+  async enterDepartment(): Promise<void> {
+        // Enter Department
+        const deptShortName = woDetailsTabData.Department.split(' ')[0].substring(0, 2);  
+        await helper.enterValueByIndex("Department", deptShortName);
+        await helper.selectFirstListItem();
+        await this.page.waitForTimeout(1000);
+  }
 
-        // Fill in the form fields using the helper method
-        // This method will handle the mapping and filling of values
-        await helper.fillFormFields(details, undefined, fillValueMapping, selectListFields);
+    /*
+    ************************
+    * Enter Start Date Time
+    ************************
+    */    
+  async enterStartDateTime(): Promise<void> {
+        // Enter Start Date
+        const dateOnly = woDetailsTabData.Started.split('T')[0]; // "2025-06-12"
+        await helper.enterValueByIndex("Started_date", dateOnly);
+        await this.page.waitForTimeout(1000);
 
-        // Click the X button to save the changes
-        await helper.closePage();
-    }
+        const timeOnly = woDetailsTabData.Started.split('T')[1].substring(0, 5); // "10:30"
+        await helper.enterValueByIndex("Started_time", timeOnly);
+        await this.page.waitForTimeout(1000);
+  }
 
+    /*
+    ************************
+    * WO Spares Tab
+    ************************
+    */
 
     /*
     ************************
     * Add Work Order Spare
     ************************
     */
-    async addWOSpare(): Promise<void> {
-        await this.openWOModule();
+    async addWOSpare(catalogueItem: string, EstQuantity: string): Promise<void> {
+        const woHeader = this.page.locator('[automation-header="WorkOrderHeader"]');
+        await woHeader.waitFor({ state: 'visible', timeout: 5000 });
 
-        await helper.selectFirstRow("WorkOrderListingGrid");
-        await helper.clickButton("Details");
+        // Wait until the ItemsTab button is visible before clicking
+        const itemsTab = this.page.locator('[automation-tab="SparesTab"]');
+        await itemsTab.waitFor({ state: 'visible', timeout: 5000 });
+
         await helper.selectTab("SparesTab");
+
+        const addBtn = this.page.locator('[automation-button="Add"]');
+        await addBtn.waitFor({ state: 'visible', timeout: 5000 });
+
         await helper.clickButton("Add");
 
         /*
         * Enter Catalogue item
         */
         const newRow = await helper.selectLastRow("SparesTabGrid");
-        await helper.enterValueInCell(newRow, "Item", "000003");
+        await helper.enterValueInCell(newRow, "Item", catalogueItem);
         await helper.selectFirstListItem();
+        await this.page.waitForTimeout(1000);
 
-        await helper.enterValueInCell(newRow, "EstimatedQuantity", "2");
-
-        await helper.closePage();
+        await helper.enterValueInCell(newRow, "EstimatedQuantity", EstQuantity);
+        await this.page.waitForTimeout(1000);
     }    
+
+    /*
+    ************************
+    * WO Listing Operations
+    ************************
+    */
 
     /*
     ***************************
     * Open Specified Opened WO
     ***************************
     */
-    async openClosedWOByWONumber(woNumber: string): Promise<void> {
+    async selectSpecificedWO(woNumber: string): Promise<void> {
         await helper.selectRowByFieldName("WorkOrderListingGrid","W/ONo", woNumber);
         await this.page.waitForTimeout(1000);
-        await helper.clickButton("Details");
+    }
+
+    /*
+    ***************************
+    * Click WO Details Button
+    ***************************
+    */
+    async clickWODetailsBtn(): Promise<void> {
+        await helper.clickButton("Details"); 
+        await this.page.waitForTimeout(1000);
+        
+    }
+
+    /*
+    ***************************
+    * Click Back button
+    ***************************
+    */
+    async clickBackBtn(): Promise<void> {
+        await helper.closePage();
         await this.page.waitForTimeout(1000);
     }
 
@@ -159,6 +238,12 @@ export class WoPage {
         await helper.clickButtonInDialog("WorkOrderPrint","Print");
         await this.page.waitForTimeout(1000);
     }
+
+    /*
+    ************************
+    * Verification Methods
+    ************************
+    */
 
     /*************************************
     * Verify WO Asset Warranty Message box

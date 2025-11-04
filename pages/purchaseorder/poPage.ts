@@ -174,6 +174,37 @@ export class PoPage {
 
     /*
     ***************************
+    * Listing Filter methods
+    ***************************
+    */
+    async openListingFilter(): Promise<void> {
+        const filterButton = this.page.locator('[automation-button="listingFilter"]');
+        await filterButton.waitFor({ state: 'visible', timeout: 5000 });
+        await filterButton.scrollIntoViewIfNeeded();
+        await this.page.waitForTimeout(500); // Let layout settle
+        await helper.clickButton("listingFilter");
+        await this.page.waitForTimeout(1000);
+    }
+
+    async closeListingFilter(): Promise<void> {
+        const filterButton = this.page.locator('[automation-button="listingFilter"]');
+        await filterButton.waitFor({ state: 'visible', timeout: 5000 });
+        await filterButton.scrollIntoViewIfNeeded();
+        await this.page.waitForTimeout(500); // Let layout settle
+        await helper.clickButton("listingFilter");
+        await this.page.waitForTimeout(1000);
+    }
+    
+    async enabledFilterPOStatusAllReceived(): Promise<void> {    
+        await helper.selectDropDown("PurchaseOrderStatus");
+        await this.page.waitForTimeout(1000);
+        await helper.selectListItemByIndex(0); // All Received        
+        await this.page.waitForTimeout(1000);
+        await helper.clickButton("Apply");
+    }
+
+    /*
+    ***************************
     * Verification methods
     ***************************
     */
@@ -238,6 +269,9 @@ export class PoPage {
     /*
     **************************************************************
     * Verify PO Contractor Invoice Transactions (Transactions tab)
+    * 
+    * This method verifies that the Transactions tab contains both
+    * "Receipt" and "Invoice Match" entries in the Action column.
     **************************************************************
     */
     async verifyPOContractorInvoiceTransactions(): Promise<void> {

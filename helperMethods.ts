@@ -103,9 +103,21 @@ class HelperMethods {
   */
 
   async enterValue(fieldName: string, value: string, shouldPressTab = false) {
-    const input = this.page.locator(`[automation-input="${fieldName}"]`);
+    const input = this.page.locator(`[automation-input="${fieldName}"]`); 
     await input.click();
     await input.fill(value);
+
+    if (shouldPressTab) {
+      await input.press('Tab');
+    }    
+  }
+
+  async enterValueByIndex(fieldName: string, value: string, shouldPressTab = false) {
+    const input = this.page.locator(`[automation-input="${fieldName}"]`).nth(1);
+  
+    await input.click();
+    await input.fill(value);
+
     if (shouldPressTab) {
       await input.press('Tab');
     }    

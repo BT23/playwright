@@ -16,7 +16,7 @@ import { test } from '../fixtures'
     * Custom tags: @smoke @feature-po
     */ 
 
-test('Verify PO Item Cells using fixture data @smoke @feature-po', async ({ poPage, testData, poDataFilePath }) => {
+test('Verify PO Item Cells using fixture data @smoke @feature-po', async ({ poPage, poTestData, poDataFilePath }) => {
         // Read and parse the file
         const specificPONumber = JSON.parse(readFileSync(poDataFilePath, 'utf-8'));    
         await poPage.selectSpecificedPO(specificPONumber.poNumber);        
@@ -24,9 +24,9 @@ test('Verify PO Item Cells using fixture data @smoke @feature-po', async ({ poPa
         await poPage.clickPOItemTab();
 
         await poPage.verifyPOItemRow({
-            SupplierStockNumber: testData.SupplierStockNumber,
-            Quantity: testData.Quantity,
-            UOM: testData.UOM,
-            UnitPrice: testData.UnitPrice
+            SupplierStockNumber: poTestData.SupplierStockNumber,
+            Quantity: poTestData.Quantity,
+            UOM: poTestData.UOM,
+            UnitPrice: poTestData.UnitPrice
         });
 });

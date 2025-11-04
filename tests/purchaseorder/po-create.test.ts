@@ -9,11 +9,12 @@ import { test } from '../fixtures'
     * 3. Enter Supplier
     * 4. Click Create button
     * Expected Result: PO created successfully and appears in the PO Listing
+    * Returns: PO Number and saves to poTempData.json
     * Custom tags: @smoke @feature-po
     */ 
 
-test('Create PO using fixture data @smoke @feature-po', async ({ poPage, testData }) => {
-    await poPage.createPO(testData.Supplier);
+test('Create PO using fixture data @smoke @feature-po', async ({ poPage, poTestData, poDataFilePath  }) => {
+    await poPage.createPO(poTestData.Supplier, poDataFilePath);
     await poPage.clickBackBtn(); // Save and Back
 
 });
