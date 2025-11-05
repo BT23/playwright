@@ -14,7 +14,7 @@ import { test } from '../fixtures'
     */ 
 
 test('Create WO using fixture data @smoke @feature-wo', async ({ woPage, woTestData, woDataFilePath  }) => {
-    await woPage.createWO(woTestData.details.Asset, woTestData.details.Description, woDataFilePath);
+    await woPage.createWO(woTestData.createwo.Asset, woTestData.createwo.Description, woDataFilePath);
     await woPage.clickBackBtn(); // Save and Back
 
 });

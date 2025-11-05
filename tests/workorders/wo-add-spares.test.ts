@@ -4,7 +4,7 @@ import { test } from '../fixtures'
     /*
     * Test Case: Add Work Order Spare successfully
     * This test 
-    * Preconditions: User is logged in and .json is available
+    * Preconditions: User is logged in. Fixture data is available.
     * Steps:
     * 1. Open Work Orders
     * 2. Select a Work Order

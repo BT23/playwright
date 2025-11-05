@@ -5,8 +5,12 @@ import { LoginPage } from '../pages/login/loginPage';
 import { WoPage } from '../pages/workorders/woPage';
 import { PoPage } from '../pages/purchaseorder/poPage';
 
+// WO Data
 import createWorkOrderData from '../test-data/work-orders/createWorkOrderData.json';
+import woDetailsTabData from '../test-data/work-orders/woDetailsTabData.json';
 import addWOSpareData from '../test-data/work-orders/woSparesTabData.json';
+
+//PO Data
 import createPurchaseOrderData from '../test-data/purchase-orders/createPurchaseOrderData.json';
 
 type MyFixtures = {
@@ -15,7 +19,8 @@ type MyFixtures = {
     poPage: PoPage;
     poTestData: typeof createPurchaseOrderData;
     woTestData: {
-        details: typeof createWorkOrderData;
+        createwo: typeof createWorkOrderData;
+        details: typeof woDetailsTabData;
         spares: typeof addWOSpareData;
     };
     poDataFilePath: string;
@@ -50,7 +55,8 @@ export const test = baseTest.extend<MyFixtures>({
 
     woTestData: async ({}, use) => {
         const combinedData = {
-            details: createWorkOrderData,
+            createwo: createWorkOrderData,
+            details: woDetailsTabData,
             spares: addWOSpareData,
         };
         await use(combinedData);

@@ -2,17 +2,18 @@ import { writeFileSync, readFileSync } from 'fs';
 import { expect, Page } from '@playwright/test';
 import { helper } from '../../helperMethods';
 
-
 import woDetailsTabData from '../../test-data/work-orders/woDetailsTabData.json';
+import exp from 'constants';
 
 export class WoPage {
 
     private page: Page;
 
     constructor(page: Page) {
-        this.page = page;
 
+        this.page = page;
         helper.setPage(page);
+
     }
 
     /*
@@ -37,7 +38,7 @@ export class WoPage {
     ************************
     */
     async createWO(woAsset: string, woDesc:string, filePath?: string): Promise<string|null> {
-         // Click the New button to create a new Work Order
+    // Click the New button to create a new Work Order
         await helper.clickButton("New");
 
         // Enter Work Order Description
@@ -100,9 +101,9 @@ export class WoPage {
     * Enter Account Code
     ************************
     */    
-  async enterAccountCode(): Promise<void> {
+  async enterAccountCode(accountCode: string): Promise<void> {
         // Enter Account Code
-        const accountCodeShortName = woDetailsTabData.AccountCode.split(' ')[0].substring(0, 2);  
+        const accountCodeShortName = accountCode.split(' ')[0].substring(0, 2);  
         await helper.enterValue("AccountCode", accountCodeShortName);
         await helper.selectFirstListItem();
         await this.page.waitForTimeout(1000);
@@ -113,9 +114,9 @@ export class WoPage {
     * Enter Job Type
     ************************
     */    
-  async enterJobType(): Promise<void> {
+  async enterJobType(jobType: string): Promise<void> {
         // Enter Job Code
-        const jobTypeShortName = woDetailsTabData.JobType.split(' ')[0].substring(0, 2);
+        const jobTypeShortName = jobType.split(' ')[0].substring(0, 2);
         await helper.enterValueByIndex("JobType", jobTypeShortName);
         await helper.selectFirstListItem();
         await this.page.waitForTimeout(1000);
@@ -126,12 +127,12 @@ export class WoPage {
     * Enter Department
     ************************
     */    
-  async enterDepartment(): Promise<void> {
+  async enterDepartment(department: string): Promise<void> {
         // Enter Department
-        const deptShortName = woDetailsTabData.Department.split(' ')[0].substring(0, 2);  
+        const deptShortName = department.split(' ')[0].substring(0, 2);  
         await helper.enterValueByIndex("Department", deptShortName);
         await helper.selectFirstListItem();
-        await this.page.waitForTimeout(1000);
+        await this.page.waitForTimeout(1000);//
   }
 
     /*
@@ -139,13 +140,13 @@ export class WoPage {
     * Enter Start Date Time
     ************************
     */    
-  async enterStartDateTime(): Promise<void> {
+  async enterStartDateTime(startDate: string): Promise<void> {
         // Enter Start Date
-        const dateOnly = woDetailsTabData.Started.split('T')[0]; // "2025-06-12"
+        const dateOnly = startDate.split('T')[0]; // "2025-06-12"
         await helper.enterValueByIndex("Started_date", dateOnly);
         await this.page.waitForTimeout(1000);
 
-        const timeOnly = woDetailsTabData.Started.split('T')[1].substring(0, 5); // "10:30"
+        const timeOnly = startDate.split('T')[1].substring(0, 5); // "10:30"
         await helper.enterValueByIndex("Started_time", timeOnly);
         await this.page.waitForTimeout(1000);
   }
@@ -211,8 +212,13 @@ export class WoPage {
     */
     async clickWODetailsBtn(): Promise<void> {
         await helper.clickButton("Details"); 
-        await this.page.waitForTimeout(1000);
         
+        const woHeader = this.page.locator('[automation-header="WorkOrderHeader"]');
+        await woHeader.waitFor({ state: 'visible', timeout: 5000 });        
+        
+        // Wait until the Details Tab button is visible before clicking
+        const itemsTab = this.page.locator('[automation-tab="DetailsTab"]');
+        await itemsTab.waitFor({ state: 'visible', timeout: 5000 });
     }
 
     /*
@@ -230,14 +236,32 @@ export class WoPage {
     * Print WO Report
     ******************
     */
-    async printWOPrint(woNumber: string): Promise<void> {
-        await helper.selectRowByFieldName("WorkOrderListingGrid","W/ONo", woNumber);
+    async printWOReport(woNumber: string, fromDetailsForm: boolean): Promise<void> {
+        // Determine the correct header based on the view
+        const headerSelector = fromDetailsForm
+            ? '[automation-header="WorkOrderHeader"] span'
+            : '[automation-header="WorkOrderListingHeader"] span';
+
+        const woHeader = this.page.locator(headerSelector);
+        await expect(woHeader).toBeVisible();
         await this.page.waitForTimeout(1000);
+
+        // Click the Print button
         await helper.clickButton("Print");
         await this.page.waitForTimeout(1000);
-        await helper.clickButtonInDialog("WorkOrderPrint","Print");
-        await this.page.waitForTimeout(1000);
+
+        // Conditionally click the Print button in the dialog if it appears
+        const dialogHeader = this.page.locator('[automation-header="WorkOrderPrint"]');
+        if (await dialogHeader.isVisible()) {
+            await helper.clickButtonInDialog("WorkOrderPrint", "Print");
+            await this.page.waitForTimeout(1000);
+        }
+
+        // Confirm the Work Order Report header is visible
+        const reportHeader = this.page.locator('[automation-header="WorkOrderReport"] span');
+        await expect(reportHeader).toBeVisible();
     }
+
 
     /*
     ************************
@@ -281,12 +305,21 @@ export class WoPage {
     }
 
     /******************************
+    * Verification Methods
+    *******************************
+    */
+
+    /******************************
     * Verify WO Requester Populated
     *******************************
     */
    async verifyWORequester(expectedRequester: string): Promise<void>{
-        const actualRequester = await this.page.locator('[automation-input="Requester"]').inputValue();
-        expect(actualRequester.trim()).toBe(expectedRequester.trim());
+        await this.page.waitForSelector('[automation-input="Requester"]');
+        const actualRequester = await this.page.locator('[automation-input="Requester"]').inputValue();        
+        if (actualRequester.trim() !== expectedRequester.trim()) {
+            throw new Error(`Expected requester to be "${expectedRequester}", but got "${actualRequester}"`);
+        }
+
    }
 
     /**********************************
