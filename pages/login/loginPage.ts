@@ -109,7 +109,7 @@ export class LoginPage {
   }
 
 
-/** Bonnie Original Code
+/** Bonnie Original Code - recaptcha handling commented out
   async login(username: string, password: string) {
     await this.page.waitForTimeout(1000);
     await helper.enterValue("userName", username);
@@ -148,20 +148,27 @@ export class LoginPage {
     await expect(this.page.locator('[automation-button="login"]')).toBeVisible();    
     
   }
+  
   async assertLoginSuccess(): Promise<void> {
-    // If a Select Language dialog appears, choose English and confirm.
+    // If a Select Language dialog appears, choose English (Australia) and confirm.
     try {
-      await helper.selectRowByFieldName("SelectLanguageGrid", "Name", "English");
+
+      const selectLanguageHeader = this.page.locator('[automation-header="SelectLanguage"]');
+      await expect(selectLanguageHeader).toBeVisible();
+      console.log("Select Language dialog is visible.");
+
+      console.log("Selecting English(Australia) language.");
+      await helper.clickButtonInDialog("SelectLanguage", "English(Australia)");
       await helper.clickButtonInDialog("SelectLanguage", "Select");
     } catch {
       // ignore - dialog may not be present or already handled
     }
 
     // Wait for the Home header to appear to confirm successful login
-    await expect(this.page.locator('[automation-header="HomeHeader"]')).toBeVisible({ timeout: 10000 });
+    const homeHeader = this.page.locator('[automation-header="HomeHeader"]');
+    await expect(homeHeader).toBeVisible();
     await this.page.waitForTimeout(500).catch(()=>null);
   }
-
 
     async performInvalidLogins(): Promise<void> {
       for (const creds of this.credentials.invalidCredentials) {

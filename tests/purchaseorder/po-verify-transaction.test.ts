@@ -13,7 +13,7 @@ import { test } from '../fixtures'
     * Custom tags: @smoke @feature-po
     */ 
 
-test('Verify PO Transaction using fixture data @smoke @feature-po', async ({ poPage, testData, poDataFilePath }) => {
+test('Verify PO Transaction using fixture data @smoke @feature-po', async ({ poPage, poDataFilePath }) => {
     await poPage.openListingFilter();    
     await poPage.enabledFilterPOStatusAllReceived();
     await poPage.closeListingFilter();

@@ -1,5 +1,4 @@
 import path from 'path';
-import { writeFileSync, readFileSync } from 'fs';
 import { test as baseTest } from '@playwright/test';
 import { LoginPage } from '../pages/login/loginPage';
 import { WoPage } from '../pages/workorders/woPage';

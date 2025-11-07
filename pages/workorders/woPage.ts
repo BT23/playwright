@@ -2,9 +2,6 @@ import { writeFileSync, readFileSync } from 'fs';
 import { expect, Page } from '@playwright/test';
 import { helper } from '../../helperMethods';
 
-import woDetailsTabData from '../../test-data/work-orders/woDetailsTabData.json';
-import exp from 'constants';
-
 export class WoPage {
 
     private page: Page;
