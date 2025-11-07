@@ -18,5 +18,5 @@ import { test } from '../fixtures'
         await woPage.selectSpecificedWO(specificWONumber.woNumber);
         await woPage.clickWODetailsBtn();
         await woPage.clickDetailsTab();
-        await woPage.verifyWORequester(woTestData.details.Requester);
+        await woPage.verifyWORequester(woTestData.wodetails.Requester);
       });

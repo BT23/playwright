@@ -63,7 +63,11 @@ class HelperMethods {
 
   async clickButton(name: string, shouldForce = false) {
       const button = this.page.locator(`[automation-button="${name}"]`).first();
-      await expect(button).toBeVisible({ timeout: 5000 });
+      await expect(button).toBeVisible({ timeout:5000 });
+
+      // Wait for stability
+      await this.page.waitForTimeout(300);
+     
       await button.click({ force: shouldForce });
   }
 

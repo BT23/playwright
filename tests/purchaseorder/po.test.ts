@@ -2,8 +2,8 @@ import { readFileSync } from 'fs';
 import { test } from '../fixtures'
 
 
-    test('Select Specificed PO', async ({ poPage, testData, poDataFilePath }) => {
-        await poPage.createPO(testData.Supplier, poDataFilePath);
+    test('Select Specificed PO', async ({ poPage, poTestData, poDataFilePath }) => {
+        await poPage.createPO(poTestData.createpo.Supplier, poDataFilePath);
 
         // Read and parse the file
         const data = JSON.parse(readFileSync(poDataFilePath, 'utf-8'));

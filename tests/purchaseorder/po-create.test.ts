@@ -14,7 +14,7 @@ import { test } from '../fixtures'
     */ 
 
 test('Create PO using fixture data @smoke @feature-po', async ({ poPage, poTestData, poDataFilePath  }) => {
-    await poPage.createPO(poTestData.Supplier, poDataFilePath);
+    await poPage.createPO(poTestData.createpo.Supplier, poDataFilePath);
     await poPage.clickBackBtn(); // Save and Back
 
 });

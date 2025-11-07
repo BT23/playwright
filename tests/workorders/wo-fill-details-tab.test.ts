@@ -20,16 +20,16 @@ import { test } from '../fixtures'
         await woPage.clickDetailsTab();
         
         // Enter Start Date
-        await woPage.enterStartDateTime(woTestData.details.Started);
+        await woPage.enterStartDateTime(woTestData.wodetails.Started);
 
         // Enter Account Code   
-        await woPage.enterAccountCode(woTestData.details.AccountCode);
+        await woPage.enterAccountCode(woTestData.wodetails.AccountCode);
 
         // Enter Job Type
-        await woPage.enterJobType(woTestData.details.JobType);
+        await woPage.enterJobType(woTestData.wodetails.JobType);
 
         // Enter Department
-        await woPage.enterDepartment(woTestData.details.Department);
+        await woPage.enterDepartment(woTestData.wodetails.Department);
 
         await woPage.clickBackBtn();
     });

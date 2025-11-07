@@ -1,9 +1,10 @@
+import { writeFileSync, readFileSync } from 'fs';
 import { expect, Page } from '@playwright/test';
 import { helper } from '../../helperMethods';
 
-import createAssetData from '../../test-data/assets/createAssetData.json';
-import assetDetailsDetailsTabData from '../../test-data/assets/assetDetailsDetailsTabData.json';
-import assetDetailsExtendedTabData from '../../test-data/assets/assetDetailsExtendedTabData.json';
+// Asset Data
+import assetDetailsTabData from '../../test-data/assets/assetDetailsDetailsTabData.json';
+import assetExtendedTabData from '../../test-data/assets/assetDetailsExtendedTabData.json';
 
 export class AssetPage {
     private page: Page;
@@ -14,7 +15,10 @@ export class AssetPage {
         helper.setPage(page);
     }
 
-    // Usage: returns true if the tree node is found and clicked, false otherwise
+    /*
+    * Check if Asset Tree Node is Present
+    * Usage: returns true if the tree node is found and clicked, false otherwise
+    */
     async isTreeNodePresent(name: string): Promise<boolean> {
     try {
         await helper.locateTreeNodeByName(name);
@@ -31,8 +35,14 @@ export class AssetPage {
     */
 
     async openAssetModule(): Promise<void> {
-        await helper.clickButton("Assets");
-        await helper.checkHeader("AssetRegisterHeader");
+        // Wait for the Assets button to become visible
+        await this.page.waitForSelector('[automation-button="NavItemAssets"]', { state: 'visible', timeout: 5000 });
+
+        // Click on the Work Orders button to open the Work Order module
+        await helper.clickButton("NavItemAssets");
+
+        // Verify that the Work Order Listing header is displayed
+        await this.page.waitForSelector('[automation-header="AssetRegisterHeader"] span', { state: 'visible', timeout: 5000 });       
     }
 
     /*
@@ -40,10 +50,11 @@ export class AssetPage {
     * Create New Asset Test
     * **********************
     */
-   async createNewAsset(assetNumber: string, assetDesc: string): Promise<void> {
-        await this.openAssetModule();
-
+   async createLevel1Asset(assetNumber: string, assetDesc: string): Promise<void> {
         await helper.clickButton("NewLevel1");
+
+        const createAssetHeader = this.page.locator('[automation-header="CreateLevel1Asset"]');
+        await createAssetHeader.waitFor({ state: 'visible', timeout: 5000 });
 
         // Fill in the asset details from the createAssetData.json file
         await helper.enterValueInDialog("CreateLevel1Asset", "Number", assetNumber);
@@ -55,8 +66,8 @@ export class AssetPage {
         // closeCount = 1 - close Asset Details form
         // closeCount = 2 - close Asset Details form and then close Asset Register
         //for (let i = 0; i < closeCount; i++) {
-        await helper.closePage();
-        await this.page.waitForTimeout(1000);
+        //await helper.closePage();
+        //await this.page.waitForTimeout(1000);
         //}
     }
 
@@ -107,6 +118,16 @@ export class AssetPage {
     }
 
     /*
+    ***************************
+    * Click Back button
+    ***************************
+    */
+    async clickBackBtn(): Promise<void> {
+        await helper.closePage();
+        await this.page.waitForTimeout(1000);
+    }
+
+    /*
     *************************************
     * Fill in Asset Details - Details Tab
     * ***********************************
@@ -130,7 +151,7 @@ export class AssetPage {
         await helper.selectTab("DetailsTab");
 
         // Use all fields from your JSON file
-        const details = assetDetailsDetailsTabData.details;
+        const details = assetDetailsTabData.details;
 
         // Verification method uses the same JSON file, so we need to ensure the field names match
         // Map the field names to the UI field names due to differences in naming conventions in Asset Details - Details tab and Asset Details tab
@@ -191,7 +212,7 @@ export class AssetPage {
         await helper.selectTab("ExtendedTab");
 
         // Use all fields from your JSON file
-        const details = assetDetailsExtendedTabData.details;
+        const details = assetExtendedTabData.details;
 
         const fillValueMapping: Record<string, (value: string) => string> = {
             // For Supplier, use the first word as the short name for filling
@@ -241,7 +262,7 @@ export class AssetPage {
         */  
         await helper.selectTab("DetailsTab");
 
-        const expected = assetDetailsDetailsTabData.details;
+        const expected = assetDetailsTabData.details;
         const fieldsToVerify = [
         "Description",
         "AssetType",
@@ -284,7 +305,7 @@ export class AssetPage {
         */  
         await helper.selectTab("DetailsTab");
 
-        const expected = assetDetailsDetailsTabData.details;
+        const expected =assetDetailsTabData.details;
         const fieldsToVerify = [
         "Contractor",
         "Customer",

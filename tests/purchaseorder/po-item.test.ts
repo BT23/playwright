@@ -15,9 +15,9 @@ import { test } from '../fixtures'
     * Custom tags: @smoke
     */ 
 
-test('Create PO using fixture data @smoke @feature-po', async ({ poPage,poTestData}) => {
+test('Add PO Item using fixture data @smoke @feature-po', async ({ poPage, poTestData}) => {
         await poPage.selectSpecificedPO('000092');
         await poPage.clickPODetailsBtn();
-        await poPage.addPOItem(poTestData);
+        await poPage.addPOItem(poTestData.createpo);
         await poPage.clickBackBtn(); //Save and Back
 });

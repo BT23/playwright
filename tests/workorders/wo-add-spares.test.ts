@@ -19,6 +19,6 @@ import { test } from '../fixtures'
         await woPage.selectSpecificedWO(specificWONumber.woNumber);
         await woPage.clickWODetailsBtn();
         await woPage.clickSparesTab();
-        await woPage.addWOSpare(woTestData.spares.Item, woTestData.spares.EstimatedQuantity);
+        await woPage.addWOSpare(woTestData.wospares.Item, woTestData.wospares.EstimatedQuantity);
         await woPage.clickBackBtn();
       });

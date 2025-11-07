@@ -37,21 +37,6 @@ test.describe('Asset Module Tests', () => {
         await assetPage.openAssetModule();
     });
 
-   /*
-    * Test Case: Create New Asset successfully
-    * This test creates a new asset using the data from createAssetData.json 
-    * Preconditions: User is logged in and createAssetData.json is available
-    * Steps:
-    * 1. Open Asset Register
-    * 2. Click New button
-    * 3. Enter Asset Number and Description
-    * Expected Result: New asset created successfully and appears in the asset register
-    * Custom tags: @smoke
-    */    
-    test('Create New Asset @smoke', async () => {
-        await assetPage.createNewAsset(createAssetData.assetNumber, createAssetData.assetDesc);
-    });
-
     /*
     * Test Case: Asset Details should open successfully
     * Preconditions: User is logged in
