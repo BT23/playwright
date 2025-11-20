@@ -6,3 +6,4 @@ node_modules/
 credentials.json
 db-config.json
 auth-storage.json
+playwright-originalbackup.yml
