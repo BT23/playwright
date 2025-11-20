@@ -24,9 +24,19 @@ export class LoginPage {
     });    
   }
 
+/*
+ * Workaround for recapture
+  * Navigate method is temporarily not in used  
+ */
+
   async navigate() {
     try{
-      await this.page.goto('https://bonnie.mex.com.au/Account/Login');
+      /* two page.got can be deleted - baseURL from config handles and the endpoint is in fixtures.ts*/
+      //await this.page.goto('https://bonnie.mex.com.au/Account/Login');
+      //await this.page.goto('https://bonnie.mex.com.au/', { waitUntil: 'networkidle' });
+      
+      // Use relative path - Playwright will use baseURL from config
+      await this.page.goto('/Account/Login');      
       await this.page.waitForTimeout(1000);
     } catch(error:any){
       throw new Error(`Failed to locate or interact with the username field: ${error.message}`);
@@ -35,7 +45,11 @@ export class LoginPage {
 
   //fill username and password
 
-  async login(username: string, password: string) {
+async login(username: string, password: string) {
+    /******
+     * Workaround for recapture
+     * Temporary disabling the following codes to bypass the login using auth-storage.json
+     ******
     // initial waits
     await this.page.waitForSelector('[automation-input="userName"]', { timeout: 10000 }).catch(()=>{});
     await this.page.waitForSelector('[automation-input="password"]', { timeout: 10000 }).catch(()=>{});
@@ -83,6 +97,8 @@ export class LoginPage {
       // re-enter and click again
       await helper.enterValue("userName", username);
       await helper.enterValue("password", password);
+    // Grecaptcha handling
+    await this.page.waitForFunction(() => typeof grecaptcha.execute !== 'undefined');      
       await clickAndWaitNav();
       await this.page.waitForTimeout(1000);
     }
@@ -104,8 +120,10 @@ export class LoginPage {
       } catch {}
       throw new Error(`Login bounced back to /Account after ${attempts} retry(ies). Saved debug/login-bounced.* (url: ${finalUrl})`);
     }
+  */
     // continue with post-login handling
     await this.assertLoginSuccess();
+
   }
 
 
@@ -122,6 +140,7 @@ export class LoginPage {
 
     await helper.clickButton("login");
     console.log("Login button is clicked");
+    
     await this.page.waitForTimeout(1000);
   }
   */
@@ -150,6 +169,11 @@ export class LoginPage {
   }
   
   async assertLoginSuccess(): Promise<void> {
+    /******
+     * Workaround for recapture
+     * Temporary disabling the following codes to bypass the login using auth-storage.json
+     ******
+
     // If a Select Language dialog appears, choose English (Australia) and confirm.
     try {
 
@@ -163,7 +187,7 @@ export class LoginPage {
     } catch {
       // ignore - dialog may not be present or already handled
     }
-
+*/
     // Wait for the Home header to appear to confirm successful login
     const homeHeader = this.page.locator('[automation-header="HomeHeader"]');
     await expect(homeHeader).toBeVisible();

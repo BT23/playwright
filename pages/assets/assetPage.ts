@@ -35,14 +35,18 @@ export class AssetPage {
     */
 
     async openAssetModule(): Promise<void> {
-        // Wait for the Assets button to become visible
-        await this.page.waitForSelector('[automation-button="NavItemAssets"]', { state: 'visible', timeout: 5000 });
+        // Wait for element visibility using smart wait
+        const navButton = this.page.locator('[automation-button="NavItemAssets"]');
+        await navButton.waitFor({ state: 'visible', timeout: 5000 });
 
-        // Click on the Work Orders button to open the Work Order module
         await helper.clickButton("NavItemAssets");
 
-        // Verify that the Work Order Listing header is displayed
-        await this.page.waitForSelector('[automation-header="AssetRegisterHeader"] span', { state: 'visible', timeout: 5000 });       
+        // Wait for page to load after navigation
+        await this.page.waitForLoadState('networkidle');
+
+        // Verify header is displayed
+        const header = this.page.locator('[automation-header="AssetRegisterHeader"] span');
+        await header.waitFor({ state: 'visible', timeout: 5000 });
     }
 
     /*
@@ -58,11 +62,13 @@ export class AssetPage {
 
         // Fill in the asset details from the createAssetData.json file
         await helper.enterValueInDialog("CreateLevel1Asset", "Number", assetNumber);
-        await this.page.waitForTimeout(1000);
+        //await this.page.waitForTimeout(1000);
         await helper.enterValueInDialog("CreateLevel1Asset", "Description", assetDesc);
         await helper.clickButton("Create");
-        await this.page.waitForTimeout(1000);
+        //await this.page.waitForTimeout(1000);
 
+        // Wait for dialog to close or next action to complete
+        await this.page.waitForLoadState('domcontentloaded');        
         // closeCount = 1 - close Asset Details form
         // closeCount = 2 - close Asset Details form and then close Asset Register
         //for (let i = 0; i < closeCount; i++) {

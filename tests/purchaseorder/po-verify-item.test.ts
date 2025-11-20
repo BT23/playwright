@@ -24,9 +24,9 @@ test('Verify PO Item Cells using fixture data @smoke @feature-po', async ({ poPa
         await poPage.clickPOItemTab();
 
         await poPage.verifyPOItemRow({
-            SupplierStockNumber: poTestData.SupplierStockNumber,
-            Quantity: poTestData.Quantity,
-            UOM: poTestData.UOM,
-            UnitPrice: poTestData.UnitPrice
+            SupplierStockNumber: poTestData.createpo.SupplierStockNumber,
+            Quantity: poTestData.createpo.Quantity,
+            UOM: poTestData.createpo.UOM,
+            UnitPrice: poTestData.createpo.UnitPrice
         });
 });

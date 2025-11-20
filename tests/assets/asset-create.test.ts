@@ -1,4 +1,4 @@
-import { test } from '../fixtures'
+import { test } from '../fixtures';
 
     /*
     * Test Case: Create New Parent Asset successfully
@@ -16,7 +16,7 @@ import { test } from '../fixtures'
 test('Create new level 1 asset using fixture data @smoke @feature-asset', async ({ assetPage, assetTestData }) => {
     await assetPage.createLevel1Asset(assetTestData.createasset.assetNumber, assetTestData.createasset.assetDesc);
     await assetPage.clickBackBtn(); // Save and Back
-
+});
     /*
     * Test Case: Create New Parent Asset successfully
     * Preconditions: User is logged in and createWorkOrderData.json is available. Fixture data used.
@@ -30,5 +30,4 @@ test('Create new level 1 asset using fixture data @smoke @feature-asset', async 
     * Custom tags: @smoke @feature-asset
     */  
 
-});
 

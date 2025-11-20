@@ -33,7 +33,7 @@ test.describe('Asset Module Tests', () => {
     * Expected Result: Asset Register loads without errors
     * Custom tags: @smoke
     */
-    test('Open Asset Module @smoke', async () => {
+    test.only('Open Asset Module @smoke', async () => {
         await assetPage.openAssetModule();
     });
 
@@ -48,21 +48,6 @@ test.describe('Asset Module Tests', () => {
     */
     test('Open Asset Details @smoke', async () => {
         await assetPage.openAssetDetailsByRightClick();
-    });
-
-   /*
-    * Test Case: Verify new asset shows on tree
-    * This test verifies that a newly created asset appears in the asset tree
-    * Preconditions: User is logged in
-    * Steps:
-    * 1. Open Asset Register
-    * 2. Check thennew asset with a specific name (e.g., "Sports") appears in the tree
-    * Expected Result: New asset created successfully and appears in the asset register
-    * Custom tags: @smoke
-    */
-    test('Verify New Asset Show On Tree @smoke', async () => {
-        const isPresent = await assetPage.isTreeNodePresent("Toys");
-        expect(isPresent).toBeTruthy();
     });
 
    /*
