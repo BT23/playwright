@@ -31,7 +31,6 @@ jobs:
       - name: Create config files
         run: |
           echo "${{ secrets.DB_CONFIG }}" > db-config.json
-          echo "${{ secrets.CREDENTIALS }}" > credentials.json
 
       - name: Run Purchase Order SMOKE tests (CI)
         run: npm run test:asset:smoke -- --reporter=list
@@ -39,7 +38,7 @@ jobs:
       # Optional: Generate HTML report (for smoke subset)
       - name: Generate HTML report
         if: always()
-        run: npx playwright test tests/assets --grep "(?=.*@smoke)(?=.*@feature-asset)" --project=chromium --reporter=html
+        run: npx playwright test tests/assets/asset-register.test.ts --grep "(?=.*@smoke)(?=.*@feature-asset)" --project=chromium --reporter=html
 
       - name: Upload HTML report
         if: always()
