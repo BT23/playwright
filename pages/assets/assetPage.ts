@@ -1,6 +1,7 @@
 import { writeFileSync, readFileSync } from 'fs';
 import { expect, Page } from '@playwright/test';
 import { helper } from '../../helperMethods';
+import { escapeRegex } from '../../helperMethods';
 
 // Asset Data
 import assetDetailsTabData from '../../test-data/assets/assetDetailsDetailsTabData.json';
@@ -15,18 +16,47 @@ export class AssetPage {
         helper.setPage(page);
     }
 
+   /*
+    **************************************
+    * Locate and select Tree Node by Name
+    * ************************************
+    */
+    async selectTreeNodeByName(assetNumber: string) {
+        // Locate the asset in the tree
+        const nodeFound = await helper.locateTreeNodeByName(assetNumber);
+
+        if (nodeFound) {
+            // ✅ Use exact match locator (generic)
+            const escapedName = escapeRegex(assetNumber);
+            const nodeLocator = this.page.locator('td[automation-col="Number"]')
+                .filter({ hasText: new RegExp(`^${escapedName}$`, 'i') }); // exact match, case-insensitive
+
+            const count = await nodeLocator.count();
+            if (count === 0) {
+                throw new Error(`Asset with number "${assetNumber}" not found.`);
+            }
+            if (count > 1) {
+                console.warn(`Multiple matches found for "${assetNumber}". Clicking the first exact match.`);
+            }
+
+            await nodeLocator.first().click();
+        } else {
+            throw new Error(`Asset with number "${assetNumber}" not found in the tree.`);
+        }
+    }
+
     /*
     * Check if Asset Tree Node is Present
     * Usage: returns true if the tree node is found and clicked, false otherwise
     */
     async isTreeNodePresent(name: string): Promise<boolean> {
-    try {
-        await helper.locateTreeNodeByName(name);
-        return true;
-    } catch (e) {
-        return false;
+        try {
+            await helper.locateTreeNodeByName(name);
+            return true;
+        } catch (e) {
+            return false;
+        }
     }
-}
 
     /*
     *********************
@@ -50,9 +80,9 @@ export class AssetPage {
     }
 
     /*
-    ************************
-    * Create New Asset Test
-    * **********************
+    **************************
+    * Create New Level 1 Asset
+    * ************************
     */
    async createLevel1Asset(assetNumber: string, assetDesc: string): Promise<void> {
         await helper.clickButton("NewLevel1");
@@ -78,41 +108,32 @@ export class AssetPage {
     }
 
     /*****************************************
-    * Create New Asset with Readign Type Test
+    * Create New Asset with Reading Type Test
     * ***************************************
     */
-   async addWarrantyAndReadingType(assetNumber: string): Promise<void> {
- 
-       // Locate the asset in the tree
-        const nodeFound = await helper.locateTreeNodeByName(assetNumber);
-        
-        // If the node is found, click the Details button
-        if (nodeFound) {
-            await helper.clickButton("Details");
-        } else {
-            throw new Error(`Asset with number ${assetNumber} not found in the tree.`);
-        }
+   async addWarrantyAndReadingType(): Promise<void> {
+         // Wait until the Items tab content is visible
+        const extendedTabContent = this.page.locator('[automation-tab="DetailsTab"]');
+        await extendedTabContent.waitFor({ state: 'visible', timeout: 5000 });
 
-        /*
-        * Fill in the Details tab of the asset details form
-        */
-        await helper.selectTab("DetailsTab");
+        await helper.clearInputField("ReadingType");
 
         // Set Reading Type to Hours
         await helper.enterValue("ReadingType", "Hours")
         await helper.selectFirstListItem();
 
+
         // enter Warranty start date as today
         // Get today's date in "YYYY-MM-DD" format "2025-06-16"
         const today = new Date().toISOString().slice(0, 10); 
-        await helper.enterValue("Start", today);
+        await helper.enterValue("Start_date", today);
         
         // enter Warranty finish date as one week later
         // Calculate one week later from today
         const weekLater = new Date(today);
         weekLater.setDate(weekLater.getDate() + 7);
         const weekLaterStr = weekLater.toISOString().slice(0, 10); // "YYYY-MM-DD" format
-        await helper.enterValue("Finish", weekLaterStr);
+        await helper.enterValue("Finish_date", weekLaterStr);
 
         // enter Reading(hours)
         await helper.enterValue("WarrantyPeriodReading", "100");
@@ -134,44 +155,45 @@ export class AssetPage {
     }
 
     /*
-    *************************************
-    * Fill in Asset Details - Details Tab
-    * ***********************************
+    ***************************
+    * Click Details button
+    ***************************
     */
-   async assetDetails_DetailsTab_FillAllFields(assetNumber: string): Promise<void> {
-        await this.openAssetModule();
+    async clickDetailsBtn(): Promise<void> {
+        const detailsBtn = this.page.locator('[automation-button="Details"]');
+        await detailsBtn.waitFor({ state: 'visible', timeout: 5000 });        
+        await helper.clickButton("Details");
+    }
 
-        // Locate the asset in the tree
-        const nodeFound = await helper.locateTreeNodeByName(assetNumber);
-        
-        // If the node is found, click the Details button
-        if (nodeFound) {
-            await helper.clickButton("Details");
-        } else {
-            throw new Error(`Asset with number ${assetNumber} not found in the tree.`);
-        }
+    /*
+    ************************************************
+    * Fill in Asset Details - Details Tab
+    * * Warranty Start and Finish handled separately
+    * **********************************************
+    */
+   async assetDetails_DetailsTab_FillAllFields(detailsTabData: typeof assetDetailsTabData): Promise<void> {
+         // Wait until the Items tab content is visible
+        const detailsTabContent = this.page.locator('[automation-tab="DetailsTab"]');
+        await detailsTabContent.waitFor({ state: 'visible', timeout: 5000 });
 
-        /*
-        * Fill in the Details tab of the asset details form
-        */
         await helper.selectTab("DetailsTab");
 
         // Use all fields from your JSON file
-        const details = assetDetailsTabData.details;
+        const details = detailsTabData.details;
 
         // Verification method uses the same JSON file, so we need to ensure the field names match
         // Map the field names to the UI field names due to differences in naming conventions in Asset Details - Details tab and Asset Details tab
         // This mapping is based on the field names in the JSON file and the expected UI field names
         const fieldMapping: Record<string, string> = {
         Supplier: "WarrantySupplier",
-        Status: "AssetStatus",
-        WarrantyStart: "Start",
-        WarrantyFinish: "Finish"
+        Status: "AssetStatus"
         };
         
         const fillValueMapping: Record<string, (value: string) => string> = {
             // For Supplier, use the first word as the short name for filling
-            Supplier: (value: string) => value.split(' ')[0]
+            Supplier: (value: string) => value.split(' ')[0],
+            Manufacturer: (value: string) => value.split(' ')[0],
+            ModelNumber: (value: string) => value.split(' ')[0]
         };
 
         // Only these fields require selectFirstListItem
@@ -189,9 +211,6 @@ export class AssetPage {
         // Fill in the form fields using the helper method
         // This method will handle the mapping and filling of values
         await helper.fillFormFields(details, fieldMapping, fillValueMapping, selectListFields);
-
-        // Click the X button to save the changes
-        await helper.closePage();
     }
 
    /*
@@ -199,26 +218,15 @@ export class AssetPage {
     * Fill in Asset Details - EXTENDED Tab
     * ************************************
     */
-   async assetDetails_ExtendedTab_FillAllFields(assetNumber: string): Promise<void> {
-        await this.openAssetModule();
+   async assetDetails_ExtendedTab_FillAllFields( extendedTabData: typeof assetExtendedTabData): Promise<void> {
+        // Wait until the Items tab content is visible
+        const extendedTabContent = this.page.locator('[automation-tab="ExtendedTab"]');
+        await extendedTabContent.waitFor({ state: 'visible', timeout: 5000 });
 
-        // Locate the asset in the tree
-        const nodeFound = await helper.locateTreeNodeByName(assetNumber);
-        
-        // If the node is found, click the Details button
-        if (nodeFound) {
-            await helper.clickButton("Details");
-        } else {
-            throw new Error(`Asset with number ${assetNumber} not found in the tree.`);
-        }
-
-        /*
-        * Fill in the Extended tab of the asset details form
-        */
         await helper.selectTab("ExtendedTab");
 
         // Use all fields from your JSON file
-        const details = assetExtendedTabData.details;
+        const details = extendedTabData.details;
 
         const fillValueMapping: Record<string, (value: string) => string> = {
             // For Supplier, use the first word as the short name for filling
@@ -236,9 +244,6 @@ export class AssetPage {
         // Fill in the form fields using the helper method
         // This method will handle the mapping and filling of values
         await helper.fillFormFields(details, undefined, fillValueMapping, selectListFields);
-
-        // Click the X button to save the changes
-        await helper.closePage();
     }
 
     /***************************
@@ -251,37 +256,39 @@ export class AssetPage {
     * Verify data populating on Asset - Details Tab
     * *********************************************
     */
-    async verifyAssetRegisterDetailsTabInfo(assetNumber: string): Promise<void> {
-        await this.openAssetModule();
+    async verifyAssetRegisterDetailsTabInfo(detailsTabData: typeof assetDetailsTabData): Promise<void> {
+         // Wait until the Items tab content is visible
+        const detailsTabContent = this.page.locator('[automation-tab="DetailsTab"]');
+        await detailsTabContent.waitFor({ state: 'visible', timeout: 5000 });
 
-        // Locate the asset in the tree and click on the node itself
-        const nodeFound = await helper.locateTreeNodeByName(assetNumber);
-
-        if (!nodeFound) {
-            throw new Error(`Asset with number ${assetNumber} not found in the tree.`);
-        }
-        
-        await this.page.waitForTimeout(1000);
+        await helper.selectTab("DetailsTab");
 
         /*
         * Verify the information ppopulate on Details tab
         */  
         await helper.selectTab("DetailsTab");
 
-        const expected = assetDetailsTabData.details;
+        const expected = detailsTabData.details;
         const fieldsToVerify = [
         "Description",
         "AssetType",
         "Manufacturer",
         "ModelNumber",
         "AccountCode",
-        "Supplier",
+        "WarrantySupplier",
         "Department",
         "Comments",
-        "Status",
+        "AssetStatus",
         "SerialNumber",
-        "WarrantyStart",
-        "WarrantyFinish",
+        "ReadingType",
+        "SafetyNotes",
+        "AddressLine1",
+        "AddressLine2",
+        "City",
+        "State",
+        "PostCode"
+        //"WarrantyStart",
+        //"WarrantyFinish",
         ];
 
         // verifyFields method will check the values of the fields in the Details tab
@@ -294,24 +301,21 @@ export class AssetPage {
     * Verify data populating on Asset - Details Tab
     * *********************************************
     */
-    async verifyAssetRegisterDetailsTabExtendedInfo(assetNumber: string): Promise<void> {
-        await this.openAssetModule();
+    async verifyAssetRegisterDetailsTabExtendedInfo(extendedTabDataTabData: typeof assetExtendedTabData ): Promise<void> {
+        // Wait until the Items tab content is visible
+        const extendedTabContent = this.page.locator('[automation-tab="ExtendedTab"]');
+        await extendedTabContent.waitFor({ state: 'visible', timeout: 5000 });
 
-        // Locate the asset in the tree and click on the node itself
-        const nodeFound = await helper.locateTreeNodeByName(assetNumber);
+        await helper.selectTab("ExtendedTab");
 
-        if (!nodeFound) {
-            throw new Error(`Asset with number ${assetNumber} not found in the tree.`);
-        }
-        
-        await this.page.waitForTimeout(1000);
 
-        /*
-        * Verify the information ppopulate on Details tab
-        */  
-        await helper.selectTab("DetailsTab");
+        // ✅ Wait for dynamic controls to load (dropdowns, ellipsis fields)
+        await this.page.waitForSelector('[automation-input="Contractor"]', { state: 'visible', timeout: 5000 });
+        await this.page.waitForSelector('[automation-input="Customer"]', { state: 'visible', timeout: 5000 });
+        await this.page.waitForSelector('[automation-input="Criticality"]', { state: 'visible', timeout: 5000 });
 
-        const expected =assetDetailsTabData.details;
+
+        const expected =assetExtendedTabData.details;
         const fieldsToVerify = [
         "Contractor",
         "Customer",
@@ -321,17 +325,6 @@ export class AssetPage {
         // verifyFields method will check the values of the fields in the Details tab
         // It will compare the expected values from the JSON file with the actual values in the UI
         await helper.verifyFields(expected, fieldsToVerify);
-    }
-
-   /*
-    ************************
-    * Expand Tree Nodes Test
-    * **********************
-    */
-    async locateTreeNodeByName(name: string) {
-        await this.openAssetModule();
-
-        await helper.locateTreeNodeByName(name);
     }
 
     /*

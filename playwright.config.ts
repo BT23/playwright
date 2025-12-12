@@ -27,7 +27,8 @@ export default defineConfig({
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
     /* Base URL to use in actions like `await page.goto('/')`. */
-    baseURL: 'https://bonnie.mex.com.au',
+    //baseURL: 'https://bonnie.mex.com.au',
+    baseURL: 'https://bonnie.mexcmms.com',
     storageState: 'auth-storage.json', // ✅ Start tests authenticated
     headless: true,
 

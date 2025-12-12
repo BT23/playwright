@@ -36,7 +36,7 @@ export class LoginPage {
       //await this.page.goto('https://bonnie.mex.com.au/', { waitUntil: 'networkidle' });
       
       // Use relative path - Playwright will use baseURL from config
-      await this.page.goto('/Account/Login');      
+      await this.page.goto('/Account/Login');
       await this.page.waitForTimeout(1000);
     } catch(error:any){
       throw new Error(`Failed to locate or interact with the username field: ${error.message}`);
@@ -172,11 +172,10 @@ async login(username: string, password: string) {
     /******
      * Workaround for recapture
      * Temporary disabling the following codes to bypass the login using auth-storage.json
-     ******
+     ******/
 
     // If a Select Language dialog appears, choose English (Australia) and confirm.
     try {
-
       const selectLanguageHeader = this.page.locator('[automation-header="SelectLanguage"]');
       await expect(selectLanguageHeader).toBeVisible();
       console.log("Select Language dialog is visible.");
@@ -187,11 +186,14 @@ async login(username: string, password: string) {
     } catch {
       // ignore - dialog may not be present or already handled
     }
-*/
+
+    /*
+      Uncomment the following lines when recaptcha workaround is removed
+    */
     // Wait for the Home header to appear to confirm successful login
-    const homeHeader = this.page.locator('[automation-header="HomeHeader"]');
-    await expect(homeHeader).toBeVisible();
-    await this.page.waitForTimeout(500).catch(()=>null);
+    //const homeHeader = this.page.locator('[automation-header="HomeHeader"]');
+    //await expect(homeHeader).toBeVisible(); 
+    //await this.page.waitForTimeout(500).catch(()=>null);
   }
 
     async performInvalidLogins(): Promise<void> {

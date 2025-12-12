@@ -39,11 +39,24 @@ type MyFixtures = {
 
 export const test = baseTest.extend<MyFixtures>({  
   page: async ({ page }, use) => {
+    const loginPage = new LoginPage(page);
+
+    /*
+     Due to the login page loads twice, the following login steps have to run twice.
+     Once the recaptcha issue is resolved, the baseURL + storageState code can be removed.
+     */
     await page.goto('/Home?baseRoute=true'); // baseURL + storageState handles auth
+    await loginPage.assertLoginSuccess();
+
+    // Optional small delay for stability
+    await page.waitForTimeout(500);    
+    
+    await page.goto('/Home?baseRoute=true'); // baseURL + storageState handles auth
+    await loginPage.assertLoginSuccess();
 
     // ✅ Wait for the Home header to confirm successful login
-    const homeHeader = page.locator('[automation-header="HomeHeader"]');
-    await expect(homeHeader).toBeVisible({ timeout: 10000 }); // Wait up to 10s
+    //const homeHeader = page.locator('[automation-header="HomeHeader"]');
+    //await expect(homeHeader).toBeVisible({ timeout: 10000 }); // Wait up to 10s
 
     // Optional small delay for stability
     await page.waitForTimeout(500);
@@ -55,8 +68,6 @@ export const test = baseTest.extend<MyFixtures>({
   loginPage: async ({ page }, use) => {
     console.log('🔐 Navigating to login page...');
     const loginPage = new LoginPage(page);
-    //await loginPage.navigate();
-
     // ✅ Perform login (UI interaction still happens)
     //await loginPage.login(
     //  loginPage.credentials.validCredentials.username,

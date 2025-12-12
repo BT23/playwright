@@ -211,6 +211,7 @@ class HelperMethods {
               await this.enterValue(uiField, fillValue);
               if (selectListFields.includes(uiField)) {
                   await this.selectFirstListItem();
+                  await this.page.waitForTimeout(1000);
               }
               await this.page.waitForTimeout(500);
           }
@@ -243,11 +244,13 @@ class HelperMethods {
   * It will click the node if found.
   * It will return true if the node is found and clicked, or false if not found.
   * */
-  async locateTreeNodeByName(name: string): Promise<boolean> {
+  
+ 
+ async locateTreeNodeByName(name: string): Promise<boolean> {
      await this.page.waitForTimeout(500);
 
     // Convert the search name to lower case for case-insensitive comparison
-    const searchName = name.toLowerCase();
+    const searchName = name.trim().toLowerCase();
 
     while (true) {
         // Find all label elements and check their text content case-insensitively
@@ -257,18 +260,22 @@ class HelperMethods {
         for (let i = 0; i < count; i++) {
             const label = assetLabels.nth(i);
             const labelText = (await label.textContent())?.trim().toLowerCase();
-            if (labelText === searchName && await label.isVisible()) {
+
+            // ✅ Exact match only
+            if (labelText && labelText === searchName && await label.isVisible()) {
                 await label.click();
                 return true;
             }
+
         }
 
+        // Expand collapsed nodes if any
         // Look for all visible, collapsed expanders
         const collapsedExpanders = this.page.locator('[automation-expander-button].expander-right');
         const expanderCount = await collapsedExpanders.count();
 
         if (expanderCount === 0) {
-            break;
+            break; // No more expanders, stop searching
         }
 
         let expanded = false;
@@ -288,7 +295,8 @@ class HelperMethods {
             for (let j = 0; j < countAfterExpand; j++) {
                 const label = assetLabelsAfterExpand.nth(j);
                 const labelText = (await label.textContent())?.trim().toLowerCase();
-                if (labelText === searchName && await label.isVisible()) {
+
+                if (labelText && labelText === searchName && await label.isVisible()) {
                     await label.click();
                     return true;
                 }
@@ -491,6 +499,20 @@ async selectRowByFieldName(gridName: string, columnName: string, fieldName: stri
     await tab.click({ force: shouldForce });
   }
 
+  /**
+   * Clears the value of an input field by its automation ID.
+   */
+  async clearInputField(fieldAutomationId: string): Promise<void> {
+      const fieldLocator = this.page.locator(`[automation-input="${fieldAutomationId}"]`);
+      if (await fieldLocator.isVisible()) {
+          await fieldLocator.click();
+          await fieldLocator.press('Control+A'); // Select all text
+          await fieldLocator.press('Delete');    // Delete selected text
+          await fieldLocator.press('Tab');       // Move focus away to trigger any change events
+          await fieldLocator.click();
+      }
+  }
+
   /***
    * Verification helper methods
    * These methods are used to verify the visibility of elements, such as headers, buttons, and lists.
@@ -549,7 +571,12 @@ async verifyFields(
           const expectedValue = expected[field];
           if (expectedValue !== undefined) {
               const actual = await this.getFieldValue(field);
-              expect(actual.trim().toLowerCase()).toBe(expectedValue.trim().toLowerCase());
+
+            // ✅ Normalize both values: trim and lowercase
+            const actualNormalized = actual?.trim().toLowerCase();
+            const expectedNormalized = expectedValue?.trim().toLowerCase();
+
+            expect(actualNormalized).toBe(expectedNormalized);
           }
       }
     }
@@ -592,5 +619,14 @@ async verifyRowCellValues(row: Locator, expectedValues: Record<string, string>):
     }
 
     }
-  }
+
+  }  
 export const helper = new HelperMethods();
+
+/**
+ * Escape special regex characters in a string.
+ * Useful for creating exact-match regex patterns from dynamic input.
+ */
+export function escapeRegex(text: string): string {
+    return text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
