@@ -28,12 +28,12 @@ jobs:
         run: npx playwright install --with-deps
 
       - name: Run Purchase Order SMOKE tests (CI)
-        run: npm run test:po:smoke -- --reporter=list
+        run: npm run test:asset:smoke -- --reporter=list
 
       # Optional: Generate HTML report (for smoke subset)
       - name: Generate HTML report
         if: always()
-        run: npx playwright test tests/purchaseorder --grep "(?=.*@smoke)(?=.*@feature-po)" --project=chromium --reporter=html
+        run: npx playwright test tests/assets --grep "(?=.*@smoke)(?=.*@feature-asset)" --project=chromium --reporter=html
 
       - name: Upload HTML report
         if: always()
