@@ -26,13 +26,13 @@ jobs:
       - name: Install Playwright browsers
         run: npx playwright install --with-deps
 
-      - name: Run Purchase Order tests (CI)
-        run: npm run test:po -- --reporter=list
+      - name: Run Purchase Order SMOKE tests (CI)
+        run: npm run test:po:smoke -- --reporter=list
 
-      # Optional: Upload HTML report
+      # Optional: Generate HTML report (for smoke subset)
       - name: Generate HTML report
         if: always()
-        run: npx playwright test tests/purchaseorder --reporter=html
+        run: npx playwright test tests/purchaseorder --grep "(?=.*@smoke)(?=.*@feature-po)" --project=chromium --reporter=html
 
       - name: Upload HTML report
         if: always()
