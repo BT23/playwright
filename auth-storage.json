@@ -1,0 +1,150 @@
+{
+  "cookies": [
+    {
+      "name": "_GRECAPTCHA",
+      "value": "09ABCLyOEH0uIgGXxnIy0WMoOg0GTSMfE-mLSd_WMmKMnJdqKqK_Nhm7O_Dk3uz9TCrca7WoW6NqmpE1xX_v8Wni8",
+      "domain": "www.google.com",
+      "path": "/recaptcha",
+      "expires": 1781058409.678074,
+      "httpOnly": true,
+      "secure": true,
+      "sameSite": "None"
+    },
+    {
+      "name": ".AspNetCore.Antiforgery.qHOGIh3u56w",
+      "value": "CfDJ8ADMg_ZIzndKrWSxq6bdYuMHcWrwbiw_tN54SDBBgEpTHvTL-fYzI-ak5fgsB5vtalPvwViff6wrj0VK5w_yZUfHxdCkt4c3GcxLzWfEqcFcCFQEVlXpLi5ihDRrugMm6ycNGgG4CXL1D8ZvYDEk1Lo",
+      "domain": "bonnie.mexcmms.com",
+      "path": "/",
+      "expires": -1,
+      "httpOnly": true,
+      "secure": false,
+      "sameSite": "Strict"
+    },
+    {
+      "name": ".AspNetCore.Session",
+      "value": "CfDJ8ADMg%2FZIzndKrWSxq6bdYuN%2F1cQ8R7%2FzoxktpkgkSwBCnFymUzJAFEeBNvgXaH%2BhVhZRBph0NhB1zw%2BBGRvryyg6uwfFAbaGTkalr4VNGOQoBfZHb98G%2B%2Blz4xJf5pRiEsMHzeKnnOPQ%2FoRRjTA9wKRCeM1Bfn%2BsLsVX9QDMrOK8",
+      "domain": "bonnie.mexcmms.com",
+      "path": "/",
+      "expires": -1,
+      "httpOnly": true,
+      "secure": false,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "MexCookie",
+      "value": "CfDJ8ADMg_ZIzndKrWSxq6bdYuO3nZh31HHARs2HHTFQvXnonrPqdKFn9ZhPqzKkY0Db7x3tjoR6f6WUi5guhsMhvTZhfMpGKeGHZN8NhUd-443nZRc4sIVXODLgxf9AvTTnOfKXFJmzs-9_WHGiCrWrnQwlEwOgzcPcl01CNlwNS5YTHovV8HAAAPM7_xc2EP3D2UxRKgqoWoEOgik04HakJUldCQvf6yrRnMgQU7CSnU_ARnUoswqmvz9hRs7c9RsRFghwkVo7cTL2ZqKK9vtwxlYwFIt_BF6pwQaBPqQp8_Cve6FT8sbVYBcTlulKSoJ-vTrv0SBM7P8mD0AUd4HKN9Ob4uGHIJYQJfhMtx4nuPaYSODGcTiJErhMkw27PRrsxCV8bumsJQc1hTmhTg_otvEH4M4C67BwbVttFTugrtZbqOam1jaZw34p1PSjYRuen9i21VXcsnzVGMPJV3I63Pa5v7aEInP5xM-P2_n1mZb9J7WpxqIY9B_aBuGoAaicZ0qHOykIjgat5A7YOF0yLI6gSdTAEjHPO4XsGd8tW4v5",
+      "domain": "bonnie.mexcmms.com",
+      "path": "/",
+      "expires": -1,
+      "httpOnly": true,
+      "secure": true,
+      "sameSite": "None"
+    },
+    {
+      "name": ".AspNetCore.Mvc.CookieTempDataProvider",
+      "value": "CfDJ8ADMg_ZIzndKrWSxq6bdYuMQyVAyZXDDFUFnGEjUaVVSOYudCJI-sDDDEGV6cAepFEZtzXR0QcGYT5i5-rqswb5cmckBhf0rxypRqzMX4Lg4PIj2Z4bXXXBwkzE-OljWfJHCp3Xir643SsS8bJaA9yo",
+      "domain": "bonnie.mexcmms.com",
+      "path": "/",
+      "expires": -1,
+      "httpOnly": true,
+      "secure": false,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "openid-session",
+      "value": "BnWj9AZowLZEOgwwmVNz8aNTAwWKyHMh",
+      "domain": "bonnie.mexcmms.com",
+      "path": "/",
+      "expires": -1,
+      "httpOnly": true,
+      "secure": true,
+      "sameSite": "None"
+    },
+    {
+      "name": "ai_user",
+      "value": "rz8kVDX/op6rpPP/cOqaIG|2025-12-12T02:26:53.210Z",
+      "domain": "bonnie.mexcmms.com",
+      "path": "/",
+      "expires": 1797042413.210419,
+      "httpOnly": false,
+      "secure": true,
+      "sameSite": "None"
+    },
+    {
+      "name": "Language",
+      "value": "EnglishAustralia",
+      "domain": "bonnie.mexcmms.com",
+      "path": "/",
+      "expires": 1797042414.886966,
+      "httpOnly": false,
+      "secure": true,
+      "sameSite": "Strict"
+    },
+    {
+      "name": "ai_session",
+      "value": "45spQYFA1LSmoqF60AIG4w|1765506413324|1765506417487",
+      "domain": "bonnie.mexcmms.com",
+      "path": "/",
+      "expires": 1765508217.488375,
+      "httpOnly": false,
+      "secure": true,
+      "sameSite": "None"
+    }
+  ],
+  "origins": [
+    {
+      "origin": "https://bonnie.mexcmms.com",
+      "localStorage": [
+        {
+          "name": "CacheTableUpdatesLastChecked",
+          "value": "{\"Record\":\"2025-12-12T12:26:54.81+10:00\"}"
+        },
+        {
+          "name": "mex_tab_count",
+          "value": "1"
+        },
+        {
+          "name": "DisplayMode",
+          "value": "{\"Record\":0}"
+        },
+        {
+          "name": "RequestListingState",
+          "value": "{\"Record\":{\"LastViewedDateTime\":\"2025-12-12T12:26:58.28+10:00\"}}"
+        },
+        {
+          "name": "Language",
+          "value": "{\"Record\":1}"
+        },
+        {
+          "name": "blazor-resource-hash:Mex.Blazor.Wasm",
+          "value": "sha256-uto+p68BP3uMqY/HsiuwWv5laO/cTGZ1Tv3kzvHo7aU="
+        },
+        {
+          "name": "CurrentTheme",
+          "value": "{\"Record\":0}"
+        },
+        {
+          "name": "_grecaptcha",
+          "value": "09ABCLyOGg5P6FkaaPV9f8LiyrCqcQVaV76H-FmF7OxJL5EjPZXbze2wopyWj_SRhrhQ_9vK4xm_wJ1tvz0dwOjy9or0Li06SKJ8y9ownfm6hJtev-PuvGfwz1aOnUZUYI"
+        },
+        {
+          "name": "RequisitionListingState",
+          "value": "{\"Record\":{\"LastViewedDateTime\":\"2025-12-12T12:26:58.287+10:00\"}}"
+        }
+      ]
+    },
+    {
+      "origin": "https://www.google.com",
+      "localStorage": [
+        {
+          "name": "rc::a",
+          "value": "ZXdjZ3dwMWs0dGx2Mw=="
+        },
+        {
+          "name": "rc::f",
+          "value": "0aAFt-EVxwaOzfy29qiXQ8CDK0PLSiJBKQ4ZYrwzi7nCmW3wiUE4RUdwOMUMa6BlpyAzfvvK8"
+        }
+      ]
+    }
+  ]
+}

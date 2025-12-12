@@ -5,5 +5,4 @@ node_modules/
 /playwright/.cache/
 credentials.json
 db-config.json
-auth-storage.json
 playwright-originalbackup.yml

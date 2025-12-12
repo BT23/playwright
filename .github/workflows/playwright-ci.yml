@@ -32,7 +32,6 @@ jobs:
         run: |
           echo "${{ secrets.DB_CONFIG }}" > db-config.json
           echo "${{ secrets.CREDENTIALS }}" > credentials.json
-          echo "${{ secrets.AUTH_STORAGE }}" > auth-storage.json
 
       - name: Run Purchase Order SMOKE tests (CI)
         run: npm run test:asset:smoke -- --reporter=list
