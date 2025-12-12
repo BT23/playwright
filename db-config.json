@@ -1,0 +1,3 @@
+{
+    "connectionString": "Server=tcp:mex16-prod-sql.database.windows.net,1433;Initial Catalog=mex16-bonnie;Persist Security Info=False;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Authentication=Active Directory Default;"
+}

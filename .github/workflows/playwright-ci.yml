@@ -27,11 +27,6 @@ jobs:
       - name: Install Playwright browsers
         run: npx playwright install --with-deps
 
-      # ✅ Create config files from secrets
-      - name: Create config files
-        run: |
-          echo "${{ secrets.DB_CONFIG }}" > db-config.json
-
       - name: Run Purchase Order SMOKE tests (CI)
         run: npm run test:asset:smoke -- --reporter=list
 
