@@ -33,6 +33,14 @@ jobs:
       - name: Run Asset Register SMOKE tests (CI)
         run: npm run test:asset:smoke -- --reporter=list
 
+      - name: Upload Playwright test artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+            name: test-results
+            path: test-results
+
+
       # Optional: Generate HTML report (for smoke subset)
       - name: Generate HTML report
         if: always()

@@ -14,21 +14,7 @@ import path from 'path';
  */
 export default defineConfig({
 
-  globalSetup: path.resolve(__dirname, 'global-setup.ts'),
-  use: {
-    baseURL: process.env.BASE_URL || 'https://bonnie.mexcmms.com',
 
-    // Artifacts
-    video: 'on',                 // 'on' = record every test; 'retain-on-failure' if you want only failures
-    screenshot: 'only-on-failure',
-    trace: 'on-first-retry',     // great for debugging flaky tests (or use 'on' to always collect)
-  },
-
-  // Where Playwright stores test outputs (videos, traces, screenshots)
-  outputDir: path.resolve(__dirname, 'test-results'),
-
-  // Optional: keep HTML report handy
-  reporter: [['html', { outputFolder: 'playwright-report', open: 'never' }]],
 
 
   testDir: './tests',
@@ -51,8 +37,15 @@ export default defineConfig({
     storageState: 'auth-storage.json', // ✅ Start tests authenticated
     headless: true,
 
+  
+    // 🎥 Artifacts
+    // 'retain-on-failure' reduces artifact size in CI. Switch to 'on' to record everything.
+    video: process.env.CI ? 'retain-on-failure' : 'on',
+    screenshot: 'only-on-failure',
+    trace: process.env.CI ? 'retain-on-failure' : 'on-first-retry',  
+
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
-    trace: 'on-first-retry',
+    //trace: 'on-first-retry',
   },
   timeout: 180000, // 3 minutes timeout for each test
 
