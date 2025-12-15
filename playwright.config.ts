@@ -37,6 +37,10 @@ export default defineConfig({
   },
   timeout: 180000, // 3 minutes timeout for each test
 
+  // Run once before any tests to generate a fresh stroageState
+  // This can be removed when recaptcha issue is resolved
+  globalSetup: './global-setup.ts',
+
   /* Configure projects for major browsers and tags */
   projects: [
     {
