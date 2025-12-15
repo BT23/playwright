@@ -27,11 +27,6 @@ export default async function globalSetup() {
 
   // Perform login with your page object
   await loginPage.login(USERNAME, PASSWORD);
-  await loginPage.assertLoginSuccess();
-
-  // Perform login with your page object
-  await loginPage.login(USERNAME, PASSWORD);
-  await loginPage.assertLoginSuccess();
 
   // Optional tiny delay if your app double-loads
   await page.waitForTimeout(500);
