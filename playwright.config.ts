@@ -1,4 +1,5 @@
 import { defineConfig, devices } from '@playwright/test';
+import path from 'path';
 
 /**
  * Read environment variables from file.
@@ -12,6 +13,24 @@ import { defineConfig, devices } from '@playwright/test';
  * See https://playwright.dev/docs/test-configuration.
  */
 export default defineConfig({
+
+  globalSetup: path.resolve(__dirname, 'global-setup.ts'),
+  use: {
+    baseURL: process.env.BASE_URL || 'https://bonnie.mexcmms.com',
+
+    // Artifacts
+    video: 'on',                 // 'on' = record every test; 'retain-on-failure' if you want only failures
+    screenshot: 'only-on-failure',
+    trace: 'on-first-retry',     // great for debugging flaky tests (or use 'on' to always collect)
+  },
+
+  // Where Playwright stores test outputs (videos, traces, screenshots)
+  outputDir: path.resolve(__dirname, 'test-results'),
+
+  // Optional: keep HTML report handy
+  reporter: [['html', { outputFolder: 'playwright-report', open: 'never' }]],
+
+
   testDir: './tests',
   /* Run tests in files in parallel */
   testMatch: '**/*.test.ts',
