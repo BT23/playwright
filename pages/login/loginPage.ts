@@ -49,7 +49,7 @@ async login(username: string, password: string) {
     /******
      * Workaround for recapture
      * Temporary disabling the following codes to bypass the login using auth-storage.json
-     ******/
+     ******
     // initial waits
     await this.page.waitForSelector('[automation-input="userName"]', { timeout: 10000 }).catch(()=>{});
     await this.page.waitForSelector('[automation-input="password"]', { timeout: 10000 }).catch(()=>{});
@@ -120,7 +120,7 @@ async login(username: string, password: string) {
       } catch {}
       throw new Error(`Login bounced back to /Account after ${attempts} retry(ies). Saved debug/login-bounced.* (url: ${finalUrl})`);
     }
-  
+  */
     // continue with post-login handling
     await this.assertLoginSuccess();
 

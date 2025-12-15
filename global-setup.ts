@@ -5,10 +5,10 @@ import path from 'path';
 import { LoginPage } from './pages/login/loginPage';
 
 const STORAGE_PATH = path.resolve(__dirname, 'auth-storage.json');
-const BASE_URL = process.env.BASE_URL || 'https://bonnie.mexcmms.com';
+const BASE_URL = 'https://bonnie.mexcmms.com';
 
 export default async function globalSetup() {
-  console.log('🔐 Global setup: generating fresh storageState at', STORAGE_PATH);
+  console.log('🔐 Global setup: generating storageState →', STORAGE_PATH);
 
   const USERNAME = process.env.E2E_USERNAME;
   const PASSWORD = process.env.E2E_PASSWORD;
@@ -17,24 +17,24 @@ export default async function globalSetup() {
   }
 
   const browser = await chromium.launch({ headless: true });
-  const context = await browser.newContext();
+  const context = await browser.newContext({ baseURL: BASE_URL });
   const page = await context.newPage();
 
   const loginPage = new LoginPage(page);
 
-  // Navigate to a route that requires auth
-  await page.goto(`${BASE_URL}/Home?baseRoute=true`);
+  // Start at the root → should show login with reCAPTCHA
+  await page.goto('/');
 
-  // Perform login with your page object
+  // Perform real login once to obtain cookies/localStorage
   await loginPage.login(USERNAME, PASSWORD);
 
-  // Optional tiny delay if your app double-loads
-  await page.waitForTimeout(500);
+  // Wait for a reliable post-login signal (URL or element)
+  await page.waitForURL(/\/Home/i);
+  // or: await loginPage.assertLoginSuccess();
 
-  // Save state for all tests
+  // Persist authenticated state for later reuse
   await context.storageState({ path: STORAGE_PATH });
   await browser.close();
 
-  console.log('✅ Global setup completed: storageState written to', STORAGE_PATH);
+  console.log('✅ storageState written:', STORAGE_PATH);
 }
-``

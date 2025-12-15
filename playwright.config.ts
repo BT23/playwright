@@ -9,14 +9,15 @@ import path from 'path';
 // import path from 'path';
 // dotenv.config({ path: path.resolve(__dirname, '.env') });
 
+// For Github Actions CI/CD pipeline
+// Remove after recaptcha issue is resolved
+const STORAGE_PATH = path.resolve(__dirname, 'auth-storage.json');
+const BASE_URL = process.env.BASE_URL || 'https://bonnie.mexcmms.com';
+
 /**
  * See https://playwright.dev/docs/test-configuration.
  */
 export default defineConfig({
-
-
-
-
   testDir: './tests',
   /* Run tests in files in parallel */
   testMatch: '**/*.test.ts',
@@ -51,7 +52,7 @@ export default defineConfig({
 
   // Run once before any tests to generate a fresh stroageState
   // This can be removed when recaptcha issue is resolved
-  globalSetup: './global-setup.ts',
+  globalSetup: path.resolve(__dirname, './global-setup.ts'),
 
   /* Configure projects for major browsers and tags */
   projects: [
