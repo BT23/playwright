@@ -4,7 +4,7 @@ import { defineConfig, devices } from '@playwright/test';
 import path from 'path';
 import fs from 'fs';
 
-const BASE_URL = process.env.BASE_URL || 'https://bonnie.mexcmms.com';
+const BASE_URL = process.env.BASE_URL || 'https://bonnie.mexcmms.com/Account/Login';
 const STORAGE_PATH = path.resolve(__dirname, 'auth-storage.json');
 
 // Decide whether to run global setup:
