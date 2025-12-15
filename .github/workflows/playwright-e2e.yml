@@ -9,6 +9,11 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+    env:
+        E2E_USERNAME: ${{ secrets.E2E_USERNAME }}
+        E2E_PASSWORD: ${{ secrets.E2E_PASSWORD }}
+        BASE_URL: https://bonnie.mexcmms.com
+        run: npx playwright test --reporter=html
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -24,14 +29,6 @@ jobs:
 
       - name: Install Playwright browsers
         run: npx playwright install --with-deps
-
-
-      - name: Run tests (globalSetup will create auth-storage.json)
-        env:
-          E2E_USERNAME: ${{ secrets.E2E_USERNAME }}
-          E2E_PASSWORD: ${{ secrets.E2E_PASSWORD }}
-          BASE_URL: https://bonnie.mexcmms.com
-        run: npx playwright test --reporter=html
 
       - name: Run Asset Register SMOKE tests (CI)
         run: npm run test:asset:smoke -- --reporter=list
