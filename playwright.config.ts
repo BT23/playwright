@@ -31,7 +31,12 @@ export default defineConfig({
     baseURL: 'https://staging-2025-12-17.mex16.dev/',
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
-    trace: 'on-first-retry',
+
+    screenshot: 'only-on-failure',     // captures PNG on test failure
+    video: 'retain-on-failure',        // keeps .webm on failure (not for passed)
+    trace: 'retain-on-failure',        // keeps trace.zip on failure (very helpful)
+      
+    //trace: 'on-first-retry',
   },
   timeout: 180000, // 3 minutes timeout for each test
 
