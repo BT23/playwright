@@ -30,15 +30,14 @@ export class LoginPage {
  */
 
   async navigate() {
-    try{
-      /* two page.got can be deleted - baseURL from config handles and the endpoint is in fixtures.ts*/
-      //await this.page.goto('https://bonnie.mex.com.au/Account/Login');
-      //await this.page.goto('https://bonnie.mex.com.au/', { waitUntil: 'networkidle' });
-      
-      // Use relative path - Playwright will use baseURL from config
-      await this.page.goto('/Account/Login');
+    try{      
+      /*
+       * Use relative path - Playwright will use baseURL from playwright.config.ts
+       * endpoint: /Account/Login requires full navigation to load correctly due to the SSL redirection bug
+      */
+      await this.page.goto('/Account/Login', { waitUntil: 'networkidle' });
       await this.page.waitForTimeout(1000);
-      //await this.assertLoginSuccess();
+      
     } catch(error:any){
       throw new Error(`Failed to locate or interact with the username field: ${error.message}`);
     }
@@ -150,18 +149,19 @@ export class LoginPage {
     await expect(selectLanguageHeader).toBeVisible();
     console.log("Login method - wait for Select Language dialog is visible.");
 
-    await this.assertLoginSuccess();
+    await this.selectLanguage();
+
+    //Required wait to stabilize the Home page after login
     await this.page.waitForTimeout(20000);
+
     // ✅ Wait for the Home header to confirm successful login
-    const homeHeader = this.page.locator('[automation-header="HomeHeader"]');
-    await expect(homeHeader).toBeVisible({ timeout: 10000 }); // Wait up to 10s 
+    //const homeHeader = this.page.locator('[automation-header="HomeHeader"]');
+    //await expect(homeHeader).toBeVisible({ timeout: 10000 }); // Wait up to 10s 
 
     // Optional small delay for stability
-    await this.page.waitForTimeout(500);   
+    //await this.page.waitForTimeout(500);   
   }
   
-
-
   async contractorUserLogin() {
     await helper.enterValue("userName", this.credentials.contractorCredentials.username);
     console.log("Enter: userName" + this.credentials.contractorCredentials.username);
@@ -184,7 +184,8 @@ export class LoginPage {
     
   }
   
-  async assertLoginSuccess(): Promise<void> {
+  //async assertLoginSuccess(): Promise<void> {
+  async selectLanguage(): Promise<void> {
     /******
      * Workaround for recapture
      * Temporary disabling the following codes to bypass the login using auth-storage.json
@@ -212,9 +213,10 @@ export class LoginPage {
       Uncomment the following lines when recaptcha workaround is removed
     */
     // Wait for the Home header to appear to confirm successful login
-    //const homeHeader = this.page.locator('[automation-header="HomeHeader"]');
-    //await expect(homeHeader).toBeVisible(); 
-    //await this.page.waitForTimeout(500).catch(()=>null);
+    const homeHeader = this.page.locator('[automation-header="HomeHeader"]');
+    await expect(homeHeader).toBeVisible(); 
+    
+    await this.page.waitForTimeout(500).catch(()=>null);
   }
 
     async performInvalidLogins(): Promise<void> {
