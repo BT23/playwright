@@ -196,9 +196,14 @@ export class LoginPage {
 
       console.log("Selecting English(Australia) language.");
       await helper.clickButtonInDialog("SelectLanguage", "English(Australia)");
+
+      const selectButton = this.page.locator('[automation-button="Select"]');
+      await expect(selectButton).toBeVisible();
       await helper.clickButtonInDialog("SelectLanguage", "Select");
+      console.log("Select button is clicked.");
     } catch {
       // ignore - dialog may not be present or already handled
+      console.log("Select Language dialog is not clicked.");
     }
 
     /*
