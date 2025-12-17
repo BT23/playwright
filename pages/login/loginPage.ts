@@ -149,8 +149,9 @@ export class LoginPage {
     const selectLanguageHeader = this.page.locator('[automation-header="SelectLanguage"]');
     await expect(selectLanguageHeader).toBeVisible();
     console.log("Login method - wait for Select Language dialog is visible.");
-    
+
     await this.assertLoginSuccess();
+    await this.page.waitForTimeout(20000);
     // ✅ Wait for the Home header to confirm successful login
     const homeHeader = this.page.locator('[automation-header="HomeHeader"]');
     await expect(homeHeader).toBeVisible({ timeout: 10000 }); // Wait up to 10s 
