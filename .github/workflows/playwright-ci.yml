@@ -3,7 +3,7 @@ name: Playwright Tests CI
 
 on:
   push:
-    branches: [ main ]
+    branches: [ ci-test-branch ]
   pull_request:
     branches: [ main ]
   workflow_dispatch:   # ✅ Allows manual trigger from GitHub Actions UI
