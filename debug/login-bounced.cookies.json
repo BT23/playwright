@@ -1,18 +1,18 @@
 [
   {
     "name": "_GRECAPTCHA",
-    "value": "09ADiQh0cDAUXHVX7zDZMmCDc72GKT-3TTBXRqiKPIgbXaDp4dMtX72j8tYBvTcy4ZUMmwqBMzUpHz8xGYHGWOCRU",
+    "value": "09ABCLyOE8mT1pJCHxufnvhn-onEtEfYyFcv8TNl-j6rmIOcejl79YpeozdiPOwto3uY2P_qoG7WBEyflxf6XZST4",
     "domain": "www.google.com",
     "path": "/recaptcha",
-    "expires": 1779074745.548662,
+    "expires": 1781404733.984116,
     "httpOnly": true,
     "secure": true,
     "sameSite": "None"
   },
   {
     "name": ".AspNetCore.Antiforgery.qHOGIh3u56w",
-    "value": "CfDJ8ADMg_ZIzndKrWSxq6bdYuOG-cGdNmXt9Vl_BVSJvaZpMkuTPPW7HriDCtnuXR4CRWV2PAYSEDv9-vsbVv--j-4GhCgr3s6BvbVYOJjPteccopdgnYjryZhWCuBHRcWbQNAfVXzwweV21wDZhnpVlKY",
-    "domain": "bonnie.mex.com.au",
+    "value": "CfDJ8AWZ1D6VnrpOv_iNUjxlEgyxZkb0mZTyQp1BIOK3Kh-ICEaG-to-8Fz-6dDacw1gKck3vQyI0noa27Dd-BK_pxpljAJQy11nLQUVDVXuM9BBwo-yCnvVkR0MSyrRiQPPNt-kbkbU-D1RrWljOEXSj0o",
+    "domain": "pr-3351.mex16.dev",
     "path": "/",
     "expires": -1,
     "httpOnly": true,
@@ -21,52 +21,12 @@
   },
   {
     "name": ".AspNetCore.Session",
-    "value": "CfDJ8ADMg%2FZIzndKrWSxq6bdYuNZp7Y%2FBZ8eTykE9fGQmpEPrZ3INJhpiOxLd3aphd3clsQKU7%2BXZsitBeaxGESTs5Xuob67qi9Cxr6ng41kdEFWD2dII3GWAYB7138l4m7iSDY2FS4TvME5bjDnJQgFFQaTOtNg9cMqbrpVd82mFOak",
-    "domain": "bonnie.mex.com.au",
+    "value": "CfDJ8AWZ1D6VnrpOv%2FiNUjxlEgwhDOtPngIIW%2Bu%2BNRIQS9SemOVUkzC62SE%2BGqGfxlu9LOt4k9pkKeMWHNgGCf08roj3fsgZrdXWBsKdoJB9tI0zV0msTGc5mnCtYj3ucajpzzFvBXzIkbz1LB5ijkS6D1KktEv6dRcaiv1YLaFr6DPm",
+    "domain": "pr-3351.mex16.dev",
     "path": "/",
     "expires": -1,
     "httpOnly": true,
     "secure": false,
     "sameSite": "Lax"
-  },
-  {
-    "name": "openid-session",
-    "value": "i6k8ChbpmJKDyAz-fb1jny_iA0Xl-ndO",
-    "domain": "bonnie.mex.com.au",
-    "path": "/",
-    "expires": -1,
-    "httpOnly": true,
-    "secure": true,
-    "sameSite": "None"
-  },
-  {
-    "name": "ai_user",
-    "value": "iPtzJtvpld5Qq4Xfx/IQCf|2025-11-19T03:16:58.255Z",
-    "domain": "bonnie.mex.com.au",
-    "path": "/",
-    "expires": 1795058218.256232,
-    "httpOnly": false,
-    "secure": true,
-    "sameSite": "None"
-  },
-  {
-    "name": "Language",
-    "value": "EnglishAustralia",
-    "domain": "bonnie.mex.com.au",
-    "path": "/",
-    "expires": 1795058220.020803,
-    "httpOnly": false,
-    "secure": true,
-    "sameSite": "Strict"
-  },
-  {
-    "name": "ai_session",
-    "value": "TYDFF1sVY5xEWv6eJVsisV|1763522218381|1763522222304",
-    "domain": "bonnie.mex.com.au",
-    "path": "/",
-    "expires": 1763524022.305833,
-    "httpOnly": false,
-    "secure": true,
-    "sameSite": "None"
   }
 ]

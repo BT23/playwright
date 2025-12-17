@@ -38,6 +38,7 @@ export class LoginPage {
       // Use relative path - Playwright will use baseURL from config
       await this.page.goto('/Account/Login');
       await this.page.waitForTimeout(1000);
+      //await this.assertLoginSuccess();
     } catch(error:any){
       throw new Error(`Failed to locate or interact with the username field: ${error.message}`);
     }
@@ -45,7 +46,7 @@ export class LoginPage {
 
   //fill username and password
 
-async login(username: string, password: string) {
+//async login(username: string, password: string) {
     /******
      * Workaround for recapture
      * Temporary disabling the following codes to bypass the login using auth-storage.json
@@ -120,16 +121,19 @@ async login(username: string, password: string) {
       } catch {}
       throw new Error(`Login bounced back to /Account after ${attempts} retry(ies). Saved debug/login-bounced.* (url: ${finalUrl})`);
     }
-  */
+
     // continue with post-login handling
-    await this.assertLoginSuccess();
+    //await this.assertLoginSuccess();
 
   }
+*/
 
-
-/** Bonnie Original Code - recaptcha handling commented out
+  /** Bonnie Original Code - recaptcha handling commented out*/
   async login(username: string, password: string) {
-    await this.page.waitForTimeout(1000);
+    //await this.page.waitForTimeout(1000);
+    // initial waits
+    await this.page.waitForSelector('[automation-input="userName"]', { timeout: 10000 }).catch(()=>{});
+    await this.page.waitForSelector('[automation-input="password"]', { timeout: 10000 }).catch(()=>{});
     await helper.enterValue("userName", username);
     await helper.enterValue("password", password);
     console.log(username + " and " + password);
@@ -142,8 +146,16 @@ async login(username: string, password: string) {
     console.log("Login button is clicked");
     
     await this.page.waitForTimeout(1000);
+
+    await this.assertLoginSuccess();
+    // ✅ Wait for the Home header to confirm successful login
+    const homeHeader = this.page.locator('[automation-header="HomeHeader"]');
+    await expect(homeHeader).toBeVisible({ timeout: 10000 }); // Wait up to 10s 
+
+    // Optional small delay for stability
+    await this.page.waitForTimeout(500);   
   }
-  */
+  
 
 
   async contractorUserLogin() {

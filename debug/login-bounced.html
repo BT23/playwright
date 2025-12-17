@@ -32,7 +32,7 @@
                     </div>
                     <div class="space-y-1">
                             <ul class="list-disc list-inside text-primary" automation-list="validationErrors">
-                                        <li automation_label="0">Too many failed recaptcha attempts, please try again in 3 minutes.</li>
+                                        <li automation_label="0">Please complete the security check.</li>
                             </ul>
                     </div>
                     <div class="mt-4 flex justify-end gap-2">
@@ -43,7 +43,7 @@
                 </div>
 
             <div class="w-full border border-solid border-secondary bg-primary rounded mb-4 py-1 text-primary">
-                <input placeholder="Username" class="text-sm w-full px-2 focus:outline-none focus:ring-0 placeholder-gray-400 dark:placeholder-gray-500" aria-required="true" automation-input="userName" type="text" id="Input_UserName" name="Input.UserName" value="toby" style="">
+                <input placeholder="Username" class="text-sm w-full px-2 focus:outline-none focus:ring-0 placeholder-gray-400 dark:placeholder-gray-500" aria-required="true" automation-input="userName" type="text" id="Input_UserName" name="Input.UserName" value="admin" style="">
             </div>
 
             <div class="relative w-full border border-solid border-secondary bg-primary rounded mb-4 py-1 text-primary">
@@ -57,6 +57,12 @@
                 </button>
             </div>
 
+                <script type="text/javascript" async="" charset="utf-8" src="https://www.gstatic.com/recaptcha/releases/7gg7H51Q-naNfhmCP3_R47ho/recaptcha__en.js" crossorigin="anonymous" integrity="sha384-TnttG+UhZcM8I0YLwHFXmjuU0uVv/3X99Itc+0eiXTiqtrwYAZwNs8Q9WliKgfF8"></script><script>
+                    document.addEventListener('DOMContentLoaded', function () {
+                        showRecaptchaV2("loginForm");
+                    });
+                </script>
+                <div id="recaptchaV2" class="g-recaptcha" data-sitekey="6LdaFuErAAAAANh8FyOafajA9uOJO2cz9-OZn0qT" data-theme="light" style="display: flex; justify-content: center; padding-bottom: 10px;"><div style="width: 304px; height: 78px;"><div><iframe title="reCAPTCHA" width="304" height="78" role="presentation" name="a-fhag9skqpdxg" frameborder="0" scrolling="no" sandbox="allow-forms allow-popups allow-same-origin allow-scripts allow-top-navigation allow-modals allow-popups-to-escape-sandbox allow-storage-access-by-user-activation" src="https://www.google.com/recaptcha/api2/anchor?ar=1&amp;k=6LdaFuErAAAAANh8FyOafajA9uOJO2cz9-OZn0qT&amp;co=aHR0cHM6Ly9wci0zMzUxLm1leDE2LmRldjo0NDM.&amp;hl=en&amp;v=7gg7H51Q-naNfhmCP3_R47ho&amp;theme=light&amp;size=normal&amp;anchor-ms=20000&amp;execute-ms=15000&amp;cb=ud2y5mug3lnn"></iframe></div><textarea id="g-recaptcha-response" name="g-recaptcha-response" class="g-recaptcha-response" style="width: 250px; height: 40px; border: 1px solid rgb(193, 193, 193); margin: 10px 25px; padding: 0px; resize: none; display: none;"></textarea></div></div>
 
             <div class="flex items-center justify-between mb-4 text-[13px]">
                 <label class="flex items-center space-x-2">
@@ -72,14 +78,14 @@
 
 
             <input type="hidden" data-val="true" data-val-required="The IsFromMauiClient field is required." id="IsFromMauiClient" name="IsFromMauiClient" value="False" style="">
-        <input name="__RequestVerificationToken" type="hidden" value="CfDJ8ADMg_ZIzndKrWSxq6bdYuMOmxz_lgrO2DahtCZ9Hs8XbLtETpENXJ86lDk7mM16YPQcxGgvk89PVsU7V37BVh6I3pcdRnu7Wx7lf7sUKP9nTOWqp8l1A0-6h7Tj9ZUb47JUs4bQh4VL_bVwIBMcV2A" style=""><input name="Input.RememberMe" type="hidden" value="false" style=""></form>
+        <input name="__RequestVerificationToken" type="hidden" value="CfDJ8AWZ1D6VnrpOv_iNUjxlEgw1f5JD2LcRh4Pac-zzihDKfDX6CXt2yUwyc930PU5ns6lUnwEbzKJY-nObsggNYvsfyAjaF0t1xmaU-baP8iYgkpJE1eKMjM8odKNynEclm4yRngJi9vBVhkCCM2Xx40c" style=""><input name="Input.RememberMe" type="hidden" value="false" style=""></form>
     </div>
 </div>
 
 
     </main>
 
-    <script type="text/javascript" async="" charset="utf-8" src="https://www.gstatic.com/recaptcha/releases/TkacYOdEJbdB_JjX802TMer9/recaptcha__en.js" crossorigin="anonymous" integrity="sha384-Ft89l3aihBBhSrkZ/Syx/7cCCaryQcJICINmdoWVHhaQefSnqabq/akNl06biiHi"></script><script>
+    <script>
         function togglePasswordVisibility() {
             const input = document.getElementById('password');
             if (!input) return;
@@ -214,4 +220,4 @@
 
 
 
-<div><div class="grecaptcha-badge" data-style="bottomright" style="width: 256px; height: 60px; display: block; transition: right 0.3s; position: fixed; bottom: 14px; right: -186px; box-shadow: gray 0px 0px 5px; border-radius: 2px; overflow: hidden;"><div class="grecaptcha-logo"><iframe title="reCAPTCHA" width="256" height="60" role="presentation" name="a-uruocjae2by2" frameborder="0" scrolling="no" sandbox="allow-forms allow-popups allow-same-origin allow-scripts allow-top-navigation allow-modals allow-popups-to-escape-sandbox allow-storage-access-by-user-activation" src="https://www.google.com/recaptcha/api2/anchor?ar=1&amp;k=6LfME-ErAAAAAMGD0xI-MqKKpRkzp2BPFx9gaqnX&amp;co=aHR0cHM6Ly9ib25uaWUubWV4LmNvbS5hdTo0NDM.&amp;hl=en&amp;v=TkacYOdEJbdB_JjX802TMer9&amp;size=invisible&amp;anchor-ms=20000&amp;execute-ms=15000&amp;cb=zd0l9eszo6a8"></iframe></div><div class="grecaptcha-error"></div><textarea id="g-recaptcha-response-100000" name="g-recaptcha-response" class="g-recaptcha-response" style="width: 250px; height: 40px; border: 1px solid rgb(193, 193, 193); margin: 10px 25px; padding: 0px; resize: none; display: none;"></textarea></div><iframe style="display: none;"></iframe></div></body></html>
+<div><div class="grecaptcha-badge" data-style="bottomright" style="width: 256px; height: 60px; display: block; transition: right 0.3s; position: fixed; bottom: 14px; right: -186px; box-shadow: gray 0px 0px 5px; border-radius: 2px; overflow: hidden;"><div class="grecaptcha-logo"><iframe title="reCAPTCHA" width="256" height="60" role="presentation" name="a-h21m0ln9npzu" frameborder="0" scrolling="no" sandbox="allow-forms allow-popups allow-same-origin allow-scripts allow-top-navigation allow-modals allow-popups-to-escape-sandbox allow-storage-access-by-user-activation" src="https://www.google.com/recaptcha/api2/anchor?ar=1&amp;k=6LfME-ErAAAAAMGD0xI-MqKKpRkzp2BPFx9gaqnX&amp;co=aHR0cHM6Ly9wci0zMzUxLm1leDE2LmRldjo0NDM.&amp;hl=en&amp;v=7gg7H51Q-naNfhmCP3_R47ho&amp;size=invisible&amp;anchor-ms=20000&amp;execute-ms=15000&amp;cb=me79dij1igdx"></iframe></div><div class="grecaptcha-error"></div><textarea id="g-recaptcha-response-100000" name="g-recaptcha-response" class="g-recaptcha-response" style="width: 250px; height: 40px; border: 1px solid rgb(193, 193, 193); margin: 10px 25px; padding: 0px; resize: none; display: none;"></textarea></div><iframe style="display: none;"></iframe></div><div style="background-color: rgb(255, 255, 255); border: 1px solid rgb(204, 204, 204); box-shadow: rgba(0, 0, 0, 0.2) 2px 2px 3px; position: absolute; transition: visibility linear 0.3s, opacity 0.3s linear; opacity: 0; visibility: hidden; z-index: 2000000000; left: 0px; top: -10000px;"><div style="width: 100%; height: 100%; position: fixed; top: 0px; left: 0px; z-index: 2000000000; background-color: rgb(255, 255, 255); opacity: 0.05;"></div><div class="g-recaptcha-bubble-arrow" style="border: 11px solid transparent; width: 0px; height: 0px; position: absolute; pointer-events: none; margin-top: -11px; z-index: 2000000000;"></div><div class="g-recaptcha-bubble-arrow" style="border: 10px solid transparent; width: 0px; height: 0px; position: absolute; pointer-events: none; margin-top: -10px; z-index: 2000000000;"></div><div style="z-index: 2000000000; position: relative;"><iframe title="recaptcha challenge expires in two minutes" name="c-fhag9skqpdxg" frameborder="0" scrolling="no" sandbox="allow-forms allow-popups allow-same-origin allow-scripts allow-top-navigation allow-modals allow-popups-to-escape-sandbox allow-storage-access-by-user-activation" src="https://www.google.com/recaptcha/api2/bframe?hl=en&amp;v=7gg7H51Q-naNfhmCP3_R47ho&amp;k=6LdaFuErAAAAANh8FyOafajA9uOJO2cz9-OZn0qT&amp;bft=0dAFcWeA7m56lM13bvqeseUFj1pqA0yXlrABAJXaQ75-ME_4djKFg76KGux65GtmkhLdAi8hRKQaakRDy9seuDPVDs7Cg63q9Xvg" style="width: 100%; height: 100%;"></iframe></div></div></body></html>
