@@ -146,6 +146,8 @@ export class LoginPage {
     console.log("Login button is clicked");
     
     await this.page.waitForTimeout(1000);
+    const selectLanguageHeader = this.page.locator('[automation-header="SelectLanguage"]');
+    await expect(selectLanguageHeader).toBeVisible();
 
     await this.assertLoginSuccess();
     // ✅ Wait for the Home header to confirm successful login
