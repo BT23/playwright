@@ -152,7 +152,7 @@ export class LoginPage {
     await this.selectLanguage();
 
     //Required wait to stabilize the Home page after login
-    await this.page.waitForTimeout(20000);
+    //await this.page.waitForTimeout(20000);
 
     // ✅ Wait for the Home header to confirm successful login
     //const homeHeader = this.page.locator('[automation-header="HomeHeader"]');
@@ -209,9 +209,9 @@ export class LoginPage {
       console.log("Select Language dialog is not clicked.");
     }
 
-    /*
-      Uncomment the following lines when recaptcha workaround is removed
-    */
+    //Required wait to stabilize the Home page after selecting language
+    await this.page.waitForTimeout(20000);
+
     // Wait for the Home header to appear to confirm successful login
     const homeHeader = this.page.locator('[automation-header="HomeHeader"]');
     await expect(homeHeader).toBeVisible(); 
