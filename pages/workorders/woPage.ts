@@ -150,6 +150,17 @@ export class WoPage {
 
     /*
     ************************
+    * Enter Requester
+    ************************
+    */    
+  async enterRequester(requester: string): Promise<void> {
+        // Enter Requester
+        await helper.enterValue("Requester", requester);
+        await this.page.waitForTimeout(1000);
+  }
+
+    /*
+    ************************
     * WO Spares Tab
     ************************
     */
@@ -181,6 +192,32 @@ export class WoPage {
         await helper.enterValueInCell(newRow, "Item", catalogueItem);
         await helper.selectFirstListItem();
         await this.page.waitForTimeout(1000);
+        const field = this.page.locator('[automation-input="Item"]');
+        await field.press('Tab');
+        await this.page.waitForTimeout(1000);
+
+        // Wait for the UpdateAPL dialog to appear (with a reasonable timeout)
+        // Use the dialog container if available; if not, use header then parent or a known container.
+        const updateAPLDialog = this.page.locator('[automation-dialog="UpdateAPL"]');
+        const dialogVisible = await updateAPLDialog.waitFor({ state: 'visible', timeout: 3000 })
+        .then(() => true)
+        .catch(() => false);
+
+        if (dialogVisible) {
+        // Scope the locator to the dialog to avoid clicking wrong elements
+        const noButton = updateAPLDialog.locator('[automation-button="No"]');
+
+        // Ensure it's actually visible and enabled before clicking
+        await noButton.waitFor({ state: 'visible', timeout: 3000 });
+
+        // Optional: wait for any overlay animations to complete
+        await this.page.waitForTimeout(100); // short settle
+
+        await noButton.click();
+
+        // Optional: wait for the dialog to disappear to ensure click took effect
+        await updateAPLDialog.waitFor({ state: 'hidden', timeout: 3000 }).catch(() => {});
+        }
 
         await helper.enterValueInCell(newRow, "EstimatedQuantity", EstQuantity);
         await this.page.waitForTimeout(1000);
@@ -198,7 +235,8 @@ export class WoPage {
     ***************************
     */
     async selectSpecificedWO(woNumber: string): Promise<void> {
-        await helper.selectRowByFieldName("WorkOrderListingGrid","W/ONo", woNumber);
+        //await helper.selectRowByFieldName("WorkOrderListingGrid","W/ONo", woNumber);
+        await helper.selectRowByFieldName("WorkOrderListingGrid", "W/ONo", woNumber.trim());
         await this.page.waitForTimeout(1000);
     }
 
