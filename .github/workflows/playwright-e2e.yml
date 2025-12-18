@@ -3,16 +3,19 @@ name: E2E
 
 on:
   push:
-  pull_request:
-  workflow_dispatch:   # ✅ Allows manual trigger from GitHub Actions UI
+    branches:
 
+  pull_request:
+    branches:
+
+  
 jobs:
   test:
     runs-on: ubuntu-latest
     env:
         E2E_USERNAME: ${{ secrets.E2E_USERNAME }}
         E2E_PASSWORD: ${{ secrets.E2E_PASSWORD }}
-        BASE_URL: https://bonnie.mexcmms.com/Account/Login
+        BASE_URL: https://staging-2025-12-17.mex16.dev/
         run: npx playwright test --reporter=html
     steps:
       - name: Checkout repository

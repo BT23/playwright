@@ -1,11 +1,9 @@
 
-name: Playwright Tests CI
+name: CI Branch Test
 
 on:
   push:
     branches: [ ci-test-branch ]
-  pull_request:
-    branches: [ main ]
   workflow_dispatch:   # ✅ Allows manual trigger from GitHub Actions UI
 
 jobs:
