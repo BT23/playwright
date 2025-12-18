@@ -43,8 +43,9 @@ export class LoginPage {
     }
   }
 
-  //fill username and password
-
+/*
+ * Login method with recaptcha workaround
+ */  
 //async login(username: string, password: string) {
     /******
      * Workaround for recapture
@@ -127,7 +128,6 @@ export class LoginPage {
   }
 */
 
-  /** Bonnie Original Code - recaptcha handling commented out*/
   async login(username: string, password: string) {
     //await this.page.waitForTimeout(1000);
     // initial waits
@@ -150,16 +150,6 @@ export class LoginPage {
     console.log("Login method - wait for Select Language dialog is visible.");
 
     await this.selectLanguage();
-
-    //Required wait to stabilize the Home page after login
-    //await this.page.waitForTimeout(20000);
-
-    // ✅ Wait for the Home header to confirm successful login
-    //const homeHeader = this.page.locator('[automation-header="HomeHeader"]');
-    //await expect(homeHeader).toBeVisible({ timeout: 10000 }); // Wait up to 10s 
-
-    // Optional small delay for stability
-    //await this.page.waitForTimeout(500);   
   }
   
   async contractorUserLogin() {
@@ -186,12 +176,11 @@ export class LoginPage {
   
   //async assertLoginSuccess(): Promise<void> {
   async selectLanguage(): Promise<void> {
-    /******
-     * Workaround for recapture
-     * Temporary disabling the following codes to bypass the login using auth-storage.json
-     ******/
 
-    // If a Select Language dialog appears, choose English (Australia) and confirm.
+    /*
+     * Select Language dialog appears, choose English (Australia) and confirm.
+    */
+
     try {
       const selectLanguageHeader = this.page.locator('[automation-header="SelectLanguage"]');
       await expect(selectLanguageHeader).toBeVisible();
@@ -205,11 +194,10 @@ export class LoginPage {
       await helper.clickButtonInDialog("SelectLanguage", "Select");
       console.log("Select button is clicked.");
     } catch {
-      // ignore - dialog may not be present or already handled
       console.log("Select Language dialog is not clicked.");
     }
 
-    //Required wait to stabilize the Home page after selecting language
+    //For GitHub only - Required wait to stabilize the Home page after selecting language (Github is slow).
     await this.page.waitForTimeout(20000);
 
     // Wait for the Home header to appear to confirm successful login
