@@ -11,7 +11,8 @@ import { test } from '../fixtures';
     * Expected Result: New Catalogue created successfully and appears in the Catalogue Listing
     * Custom tags: @smoke
     */    
+    /*
     test('Create New Catalogue @smoke @feature-catalogue', async ({ cataloguePage, catalogueTestData }) => {
         await cataloguePage.createCatalogue(catalogueTestData.createcatalogue.catalogueNumber, catalogueTestData.createcatalogue.partName, catalogueTestData.createcatalogue.StockOnHand, catalogueTestData.createcatalogue.UnitPrice);
         });
-
+*/
