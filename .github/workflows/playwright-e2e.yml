@@ -55,10 +55,6 @@ jobs:
             if-no-files-found: ignore
 
       # Optional: Generate HTML report (for smoke subset)
-      - name: Generate HTML report
-        if: always()
-        run: npx playwright test tests/assets/ --workers=3 --grep "(?=.*@feature-wo)(?=.*@feature-asset)" --project=chromium --reporter=html
-
       - name: Upload HTML report
         if: always()
         uses: actions/upload-artifact@v4
