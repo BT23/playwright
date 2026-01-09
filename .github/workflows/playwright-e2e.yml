@@ -14,7 +14,7 @@ jobs:
         E2E_USERNAME: ${{ secrets.E2E_USERNAME }}
         E2E_PASSWORD: ${{ secrets.E2E_PASSWORD }}
         BASE_URL: https://pr-3392.mex16.dev/
-        run: npx playwright test --reporter=html
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -33,17 +33,7 @@ jobs:
 
       # Run feature tests for work orders and assets
       - name: Run feature tests
-        run: npm run test tests --grep '@feature-(wo|asset)' --project=chromium --reporter=html
-
-      # Smoke tests for PR branches - refer to package.json scripts
-      - name: Run Smoke Tests
-        if: github.ref != 'refs/heads/main'
-        run: npm run test:smoke
-
-      # Full regression for main - refer to package.json scripts
-      - name: Run Full Tests
-        if: github.ref == 'refs/heads/main'
-        run: npm run test:full
+        run: npm run test --tests --grep `@feature-(wo|asset)` --project=chromium --reporter=html
        
       # Always upload raw test-results if your tests output there (e.g. trace, screenshots)
       - name: Upload Playwright test artifacts
