@@ -4,8 +4,9 @@
   "main": "index.js",
   "scripts": {
     "test": "playwright test",
-    "test:asset": "playwright test tests/assets/asset-register.test.ts --project=chromium",
-    "test:asset:smoke": "playwright test tests/assets/asset-register.test.ts --grep \"(?=.*@smoke)(?=.*@feature-asset)\" --project=chromium",
+    "test:smoke": "playwright test tests --grep '@smoke' --project=chromium --reporter=list",
+    "test:full": "playwright test tests --project=chromium --reporter=list",
+    "test:feature-asset": "playwright test tests --grep '(?=.*@smoke)(?=.*@feature-asset)' --project=chromium --reporter=html",
     "test:report": "playwright show-report",
     "install:browsers": "playwright install --with-deps"
   },
