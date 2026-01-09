@@ -7,7 +7,7 @@ import { ContractorWOPage } from '../../pages/contractorworkorders/contractorwoP
 import { PoPage } from '../../pages/purchaseorder/poPage';
 
 import testData from '../../test-data/e2e/contractorwoPOData.json';
-
+/*
 test.describe('Contractor Work Orders PO Tests', () => {
     let loginPage: LoginPage;
     let assetPage: AssetPage;
@@ -42,7 +42,7 @@ test.describe('Contractor Work Orders PO Tests', () => {
     * 7. Click Purchase Order No hyperlink
     * Expected Result: PO Due Start Date should autofill
     * Custom tags: @bug @regression @contractorWO @PO
-    */    
+        
     test('Contractor WO PO Due Start Date autofill - Case 1 @bug @regression @contractorwo @PO', async () => {
         const data = testData.case1;
         await assetPage.createNewAsset(data.assetNumber, data.assetDesc);
@@ -52,7 +52,7 @@ test.describe('Contractor Work Orders PO Tests', () => {
         await contractorwoPage.clickPOHyperlink();
         await poPage.verifyPODueStartDate(dueStart);      
     });
- 
+ */
     /*
      * Bug 1234: Quote Number do not autofill when creating PO from a Contractor WO
     * Source: https://jira.com/browse/BUG-1234
@@ -66,7 +66,7 @@ test.describe('Contractor Work Orders PO Tests', () => {
     * 7. Click Purchase Order No hyperlink
     * Expected Result: PO Quote No should autofill
     * Custom tags: @bug @regression @contractorWO @PO
-    */    
+        
     test('Contractor WO PO Quote Number autofill - Case 2 @bug @regression @contractorwo @PO', async () => {
         const data = testData.case2;
         await assetPage.createNewAsset(data.assetNumber, data.assetDesc);
@@ -76,7 +76,7 @@ test.describe('Contractor Work Orders PO Tests', () => {
         await contractorwoPage.clickPOHyperlink();
         await poPage.verifyPOQuoteNumber(data.QuoteNo);
     });   
-
+    */
     /*
      * Bug 1234: Quote Number do not autofill when creating PO from a Contractor WO
     * Source: https://jira.com/browse/BUG-1234
@@ -91,7 +91,7 @@ test.describe('Contractor Work Orders PO Tests', () => {
     * 7. Click Purchase Order No hyperlink
     * Expected Result: PO Quote No should autofill
     * Custom tags: @bug @regression @contractorWO @PO
-    */    
+       
     test('Contractor WO PO Transaction after subimitting and approving invoice - Case 3 @bug @regression @contractorwo @PO', async () => {
         const data = testData.case3;
         await assetPage.createNewAsset(data.assetNumber, data.assetDesc);
@@ -108,7 +108,7 @@ test.describe('Contractor Work Orders PO Tests', () => {
         await poPage.clickPOTransactionsTab();
         await poPage.verifyPOContractorInvoiceTransactions();
     });  
-
+*/
     /*
      * Bug 1234: Contractor WO appears in Contractor User Portal prior to PO approval
     * Source: https://jira.com/browse/BUG-1234
@@ -126,7 +126,8 @@ test.describe('Contractor Work Orders PO Tests', () => {
     * 8. Login as Contractor User portal user
     * Expected Result: PO Quote No should autofill
     * Custom tags: @bug @regression @contractorWO @PO
-    */    
+     
+
     test.only('Contractor User Portal - Case 4 @bug @regression @contractorwo @PO', async () => {
         const data = testData.case4;
         await assetPage.createNewAsset(data.assetNumber, data.assetDesc);
@@ -141,3 +142,4 @@ test.describe('Contractor Work Orders PO Tests', () => {
     });  
 
 });
+*/

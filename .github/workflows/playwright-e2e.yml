@@ -45,7 +45,7 @@ jobs:
         if: github.ref == 'refs/heads/main'
         run: npm run test:full
        
-        # Always upload raw test-results if your tests output there (e.g. trace, screenshots)
+      # Always upload raw test-results if your tests output there (e.g. trace, screenshots)
       - name: Upload Playwright test artifacts
         if: always()
         uses: actions/upload-artifact@v4
