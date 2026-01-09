@@ -33,7 +33,7 @@ jobs:
 
       # Run feature tests for work orders and assets
       - name: Run feature tests
-        run: npm run test tests -grep "@feature-(wo|asset)" --project=chromium --reporter=html
+        run: npm run test tests -grep '@feature-(wo|asset)' --project=chromium --reporter=html
 
       # Smoke tests for PR branches - refer to package.json scripts
       - name: Run Smoke Tests
