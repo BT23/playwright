@@ -32,8 +32,8 @@ jobs:
         run: npx playwright install --with-deps
 
       # Run feature tests for work orders and assets
-      - name: Run feature tests
-        run: npm run test --tests --grep `@feature-(wo|asset)` --project=chromium --reporter=html
+      - name: Run feature tests (WO + Asset)
+        run: npm run test:features
        
       # Always upload raw test-results if your tests output there (e.g. trace, screenshots)
       - name: Upload Playwright test artifacts
