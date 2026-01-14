@@ -4,9 +4,7 @@
   "main": "index.js",
   "scripts": {
     "test": "playwright test",
-    "test:smoke": "playwright test tests --grep '@smoke' --project=chromium --reporter=list",
-    "test:full": "playwright test tests --project=chromium --reporter=list",
-    "test:feature-asset": "playwright test tests --grep '(?=.*@smoke)(?=.*@feature-asset)' --project=chromium --reporter=html",
+    "test:feature-asset": "playwright test tests --grep '(?=.*@feature-wo)(?=.*@feature-asset)' --project=chromium --reporter=html",
     "test:report": "playwright show-report",
     "install:browsers": "playwright install --with-deps"
   },

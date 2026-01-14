@@ -13,7 +13,7 @@ jobs:
     env:
         E2E_USERNAME: ${{ secrets.E2E_USERNAME }}
         E2E_PASSWORD: ${{ secrets.E2E_PASSWORD }}
-        BASE_URL: https://pr-3392.mex16.dev/
+        BASE_URL: https://staging-2026-01-15.mex16.dev/
 
     steps:
       - name: Checkout repository
