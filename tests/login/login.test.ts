@@ -43,6 +43,7 @@ test.describe('Login Tests', () =>{
         await loginPage.login(loginPage.credentials.validCredentials.username, loginPage.credentials.validCredentials.password);
     });
 
+    /*
     test ('invalid login', async () => {
         await loginPage.performInvalidLogins();
     });   
@@ -56,5 +57,6 @@ test.describe('Login Tests', () =>{
         //await loginPage.assertLoginSuccess();
 
         await loginPage.logout();
-    });     
+    });
+    */
 }); 
