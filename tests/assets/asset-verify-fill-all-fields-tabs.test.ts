@@ -17,7 +17,7 @@ import { test } from '../fixtures'
     * Expected Result: Some values entered in the Details tab should be visible in the Asset Register Details tab
     * Custom tags: @regression
     */
-    test.only('Verify Asset Details Details Tab Information Populate @regression', async ({ assetPage, assetTestData }) => {
+    test('Verify Asset Details Details Tab Information Populate @regression', async ({ assetPage, assetTestData }) => {
         await assetPage.selectTreeNodeByName(assetTestData.assetdetailstab.assetNumber);
         await assetPage.clickDetailsBtn();
         await assetPage.verifyAssetRegisterDetailsTabInfo(assetTestData.assetdetailstab);
@@ -36,6 +36,7 @@ import { test } from '../fixtures'
     * Expected Result: Some values entered in the Details tab should be visible in the Asset Register Details tab
     * Custom tags: @regression
     */
+
     test('Verify Asset Details Details Tab Extended Information Populate @regression', async ({ assetPage, assetTestData }) => {
         await assetPage.selectTreeNodeByName(assetTestData.assetextendedtab.assetNumber);
         await assetPage.clickDetailsBtn();

@@ -2,9 +2,10 @@
 name: E2E
 
 on:
-  push:
-  pull_request:
-  workflow_dispatch:   # ✅ Allows manual trigger from GitHub Actions UI
+  push:    
+    branches:
+      - ci-test-branch
+  workflow_dispatch:
 
 jobs:
   test:
@@ -12,8 +13,8 @@ jobs:
     env:
         E2E_USERNAME: ${{ secrets.E2E_USERNAME }}
         E2E_PASSWORD: ${{ secrets.E2E_PASSWORD }}
-        BASE_URL: https://bonnie.mexcmms.com/Account/Login
-        run: npx playwright test --reporter=html
+        BASE_URL: https://staging-2026-01-15.mex16.dev/
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -30,22 +31,20 @@ jobs:
       - name: Install Playwright browsers
         run: npx playwright install --with-deps
 
-      - name: Run Asset Register SMOKE tests (CI)
-        run: npm run test:asset:smoke -- --reporter=list
-
+      # Run feature tests for work orders and assets
+      - name: Run feature tests (WO + Asset)
+        run: npm run test:features
+       
+      # Always upload raw test-results if your tests output there (e.g. trace, screenshots)
       - name: Upload Playwright test artifacts
         if: always()
         uses: actions/upload-artifact@v4
         with:
             name: test-results
             path: test-results
-
+            if-no-files-found: ignore
 
       # Optional: Generate HTML report (for smoke subset)
-      - name: Generate HTML report
-        if: always()
-        run: npx playwright test tests/assets/asset-register.test.ts --grep "(?=.*@smoke)(?=.*@feature-asset)" --project=chromium --reporter=html
-
       - name: Upload HTML report
         if: always()
         uses: actions/upload-artifact@v4

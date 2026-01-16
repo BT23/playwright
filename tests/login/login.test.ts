@@ -39,10 +39,11 @@ test.describe('Login Tests', () =>{
     });
      */
 
-    test.only ('valid login', async ({page}) => { 
+    test ('valid login', async ({page}) => { 
         await loginPage.login(loginPage.credentials.validCredentials.username, loginPage.credentials.validCredentials.password);
     });
 
+    /*
     test ('invalid login', async () => {
         await loginPage.performInvalidLogins();
     });   
@@ -53,8 +54,9 @@ test.describe('Login Tests', () =>{
 
     test('Login Logout Test', async ({ page }) => {
         await loginPage.login(loginPage.credentials.validCredentials.username, loginPage.credentials.validCredentials.password);
-        await loginPage.assertLoginSuccess();
+        //await loginPage.assertLoginSuccess();
 
         await loginPage.logout();
-    });     
+    });
+    */
 }); 

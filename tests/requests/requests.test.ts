@@ -34,7 +34,7 @@ test.describe('Requests Module Tests', () => {
         await requestPage.openRequestsModule();
     });
 
-    test.only('Create New Request with Asset @smoke', async () => {
+    test('Create New Request with Asset @smoke', async () => {
         await requestPage.openRequestsModule();
         await requestPage.createRequest(requestData.jobDesc, requestData.assetNumber, true);
     });

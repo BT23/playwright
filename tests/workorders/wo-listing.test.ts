@@ -9,6 +9,6 @@ import { test } from '../fixtures'
    * Custom tags: @smoke @feature-wo
  */
 
-test('Open PO lising @smoke @feature-po', async ({ woPage }) => {
+test('Open WO lising @smoke @feature-wo', async ({ woPage }) => {
         await woPage.openWOModule();
 });

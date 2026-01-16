@@ -36,7 +36,7 @@ test.describe('Supplier Module Tests', () => {
         await supplierPage.createSupplier(createSupplierData.CompanyCode, createSupplierData.CompanyName);
     });
 
-    test.only('Verify Supplier @bug @regression', async () => {
+    test('Verify Supplier @bug @regression', async () => {
         await supplierPage.openSupplierListing();
         await supplierPage.createSupplier(createSupplierData.CompanyCode, createSupplierData.CompanyName);
         await supplierPage.verifySupplierExist();

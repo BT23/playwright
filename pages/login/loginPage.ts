@@ -30,22 +30,23 @@ export class LoginPage {
  */
 
   async navigate() {
-    try{
-      /* two page.got can be deleted - baseURL from config handles and the endpoint is in fixtures.ts*/
-      //await this.page.goto('https://bonnie.mex.com.au/Account/Login');
-      //await this.page.goto('https://bonnie.mex.com.au/', { waitUntil: 'networkidle' });
-      
-      // Use relative path - Playwright will use baseURL from config
-      await this.page.goto('/Account/Login');
+    try{      
+      /*
+       * Use relative path - Playwright will use baseURL from playwright.config.ts
+       * endpoint: /Account/Login requires full navigation to load correctly due to the SSL redirection bug
+      */
+      await this.page.goto('/Account/Login', { waitUntil: 'networkidle' });
       await this.page.waitForTimeout(1000);
+      
     } catch(error:any){
       throw new Error(`Failed to locate or interact with the username field: ${error.message}`);
     }
   }
 
-  //fill username and password
-
-async login(username: string, password: string) {
+/*
+ * Login method with recaptcha workaround
+ */  
+//async login(username: string, password: string) {
     /******
      * Workaround for recapture
      * Temporary disabling the following codes to bypass the login using auth-storage.json
@@ -120,16 +121,18 @@ async login(username: string, password: string) {
       } catch {}
       throw new Error(`Login bounced back to /Account after ${attempts} retry(ies). Saved debug/login-bounced.* (url: ${finalUrl})`);
     }
-  */
+
     // continue with post-login handling
-    await this.assertLoginSuccess();
+    //await this.assertLoginSuccess();
 
   }
+*/
 
-
-/** Bonnie Original Code - recaptcha handling commented out
   async login(username: string, password: string) {
-    await this.page.waitForTimeout(1000);
+    //await this.page.waitForTimeout(1000);
+    // initial waits
+    await this.page.waitForSelector('[automation-input="userName"]', { timeout: 10000 }).catch(()=>{});
+    await this.page.waitForSelector('[automation-input="password"]', { timeout: 10000 }).catch(()=>{});
     await helper.enterValue("userName", username);
     await helper.enterValue("password", password);
     console.log(username + " and " + password);
@@ -141,11 +144,14 @@ async login(username: string, password: string) {
     await helper.clickButton("login");
     console.log("Login button is clicked");
     
-    await this.page.waitForTimeout(1000);
+    await this.page.waitForTimeout(10000);
+    const selectLanguageHeader = this.page.locator('[automation-header="SelectLanguage"]');
+    await expect(selectLanguageHeader).toBeVisible();
+    console.log("Login method - wait for Select Language dialog is visible.");
+
+    await this.selectLanguage();
   }
-  */
-
-
+  
   async contractorUserLogin() {
     await helper.enterValue("userName", this.credentials.contractorCredentials.username);
     console.log("Enter: userName" + this.credentials.contractorCredentials.username);
@@ -168,13 +174,13 @@ async login(username: string, password: string) {
     
   }
   
-  async assertLoginSuccess(): Promise<void> {
-    /******
-     * Workaround for recapture
-     * Temporary disabling the following codes to bypass the login using auth-storage.json
-     ******/
+  //async assertLoginSuccess(): Promise<void> {
+  async selectLanguage(): Promise<void> {
 
-    // If a Select Language dialog appears, choose English (Australia) and confirm.
+    /*
+     * Select Language dialog appears, choose English (Australia) and confirm.
+    */
+
     try {
       const selectLanguageHeader = this.page.locator('[automation-header="SelectLanguage"]');
       await expect(selectLanguageHeader).toBeVisible();
@@ -182,18 +188,23 @@ async login(username: string, password: string) {
 
       console.log("Selecting English(Australia) language.");
       await helper.clickButtonInDialog("SelectLanguage", "English(Australia)");
+
+      const selectButton = this.page.locator('[automation-button="Select"]');
+      await expect(selectButton).toBeVisible();
       await helper.clickButtonInDialog("SelectLanguage", "Select");
+      console.log("Select button is clicked.");
     } catch {
-      // ignore - dialog may not be present or already handled
+      console.log("Select Language dialog is not clicked.");
     }
 
-    /*
-      Uncomment the following lines when recaptcha workaround is removed
-    */
+    //For GitHub only - Required wait to stabilize the Home page after selecting language (Github is slow).
+    await this.page.waitForTimeout(20000);
+
     // Wait for the Home header to appear to confirm successful login
-    //const homeHeader = this.page.locator('[automation-header="HomeHeader"]');
-    //await expect(homeHeader).toBeVisible(); 
-    //await this.page.waitForTimeout(500).catch(()=>null);
+    const homeHeader = this.page.locator('[automation-header="HomeHeader"]');
+    await expect(homeHeader).toBeVisible(); 
+    
+    await this.page.waitForTimeout(500).catch(()=>null);
   }
 
     async performInvalidLogins(): Promise<void> {

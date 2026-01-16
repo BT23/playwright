@@ -53,7 +53,7 @@ test.describe('WO History Module Tests', () => {
     * Expected Result: Specified closed WO should open successfully.
     * Custom tags: @smoke
     */
-    test.only('Open Specified Closed WO @smoke', async () => {
+    test('Open Specified Closed WO @smoke', async () => {
         await historyPage.openHistoryModule();
         await historyPage.openClosedWOByWONumber("35");
     });
