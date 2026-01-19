@@ -6,6 +6,7 @@
     "test": "playwright test",
     "@playwright/test": "^1.49.0",
     "test:features": "playwright test --grep \"@feature-(wo|asset)\" --project=chromium --reporter=html",
+    "test:requests": "playwright test tests/requests --project=chromium --reporter=html",
     "test:report": "playwright show-report",
     "install:browsers": "playwright install --with-deps"
   },
