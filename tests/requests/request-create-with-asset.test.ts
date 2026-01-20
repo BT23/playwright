@@ -14,6 +14,7 @@ import { test } from '../fixtures';
     */ 
 
 test('Create new request with asset using fixture data @smoke @feature-request', async ({ requestPage, requestTestData }) => {
+        console.log("📝 Starting test: Create new request with asset using fixture data");
         await requestPage.openRequestsModule();
         await requestPage.createRequest(requestTestData.createrequest.jobDesc, requestTestData.createrequest.assetNumber);
         await requestPage.clickBackBtn();

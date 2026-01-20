@@ -18,7 +18,8 @@ import { test } from '../fixtures';
     * Custom tags: @smoke @feature-request
     */ 
 
-test('Request Listing - Approve new request with asset using fixture data @smoke @feature-request', async ({ requestPage, requestTestData }) => {        
+test('Request Listing - Approve new request with asset using fixture data @smoke @feature-request', async ({ requestPage, requestTestData }) => {   
+        console.log("📝 Starting test: Request Listing - Approve new request with asset using fixture data");     
         // Create a new Request and capture the number instead of reading from file (as request number does not exist when running the worker in parallel)
         const rawRequestNumber = await requestPage.createRequest(requestTestData.createrequest.jobDesc, requestTestData.createrequest.assetNumber);
         console.log(`Created Request Number: ${rawRequestNumber}`);
@@ -30,5 +31,8 @@ test('Request Listing - Approve new request with asset using fixture data @smoke
         await requestPage.clickBackBtn();
         await requestPage.selectSpecificedRequest(requestNumber!);
         await requestPage.approveRequestAndClickOK();
+        //await requestPage.clickRefreshBtn();
+        // Re-select the request to verify status after approval
+        await requestPage.selectSpecificedRequest(requestNumber!);
         await requestPage.verifyRequestStatusEqualApprovedOnListing(requestNumber!, "Approved");
 });

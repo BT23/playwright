@@ -18,6 +18,7 @@ import { test } from '../fixtures';
     * Custom tags: @smoke @feature-request
     */ 
 test('Create Request WO using fixture data @smoke @feature-request', async ({ woPage, requestPage, requestTestData }) => {        
+        console.log("📝 Starting test: Create Request WO using fixture data");
         // Create a new Request and capture the number instead of reading from file (as request number does not exist when running the worker in parallel)
         const rawRequestNumber = await requestPage.createRequest(requestTestData.createrequest.jobDesc, requestTestData.createrequest.assetNumber);
         console.log(`Created Request Number: ${rawRequestNumber}`);

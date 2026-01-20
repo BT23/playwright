@@ -84,6 +84,16 @@ export class RequestPage {
     }
 
     /*
+    ***************************
+    * Click Refresh button
+    ***************************
+    */
+    async clickRefreshBtn(): Promise<void> {
+        await helper.clickButton("Refresh");
+        await this.page.waitForTimeout(1000);
+    }
+
+    /*
 
     /*
     ***************************************************************************************
@@ -141,7 +151,7 @@ export class RequestPage {
     *************************************
     */
     async selectSpecificedRequest(requestNumber: string): Promise<void> {
-        await helper.selectRowByFieldName("RequestListingGrid", "RequestNumber", requestNumber.trim());
+         await helper.selectRowByFieldName("RequestListingGrid", "RequestNumber", requestNumber.trim());
         await this.page.waitForTimeout(1000);
     }
 
