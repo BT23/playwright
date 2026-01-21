@@ -15,9 +15,14 @@ import { test } from '../fixtures'
 
 test('Fill in Asset Details Details tab using fixture data @smoke @feature-asset', async ({ assetPage, assetTestData }) => { 
     console.log('🧪 Starting test: Fill in an existing asset details - details tab using fixture data');
-    await assetPage.selectTreeNodeByName(assetTestData.assetdetailstab.assetNumber);
-    await assetPage.clickDetailsBtn();
+    await assetPage.createLevel1Asset(assetTestData.assetdetailstab.assetNumber, assetTestData.assetdetailstab.assetDesc);
     await assetPage.assetDetails_DetailsTab_FillAllFields(assetTestData.assetdetailstab);
     await assetPage.addWarrantyAndReadingType();
+    await assetPage.clickBackBtn();
+    // Select the created asset again to verify asset is created and details saved
+    await assetPage.selectTreeNodeByName(assetTestData.assetdetailstab.assetNumber);
+    await assetPage.clickDetailsBtn();
+    console.log('🧪 Starting test: Verify Asset Details Details Tab Information Populate');
+    await assetPage.verifyAssetRegisterDetailsTabInfo(assetTestData.assetdetailstab);
     await assetPage.clickBackBtn();
 });

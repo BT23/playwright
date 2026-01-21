@@ -3,10 +3,6 @@ import { expect, Page } from '@playwright/test';
 import { helper } from '../../helperMethods';
 import { escapeRegex } from '../../helperMethods';
 
-// Asset Data
-import assetDetailsTabData from '../../test-data/assets/assetDetailsDetailsTabData.json';
-import assetExtendedTabData from '../../test-data/assets/assetDetailsExtendedTabData.json';
-
 export class AssetPage {
     private page: Page;
 
@@ -22,6 +18,10 @@ export class AssetPage {
     * ************************************
     */
     async selectTreeNodeByName(assetNumber: string) {
+        // Wait for tree nodes to populate
+        const treeNodes = this.page.locator('td[automation-col="Number"]');
+        await treeNodes.first().waitFor({ state: 'visible', timeout: 5000 });
+
         // Locate the asset in the tree
         const nodeFound = await helper.locateTreeNodeByName(assetNumber);
 
@@ -140,8 +140,8 @@ export class AssetPage {
 
         await this.page.waitForTimeout(1000);
         // Click the X button to close Asset Details
-        await helper.closePage();
-        await this.page.waitForTimeout(1000);
+        //await helper.closePage();
+        //await this.page.waitForTimeout(1000);
     }
 
     /*
@@ -171,15 +171,19 @@ export class AssetPage {
     * * Warranty Start and Finish handled separately
     * **********************************************
     */
-   async assetDetails_DetailsTab_FillAllFields(detailsTabData: typeof assetDetailsTabData): Promise<void> {
+   async assetDetails_DetailsTab_FillAllFields(assetDetailsTabData: any): Promise<void> {
          // Wait until the Items tab content is visible
         const detailsTabContent = this.page.locator('[automation-tab="DetailsTab"]');
         await detailsTabContent.waitFor({ state: 'visible', timeout: 5000 });
 
         await helper.selectTab("DetailsTab");
 
+        // Wait for dynamic fields to load
+        await this.page.waitForTimeout(1000);
+        await this.page.waitForLoadState('networkidle');
+
         // Use all fields from your JSON file
-        const details = detailsTabData.details;
+        const details = assetDetailsTabData.details;
 
         // Verification method uses the same JSON file, so we need to ensure the field names match
         // Map the field names to the UI field names due to differences in naming conventions in Asset Details - Details tab and Asset Details tab
@@ -218,7 +222,7 @@ export class AssetPage {
     * Fill in Asset Details - EXTENDED Tab
     * ************************************
     */
-   async assetDetails_ExtendedTab_FillAllFields( extendedTabData: typeof assetExtendedTabData): Promise<void> {
+   async assetDetails_ExtendedTab_FillAllFields(extendedTabData: any): Promise<void> {
         // Wait until the Items tab content is visible
         const extendedTabContent = this.page.locator('[automation-tab="ExtendedTab"]');
         await extendedTabContent.waitFor({ state: 'visible', timeout: 5000 });
@@ -256,13 +260,17 @@ export class AssetPage {
     * Verify data populating on Asset - Details Tab
     * *********************************************
     */
-    async verifyAssetRegisterDetailsTabInfo(detailsTabData: typeof assetDetailsTabData): Promise<void> {
+    async verifyAssetRegisterDetailsTabInfo(detailsTabData: any): Promise<void> {
          // Wait until the Items tab content is visible
         const detailsTabContent = this.page.locator('[automation-tab="DetailsTab"]');
         await detailsTabContent.waitFor({ state: 'visible', timeout: 5000 });
 
         await helper.selectTab("DetailsTab");
 
+        // Wait for dynamic fields to load
+        await this.page.waitForTimeout(1000);
+        await this.page.waitForLoadState('networkidle');    
+        
         /*
         * Verify the information ppopulate on Details tab
         */  
@@ -301,13 +309,15 @@ export class AssetPage {
     * Verify data populating on Asset - Details Tab
     * *********************************************
     */
-    async verifyAssetRegisterDetailsTabExtendedInfo(extendedTabDataTabData: typeof assetExtendedTabData ): Promise<void> {
+    async verifyAssetRegisterDetailsTabExtendedInfo(extendedTabData: any): Promise<void> {
         // Wait until the Items tab content is visible
         const extendedTabContent = this.page.locator('[automation-tab="ExtendedTab"]');
         await extendedTabContent.waitFor({ state: 'visible', timeout: 5000 });
 
         await helper.selectTab("ExtendedTab");
 
+         await this.page.waitForTimeout(1000);
+        await this.page.waitForLoadState('networkidle');          
 
         // ✅ Wait for dynamic controls to load (dropdowns, ellipsis fields)
         await this.page.waitForSelector('[automation-input="Contractor"]', { state: 'visible', timeout: 5000 });
@@ -315,7 +325,7 @@ export class AssetPage {
         await this.page.waitForSelector('[automation-input="Criticality"]', { state: 'visible', timeout: 5000 });
 
 
-        const expected =assetExtendedTabData.details;
+        const expected = extendedTabData.details;
         const fieldsToVerify = [
         "Contractor",
         "Customer",

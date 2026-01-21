@@ -15,7 +15,7 @@ export default defineConfig({
   testDir: './tests',
   /* Run tests in files in parallel */
   testMatch: '**/*.test.ts',
-  fullyParallel: true,
+  fullyParallel: true, 
   /* Fail the build on CI if you accidentally left test.only in the source code. */
   forbidOnly: !!process.env.CI,
   /* Retry on CI only */
@@ -27,8 +27,8 @@ export default defineConfig({
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
     /* Base URL to use in actions like `await page.goto('/')`. */
-     //baseURL: 'https://bonnie.mexcmms.com/',
-    baseURL: 'https://staging-2026-01-22.mex16.dev/',
+     baseURL: 'https://bonnie.mexcmms.com/',
+    //baseURL: 'https://staging-2026-01-22.mex16.dev/',
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
 
