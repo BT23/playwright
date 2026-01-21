@@ -357,6 +357,19 @@ export class WoPage {
 
    }
 
+     /********************************
+    * Verify Request Number Populated
+    **********************************
+    */
+   async verifyWORequestNumber(expectedRequestNumber: string): Promise<void>{
+        await this.page.waitForSelector('[automation-input="RequestNo"]');
+        const actualRequestNumber = await this.page.locator('[automation-input="RequestNo"]').inputValue();        
+        if (actualRequestNumber.trim() !== expectedRequestNumber.trim()) {
+            throw new Error(`Expected requester to be "${expectedRequestNumber}", but got "${actualRequestNumber}"`);
+        }
+
+   }  
+
     /**********************************
     * RMC and click Add Listing Columns
     ***********************************

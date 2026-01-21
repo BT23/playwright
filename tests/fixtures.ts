@@ -5,6 +5,7 @@ import { expect } from '@playwright/test';
 
 import { LoginPage } from '../pages/login/loginPage';
 import { AssetPage } from '../pages/assets/assetPage';
+import { RequestPage } from '../pages/requests/requestPage';
 import { WoPage } from '../pages/workorders/woPage';
 import { PoPage } from '../pages/purchaseorder/poPage';
 import { CataloguePage } from '../pages/catalogue/cataloguePage';
@@ -12,6 +13,7 @@ import { CataloguePage } from '../pages/catalogue/cataloguePage';
 import createAssetData from '../test-data/assets/createAssetData.json';
 import assetDetailsTabData from '../test-data/assets/assetDetailsDetailsTabData.json';
 import assetExtendedTabData from '../test-data/assets/assetDetailsExtendedTabData.json';
+import createRequestData from '../test-data/requests/createRequestData.json';
 import createWorkOrderData from '../test-data/work-orders/createWorkOrderData.json';
 import woDetailsTabData from '../test-data/work-orders/woDetailsTabData.json';
 import addWOSpareData from '../test-data/work-orders/woSparesTabData.json';
@@ -21,6 +23,7 @@ import createPurchaseOrderData from '../test-data/purchase-orders/createPurchase
 type MyFixtures = {
   loginPage: LoginPage;
   assetPage: AssetPage;
+  requestPage: RequestPage;
   woPage: WoPage;
   cataloguePage: CataloguePage;
   poPage: PoPage;
@@ -30,6 +33,7 @@ type MyFixtures = {
     assetdetailstab: typeof assetDetailsTabData;
     assetextendedtab: typeof assetExtendedTabData;
   };
+  requestTestData: { createrequest: typeof createRequestData };
   woTestData: {
     createwo: typeof createWorkOrderData;
     wodetails: typeof woDetailsTabData;
@@ -39,8 +43,9 @@ type MyFixtures = {
     createcatalogue: typeof createCatalogueData;
   };  
   assetDataFilePath: string;
-  poDataFilePath: string;
+  requestDataFilePath: string;
   catalogueFilePath: string;
+  poDataFilePath: string;
   woDataFilePath: string;
 };
 
@@ -88,11 +93,16 @@ export const test = baseTest.extend<MyFixtures>({
     await use(loginPage);
   },
 
-
   assetPage: async ({ page, loginPage}, use) => {
     const assetPage = new AssetPage(page);
     await assetPage.openAssetModule();
     await use(assetPage);
+  },
+
+  requestPage: async ({ page, loginPage}, use) => {
+    const requestPage = new RequestPage(page);
+    await requestPage.openRequestsModule();
+    await use(requestPage);
   },
 
   woPage: async ({ page, loginPage }, use) => {
@@ -121,6 +131,12 @@ export const test = baseTest.extend<MyFixtures>({
     });
   },
 
+  requestTestData: async ({}, use) => {
+    await use({
+      createrequest: createRequestData
+    });
+  },
+
   woTestData: async ({}, use) => {
     await use({
       createwo: createWorkOrderData,
@@ -135,6 +151,10 @@ export const test = baseTest.extend<MyFixtures>({
 
   assetDataFilePath: async ({}, use) => {
     await use(path.resolve(__dirname, '../test-data/assets/assetTempData.json'));
+  },
+
+  requestDataFilePath: async ({}, use) => {
+    await use(path.resolve(__dirname, '../test-data/requests/requestTempData.json'));
   },
 
   woDataFilePath: async ({}, use) => {
