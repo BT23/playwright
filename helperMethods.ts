@@ -567,6 +567,9 @@ async verifyFields(
       expected: Record<string, string>,
       fieldsToVerify: string[]
     ): Promise<void> {
+      // Fields that should match the first part before " - "
+      //const partialMatchFields = ['Manufacturer', 'ModelNumber'];
+
       for (const field of fieldsToVerify) {
           const expectedValue = expected[field];
           if (expectedValue !== undefined) {
@@ -574,7 +577,12 @@ async verifyFields(
 
             // ✅ Normalize both values: trim and lowercase
             const actualNormalized = actual?.trim().toLowerCase();
-            const expectedNormalized = expectedValue?.trim().toLowerCase();
+            let expectedNormalized = expectedValue?.trim().toLowerCase();
+
+            // For partial match fields, extract first part before " - "
+            //if (partialMatchFields.includes(field)) {
+            //  expectedNormalized = expectedNormalized.split(' - ')[0].trim();
+           // }
 
             expect(actualNormalized).toBe(expectedNormalized);
           }
