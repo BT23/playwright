@@ -5,10 +5,11 @@ import { test } from '../fixtures'
     * Preconditions: User is logged in and assetDetailsExtendedTabData.json is available. Fixture data used.
     * Steps:
     * 1. Open Assets Module
-    * 2. Locate and select a specified asset on the tree (Specified asset number in assetDetailsExtendedTabData.json)
-    * 3. Click Details button
+    * 2. Create a new Asset
     * 4. Fill all fields in the Extended tab
     * 5. Save the changes
+    * 6. Reopen the asset and navigate to the Extended tab
+    * 7. Verify that all fields are populated with the correct data
     * Expected Result: All fields in the Extended tab are filled in successfully
     * Returns: N/A
     * Custom tags: @smoke @feature-asset

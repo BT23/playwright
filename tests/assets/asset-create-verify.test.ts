@@ -8,6 +8,8 @@ import { test } from '../fixtures';
     * 2. Click 'New Level 1' button
     * 3. Enter Description and Asset
     * 4. Click Create button
+    * 5. Click Save and Back button
+    * 6. Verify new Level 1 asset appears in the Asset Register tree
     * Expected Result: Level 1 created successfully and appears in the Asset Register
     * Returns: N/A
     * Custom tags: @smoke @feature-asset
@@ -18,11 +20,6 @@ test('Create new level 1 asset using fixture data @smoke @feature-asset', async 
     await assetPage.createLevel1Asset(assetTestData.createasset.assetNumber, assetTestData.createasset.assetDesc);
     await assetPage.clickBackBtn(); // Save and Back
     console.log('🧪 Starting test: Verify New Level 1 asset showing on the tree using fixture data');
-    const assetNumber = assetTestData.createasset.assetNumber;
-    const isPresent = await assetPage.isTreeNodePresent(assetNumber);
-        
-    if (!isPresent) {
-        throw new Error(`Asset ${assetNumber} should be present in the tree`);
-    }    
+    await assetPage.verifyTreeNodePresentByName(assetTestData.createasset.assetNumber); 
 });
 

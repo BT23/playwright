@@ -11,6 +11,7 @@ import { PoPage } from '../pages/purchaseorder/poPage';
 import { CataloguePage } from '../pages/catalogue/cataloguePage';
 
 import createAssetData from '../test-data/assets/createAssetData.json';
+import deleteAssetData from '../test-data/assets/deleteAssetData.json';
 import assetDetailsTabData from '../test-data/assets/assetDetailsDetailsTabData.json';
 import assetExtendedTabData from '../test-data/assets/assetDetailsExtendedTabData.json';
 import createRequestData from '../test-data/requests/createRequestData.json';
@@ -30,6 +31,7 @@ type MyFixtures = {
   poTestData: { createpo: typeof createPurchaseOrderData };
   assetTestData: {
     createasset: typeof createAssetData;
+    deleteasset: typeof deleteAssetData;
     assetdetailstab: typeof assetDetailsTabData;
     assetextendedtab: typeof assetExtendedTabData;
   };
@@ -126,6 +128,7 @@ export const test = baseTest.extend<MyFixtures>({
   assetTestData: async ({}, use) => {
     await use({
       createasset: createAssetData,
+      deleteasset: deleteAssetData,
       assetdetailstab: assetDetailsTabData,
       assetextendedtab: assetExtendedTabData,
     });

@@ -165,6 +165,17 @@ export class AssetPage {
         await helper.clickButton("Details");
     }
 
+       /*
+    ***************************
+    * Click Details button
+    ***************************
+    */
+    async clickDeleteBtn(): Promise<void> {
+        const deleteBtn = this.page.locator('[automation-button="Delete"]');
+        await deleteBtn.waitFor({ state: 'visible', timeout: 5000 });        
+        await helper.clickButton("Delete");
+    } 
+
     /*
     ************************************************
     * Fill in Asset Details - Details Tab
@@ -254,6 +265,69 @@ export class AssetPage {
     **  VERIFICATION TEST CODES
     ****************************
      */
+
+   /*
+    **************************************
+    * Verify Tree Node is Present By Name
+    * ************************************
+    */
+    async verifyTreeNodePresentByName(assetNumber: string): Promise<void> {
+        console.log(`🔍 Verifying tree node present: ${assetNumber}`);
+        
+        // Wait for tree nodes to populate
+        const treeNodes = this.page.locator('td[automation-col="Number"]');
+        await treeNodes.first().waitFor({ state: 'visible', timeout: 5000 });
+
+        // Use a timeout to prevent infinite waiting
+        const isPresent = await Promise.race([
+            this.isTreeNodePresent(assetNumber),
+            new Promise<boolean>(resolve => setTimeout(() => resolve(false), 10000)) // 10 second timeout
+        ]);
+        
+        if (!isPresent) {
+            throw new Error(`❌ Asset ${assetNumber} should be present in the tree but was not found`);
+        }
+        
+        console.log(`✅ Asset ${assetNumber} successfully verified in the tree`);
+    }
+
+   /*
+    **************************************
+    * Verify Tree Node is Not Present By Name
+    * ************************************
+    */
+    async verifyTreeNodeNotPresentByName(assetNumber: string): Promise<void> {
+        console.log(`🔍 Verifying tree node not present: ${assetNumber}`);
+        
+        // Wait for tree nodes to populate
+        const treeNodes = this.page.locator('td[automation-col="Number"]');
+        await treeNodes.first().waitFor({ state: 'visible', timeout: 5000 });
+
+        // Use a timeout to prevent infinite waiting
+        const isPresent = await Promise.race([
+            this.isTreeNodePresent(assetNumber),
+            new Promise<boolean>(resolve => setTimeout(() => resolve(false), 10000)) // 10 second timeout
+        ]);
+        
+        if (isPresent) {
+            throw new Error(`❌ Asset ${assetNumber} should not be present in the tree but was found`);
+        }
+
+        console.log(`✅ Asset ${assetNumber} successfully deleted and removed in the tree`);
+    }
+
+   /*
+    **************************************
+    * Verify Confirmation Dialog Visible and Click Yes
+    * ************************************
+    */    
+    async confirmDeleteAction(dialogName: string, answer: string): Promise<void> {
+        const dialog = this.page.locator(`[automation-dialog="${dialogName}"]`);
+        await expect(dialog).toBeVisible();
+        // Click the Ok button inside the dialog
+        const answerButton = dialog.locator(`[automation-button="${answer}"]`);
+        await answerButton.click();
+    }    
 
     /*
     ***********************************************
