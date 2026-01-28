@@ -9,6 +9,7 @@ import { test } from '../fixtures';
     * Expected Result: Asset Register loads without errors
     * Custom tags: @smoke
     */
-test('Open Asset Module using fixture data @smoke @feature-asset', async ({ assetPage, loginPage }) => {
+    test('Open Asset Module using fixture data @smoke @feature-asset', async ({ assetPage, loginPage }) => {
+        console.log('🧪 Starting test: Open Asset Module using fixture data');
         await assetPage.openAssetModule();
     });

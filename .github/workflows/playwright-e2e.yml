@@ -4,7 +4,7 @@ name: E2E
 on:
   push:    
     branches:
-      - main
+      - feature/requests-module
   workflow_dispatch:
 
 jobs:
@@ -13,7 +13,11 @@ jobs:
     env:
         E2E_USERNAME: ${{ secrets.E2E_USERNAME }}
         E2E_PASSWORD: ${{ secrets.E2E_PASSWORD }}
+<<<<<<< HEAD
         BASE_URL: https://preview.mex16.dev/
+=======
+        BASE_URL: https://bonnie.mexcmms.com/
+>>>>>>> 8d5f7dd2b72be80ded763c3c73660e849e4891d6
 
     steps:
       - name: Checkout repository

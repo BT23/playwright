@@ -1,8 +1,8 @@
 {
-  "assetNumber": "BBC",
-  "assetDesc": "BBC News",
+  "assetNumber": "Auto Test Asset 02",
+  "assetDesc": "Automation Test Asset",
   "details": {
-    "Description": "Helper",
+    "Description": "Change Description to: fill Details Tab",
     "AssetType": "burner",
     "Manufacturer": "cummins - cummins power",
     "ModelNumber": "vl98 - vl98",
