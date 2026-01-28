@@ -27,13 +27,8 @@ export default defineConfig({
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
     /* Base URL to use in actions like `await page.goto('/')`. */
-<<<<<<< HEAD
     // baseURL: 'http://127.0.0.1:3000',
     baseURL: 'https://preview.mex16.dev/',
-=======
-     baseURL: 'https://bonnie.mexcmms.com/',
-    //baseURL: 'https://staging-2026-01-22.mex16.dev/',
->>>>>>> 8d5f7dd2b72be80ded763c3c73660e849e4891d6
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
 
