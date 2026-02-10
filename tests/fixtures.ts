@@ -9,6 +9,7 @@ import { RequestPage } from '../pages/requests/requestPage';
 import { WoPage } from '../pages/workorders/woPage';
 import { PoPage } from '../pages/purchaseorder/poPage';
 import { CataloguePage } from '../pages/catalogue/cataloguePage';
+import { SupplierPage } from '../pages/Contacts/SupplierPage';
 
 import createAssetData from '../test-data/assets/createAssetData.json';
 import deleteAssetData from '../test-data/assets/deleteAssetData.json';
@@ -20,6 +21,7 @@ import woDetailsTabData from '../test-data/work-orders/woDetailsTabData.json';
 import addWOSpareData from '../test-data/work-orders/woSparesTabData.json';
 import createCatalogueData from '../test-data/catalogue/createCatalogueData.json';
 import createPurchaseOrderData from '../test-data/purchase-orders/createPurchaseOrderData.json';
+import createSupplierData from '../test-data/contacts/suppliers/createSupplierData.json';
 
 type MyFixtures = {
   loginPage: LoginPage;
@@ -28,6 +30,7 @@ type MyFixtures = {
   woPage: WoPage;
   cataloguePage: CataloguePage;
   poPage: PoPage;
+  supplierPage: SupplierPage;
   poTestData: { createpo: typeof createPurchaseOrderData };
   assetTestData: {
     createasset: typeof createAssetData;
@@ -43,12 +46,14 @@ type MyFixtures = {
   };
   catalogueTestData: {
     createcatalogue: typeof createCatalogueData;
-  };  
+  };
+  supplierTestData: {createsupplier: typeof createSupplierData;};  
   assetDataFilePath: string;
   requestDataFilePath: string;
   catalogueFilePath: string;
   poDataFilePath: string;
   woDataFilePath: string;
+  supplierDataFilePath: string;
 };
 
 export const test = baseTest.extend<MyFixtures>({  
@@ -125,6 +130,12 @@ export const test = baseTest.extend<MyFixtures>({
     await use(poPage);
   },
 
+  supplierPage: async ({ page, loginPage }, use) => {
+    const supplierPage = new SupplierPage(page);
+    await supplierPage.openSupplierListing();
+    await use(supplierPage);
+  },
+
   assetTestData: async ({}, use) => {
     await use({
       createasset: createAssetData,
@@ -152,6 +163,10 @@ export const test = baseTest.extend<MyFixtures>({
     await use({ createpo: createPurchaseOrderData });
   },
 
+  supplierTestData: async ({}, use) => {
+    await use({ createsupplier: createSupplierData });
+  },
+  
   assetDataFilePath: async ({}, use) => {
     await use(path.resolve(__dirname, '../test-data/assets/assetTempData.json'));
   },

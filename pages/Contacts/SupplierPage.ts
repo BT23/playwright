@@ -19,6 +19,14 @@ export class SupplierPage {
     */
 
     async openSupplierListing(): Promise<void> {
+        // Wait for the Stores button to become visible
+        await this.page.waitForSelector('[automation-button="NavItemStores"]', { state: 'visible', timeout: 5000 });        
+        // Click on Stores button to open the Stores menu
+        await helper.clickButton("NavItemStores");
+        await this.page.waitForSelector('[automation-button="Suppliers"]', { state: 'visible', timeout: 5000 });
+        await helper.clickButton('Suppliers');
+        await this.assertSupplierListingOpened();
+        /*
         try {
             // Try the default navigation path first
             const contactsButton = this.page.locator('[automation-button="Contacts"]');
@@ -48,6 +56,7 @@ export class SupplierPage {
                 throw new Error(`openSupplierListing failed: ${String(fallbackErr)}`);
             }
         }
+        */
     }
    
     /*
@@ -66,38 +75,47 @@ export class SupplierPage {
         await helper.enterValueInFilterDialog('CreateContact', 'CompanyName', companyName);
         await helper.clickButton("Create");
         await this.page.waitForTimeout(1000);
-        await helper.clickButton('Back');
     }
-   
+  
+     /*
+    ***************************
+    * Click Back button
+    ***************************
+    */
+    async clickBackBtn(): Promise<void> {
+        await helper.closePage();
+        await this.page.waitForTimeout(1000);
+    }   
+
     /**
      * Asserts that the Supplier listing page is opened by checking the header.
      */
     async assertSupplierListingOpened(): Promise<void> {
-        await helper.checkHeader('ContactsListingHeader');
+        await helper.checkHeader('SuppliersListingHeader');
 
-        // Verify the ContactsListingHeader text reads "Supplier Listing"
-        const header = this.page.locator('[automation-header="ContactsListingHeader"]');
+        // Verify the SuppliersListingHeader text reads "Suppliers Listing"
+        const header = this.page.locator('[automation-header="SuppliersListingHeader"]');
         await expect(header).toHaveText("Suppliers Listing", { timeout: 5000 });        
     }
 
     /**
      * Verify that the Supplier is created and exists in the listing.
      */
-    async verifySupplierExist(): Promise<void> {
+    async verifySupplierExist(companyCode: string): Promise<void> {
         await helper.clickButton("Refresh");
         await this.page.waitForTimeout(1000);
  
-        const supplierCode = "SUPP001";
-        const selector = `[automation-grid="ContactListingGrid"] >> text=${supplierCode}`;
+
+        const selector = `[automation-grid="ContactListingGrid"] >> text=${companyCode}`;
 
         // Check if the supplier exists in the grid
         const supplierExists = await this.page.locator(selector).isVisible();
 
         if (supplierExists) {
-            await helper.selectRowByFieldName("ContactListingGrid", "Code|FirstName", supplierCode);
-            console.log(`Supplier ${supplierCode} found and selected.`);
+            await helper.selectRowByFieldName("ContactListingGrid", "Code|FirstName", companyCode);
+            console.log(`Supplier ${companyCode} found and selected.`);
         } else {
-            throw new Error(`Supplier ${supplierCode} not found in ContactListingGrid.`);
+            throw new Error(`Supplier ${companyCode} not found in ContactListingGrid.`);
         }
     }
 }
