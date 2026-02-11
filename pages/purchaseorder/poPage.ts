@@ -22,9 +22,6 @@ export class PoPage {
     ************************************
     */
     async openPOModule(): Promise<void> {
-        // Click on Stores button to open the Stores menu
-        await helper.clickButton("NavItemStores");
-
         // Wait for the Purchasing button to become visible
         await this.page.waitForSelector('[automation-button="Purchasing"]', { state: 'visible', timeout: 5000 });
 
@@ -36,6 +33,13 @@ export class PoPage {
         // Wait for the PO Listing header to appear
         await this.page.waitForSelector('[automation-header="PurchaseOrderListingHeader"] span', { state: 'visible', timeout: 5000 });
 
+    }
+
+    async openStoresMenu(): Promise<void> {
+        // Wait for the Purchasing button to become visible
+        await this.page.waitForSelector('[automation-button="NavItemStores"]', { state: 'visible', timeout: 5000 });        
+        // Click on Stores button to open the Stores menu
+        await helper.clickButton("NavItemStores");
     }
 
     /***************************
