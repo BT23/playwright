@@ -6,3 +6,4 @@ node_modules/
 playwright/.auth/
 auth-storage.json
 playwright-originalbackup.yml
+/debug/

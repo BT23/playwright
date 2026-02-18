@@ -126,6 +126,7 @@ export const test = baseTest.extend<MyFixtures>({
 
   poPage: async ({ page, loginPage }, use) => {
     const poPage = new PoPage(page);
+    await poPage.openStoresMenu();
     await poPage.openPOModule();
     await use(poPage);
   },

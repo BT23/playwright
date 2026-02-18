@@ -1,9 +1,9 @@
 {
-    "SupplierCode": "AUTO_PO_SUPP_001",
-    "SupplierName": "Auto PO Supplier 001",
-    "SupplierStockNumber": "Kong Toy",
-    "Quantity": "15",
+    "SupplierCode": "Bakers",
+    "SupplierName": "EA Baker and Co",
+    "SupplierStockNumber": "LB100",
+    "Quantity": "2",
     "UOM": "EACH",
-    "UnitPrice": "15.00"
+    "UnitPrice": "1.00"
 
 }

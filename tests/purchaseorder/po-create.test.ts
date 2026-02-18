@@ -13,14 +13,7 @@ import { test } from '../fixtures'
     * Custom tags: @smoke @feature-po
     */ 
 
-test('Create PO using fixture data @smoke @feature-po', async ({ poPage, supplierPage, poTestData, poDataFilePath  }) => {
-    console.log('🧪 Starting test: Create new PO using fixture data');
-    await supplierPage.openSupplierListing();
-    console.log('🧪 Starting test: Create new PO supplier using fixture data');
-    await supplierPage.createSupplier(poTestData.createpo.SupplierCode, poTestData.createpo.SupplierName);
-    await supplierPage.clickBackBtn(); // Save and Back
-    console.log('🧪 Starting test: Open PO Listing using fixture data');
-    await poPage.openPOModule();
+test('Create PO using fixture data @smoke @feature-po', async ({ poPage, poTestData, poDataFilePath  }) => {
     console.log('🧪 Starting test: Create new PO  using fixture data');
     await poPage.createPO(poTestData.createpo.SupplierCode, poDataFilePath);
     await poPage.clickBackBtn(); // Save and Back

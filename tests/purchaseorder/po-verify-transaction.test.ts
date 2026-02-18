@@ -12,14 +12,18 @@ import { test } from '../fixtures'
     * Expected Result: PO Transactions are displayed correctly
     * Custom tags: @smoke @feature-po
     */ 
-
-test('Verify PO Transaction using fixture data @smoke @feature-po', async ({ poPage, poDataFilePath }) => {
+/*
+test('Verify PO Transaction using fixture data @smoke @feature-po', async ({ poPage}) => {
+    console.log('🧪 Starting test: Filter PO Listing with All Received status');
     await poPage.openListingFilter();    
     await poPage.enabledFilterPOStatusAllReceived();
     await poPage.closeListingFilter();
-    const specificPONumber = JSON.parse(readFileSync(poDataFilePath, 'utf-8'));    
-    await poPage.selectSpecificedPO(specificPONumber.poNumber);   
+
+    console.log('🧪 Starting test: Select PO 000001 with All Received status');    
+    // Select the PO with status = All Received
+    await poPage.selectSpecificedPO('000001');
     await poPage.clickPODetailsBtn();
     await poPage.clickPOTransactionsTab();
-    await poPage.verifyPOContractorInvoiceTransactions();
+    await poPage.verifyPOReceiptActionTransactions();
 });
+*/

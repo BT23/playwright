@@ -21,25 +21,22 @@ export class PoPage {
     * Open Purchase Order Listing
     ************************************
     */
-    async openPOModule(): Promise<void> {
-        // Wait for the Purchasing button to become visible
-        await this.page.waitForSelector('[automation-button="Purchasing"]', { state: 'visible', timeout: 5000 });
-
-
-        // Click on Stores button to open the Stores menu
-        await helper.clickButton("Purchasing");
-        //await this.page.waitForTimeout(1000);       
-
-        // Wait for the PO Listing header to appear
-        await this.page.waitForSelector('[automation-header="PurchaseOrderListingHeader"] span', { state: 'visible', timeout: 5000 });
-
-    }
-
     async openStoresMenu(): Promise<void> {
         // Wait for the Purchasing button to become visible
         await this.page.waitForSelector('[automation-button="NavItemStores"]', { state: 'visible', timeout: 5000 });        
         // Click on Stores button to open the Stores menu
         await helper.clickButton("NavItemStores");
+    }    
+    
+    async openPOModule(): Promise<void> {
+        // Wait for the Purchasing button to become visible
+        await this.page.waitForSelector('[automation-button="Purchasing"]', { state: 'visible', timeout: 5000 });
+
+        // Click on Purchasing button to open the PO Listing
+        await helper.clickButton("Purchasing");
+
+        // Wait for the PO Listing header to appear
+        await this.page.waitForSelector('[automation-header="PurchaseOrderListingHeader"] span', { state: 'visible', timeout: 5000 });
     }
 
     /***************************
@@ -50,6 +47,10 @@ export class PoPage {
     async createPO(poSupplier: string, filePath?: string): Promise<string> {
         // Click the New button to create a new Purchase Order
         await helper.clickButton("New");
+
+        // Wait until the PO Header is visible before clicking
+        const createPOHeader = this.page.locator('[automation-header="CreatePurchaseOrder"]');
+        await createPOHeader.waitFor({ state: 'visible', timeout: 5000 });    
 
         // Enter the supplier short name in the dialog/list
         const supplierShortName = poSupplier.split(' ')[0].substring(0, 2);
@@ -62,6 +63,9 @@ export class PoPage {
         // Wait until the PO Header is visible before clicking
         const poHeader = this.page.locator('[automation-header="PurchaseOrderHeader"]');
         await poHeader.waitFor({ state: 'visible', timeout: 5000 });        
+
+        await helper.enterValue("SpecialInstructions", "Automation Testing - Create PO");
+        await this.page.waitForTimeout(1000);
 
         const poNumber = await helper.getFieldValue("PurchaseOrderNo");
         console.log(`Created PO Number: ${poNumber}`);
@@ -79,7 +83,7 @@ export class PoPage {
     ***************************
     */
   
-    async addPOItem(testData:{SupplierStockNumber: string, Quantity: string;}): Promise<void> {
+    async addPOItem(SupplierStockNumber: string, Quantity:string): Promise<void> {
         // Wait until the PO Header is visible before clicking
         const poHeader = this.page.locator('[automation-header="PurchaseOrderHeader"]');
         await poHeader.waitFor({ state: 'visible', timeout: 5000 });
@@ -100,11 +104,11 @@ export class PoPage {
 
         // Enter the supplier short name in the dialog/list
         const newRow = await helper.selectLastRow("ItemsTabGrid");
-        const stockNumberShortName = testData.SupplierStockNumber.split(' ')[0].substring(0, 2);     
+        const stockNumberShortName = SupplierStockNumber.split(' ')[0].substring(0, 2);     
         await helper.enterValueInCell(newRow, "SupplierStockNumber", stockNumberShortName);
         await helper.selectFirstListItem();
         await this.page.waitForTimeout(1000);
-        await helper.enterValueInCell(newRow, "Quantity", testData.Quantity);
+        await helper.enterValueInCell(newRow, "Quantity", Quantity);
         await this.page.waitForTimeout(1000);
     }
 
@@ -114,7 +118,7 @@ export class PoPage {
     ***************************
     */
     async selectSpecificedPO(poNumber: string): Promise<void> {
-        await helper.selectRowByFieldName("PurchaseOrderListingGrid","P/ONumber", poNumber);
+        await helper.selectRowByFieldName("PurchaseOrderListingGrid","P/ONumber", poNumber.trim());
         await this.page.waitForTimeout(1000);
     }
 
@@ -302,5 +306,33 @@ export class PoPage {
         expect(foundInvoiceMatch).toBe(true);
     }
 
+    /*
+    **************************************************************
+    * Verify PO Contractor Invoice Transactions (Transactions tab)
+    * 
+    * This method verifies that the Transactions tab contains both
+    * "Receipt" and "Invoice Match" entries in the Action column.
+    **************************************************************
+    */
+    async verifyPOReceiptActionTransactions(): Promise<void> {
+        // Select the row with "Receipt" in the Action column
+        await helper.selectRowByFieldName("TransactionsTabGrid", "Action", "Receipt");
+
+        // Get all rows in the TransactionsTabGrid
+        const grid = this.page.locator('[automation-grid="TransactionsTabGrid"]');
+        const rows = grid.locator('[automation-row]');
+        const count = await rows.count();
+
+        let foundReceipt = false;
+
+        for (let i = 0; i < count; i++) {
+            const row = rows.nth(i);
+            const actionCell = row.locator('[automation-col="Action"]');
+            const cellText = (await actionCell.textContent())?.trim();
+            if (cellText === "Receipt") foundReceipt = true;
+        }
+
+        expect(foundReceipt).toBe(true);
+    }
 
 }

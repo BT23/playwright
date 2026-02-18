@@ -11,11 +11,16 @@ import { test } from '../fixtures'
     * Custom tags: @smoke @feature-wo
     * */
 
-    test('Print WO on listing using fixture data @smoke @feature-wo', async ({ woPage,woDataFilePath }) => {
-        const specificWONumber = JSON.parse(readFileSync(woDataFilePath, 'utf-8'));  
-        await woPage.selectSpecificedWO(specificWONumber.woNumber);        
-        //await woPage.printWOReportOnListing(specificWONumber);
-        await woPage.printWOReport(specificWONumber, false)
+    test('Print WO on listing using fixture data @smoke @feature-wo', async ({ woPage, woTestData }) => {
+        console.log('🧪 Starting test: Create WO using fixture data');
+        // Create the WO and capture the number instead of reading from file (as WO number does not exist when running the worker in parallel)
+        const rawWoNumber = await woPage.createWO(woTestData.createwo.Asset, woTestData.createwo.Description);
+        // Ensure we have a value and trim it
+        const woNumber = rawWoNumber?.trim() ?? null;        
+        await woPage.clickBackBtn();
+        console.log('🧪 Starting test: Print WO on listing');
+        await woPage.selectSpecificedWO(woNumber!);   
+        await woPage.printWOReport(woNumber!, false)
     });
 
    /*
@@ -30,10 +35,15 @@ import { test } from '../fixtures'
     * Custom tags: @smoke @feature-wo
     * */
 
-    test('Print WO in Details form using fixture data @smoke @feature-wo', async ({ woPage,woDataFilePath }) => {
-        const specificWONumber = JSON.parse(readFileSync(woDataFilePath, 'utf-8'));  
-        await woPage.selectSpecificedWO(specificWONumber.woNumber);        
+    test('Print WO in Details form using fixture data @smoke @feature-wo', async ({ woPage,woTestData }) => {
+        console.log('🧪 Starting test: Create WO using fixture data');
+        // Create the WO and capture the number instead of reading from file (as WO number does not exist when running the worker in parallel)
+        const rawWoNumber = await woPage.createWO(woTestData.createwo.Asset, woTestData.createwo.Description);
+        // Ensure we have a value and trim it
+        const woNumber = rawWoNumber?.trim() ?? null;        
+        await woPage.clickBackBtn();
+        console.log('🧪 Starting test: Print WO in Details');
+        await woPage.selectSpecificedWO(woNumber!);        
         await woPage.clickWODetailsBtn();
-        //await woPage.printWOReportInDetailsForm(specificWONumber);
-        await woPage.printWOReport(specificWONumber, true)
+        await woPage.printWOReport(woNumber!, true)
     });

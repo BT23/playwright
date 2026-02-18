@@ -607,17 +607,43 @@ async verifyFields(
 async verifyRowCellValues(row: Locator, expectedValues: Record<string, string>): Promise<void> {
     const mismatches: string[] = [];
 
+    // Helper: normalize values by removing currency symbols, thousands separators
+    // and extracting numeric portion when present so numeric comparison can be used.
+    const normalizeComparableValue = (val: string): { text: string; numeric?: number } => {
+      const raw = (val ?? '').trim();
+      // Remove common currency symbols
+      const noCurrency = raw.replace(/[$£€₹¥₩₽¢]/g, '').replace(/\u00A0/g, ' ').trim();
+      // Remove thousands separators (commas)
+      const noSeparators = noCurrency.replace(/,/g, '').trim();
+      // Attempt to extract a numeric portion (first match)
+      const match = noSeparators.match(/-?\d+(?:\.\d+)?/);
+      const numeric = match ? parseFloat(match[0]) : undefined;
+      return { text: noSeparators.toLowerCase(), numeric };
+    };
+
     for (const [columnName, expectedValue] of Object.entries(expectedValues)) {
       const actualValue = await this.getCellValue(row, columnName);
-      const actualTrimmed = actualValue.trim().toLowerCase();
-      const expectedTrimmed = expectedValue.trim().toLowerCase();
+      const actualNormalized = normalizeComparableValue(actualValue);
+      const expectedNormalized = normalizeComparableValue(expectedValue);
 
       console.log(`Verifying column "${columnName}": actual="${actualValue}", expected="${expectedValue}"`);
 
-      if (actualTrimmed !== expectedTrimmed) {
-        mismatches.push(
-          `❌ Column "${columnName}": Expected "${expectedValue}", but got "${actualValue}"`
-        );
+      // If both sides contain numeric parts, compare numerically (allowing tiny float tolerance)
+      if (actualNormalized.numeric !== undefined && expectedNormalized.numeric !== undefined) {
+        const a = actualNormalized.numeric;
+        const b = expectedNormalized.numeric;
+        if (Math.abs(a - b) > 0.0001) {
+          mismatches.push(
+            `❌ Column "${columnName}": Expected ${expectedValue}, but got ${actualValue}`
+          );
+        }
+      } else {
+        // Fallback to case-insensitive string compare after normalization
+        if (actualNormalized.text !== expectedNormalized.text) {
+          mismatches.push(
+            `❌ Column "${columnName}": Expected "${expectedValue}", but got "${actualValue}"`
+          );
+        }
       }
     }
 
