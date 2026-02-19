@@ -1,125 +1,53 @@
-name: Playwright Tests
+
+name: E2E
 
 on:
-  push:
-    branches: [ main, master ]
-  pull_request:
-    branches: [ main, master ]
+  push:    
+    branches:
+      - main
   workflow_dispatch:
-    inputs:
-      milestone:
-        description: 'Milestone to test (e.g. 23.4)'
-        required: false
-        type: string
-      modules:
-        description: 'Modules to test (comma-separated)'
-        required: false
-        type: string
-        default: 'all'
-
-env:
-  STAGING_URL: ${{ secrets.STAGING_URL }}
-  TEST_USERNAME: ${{ secrets.TEST_USERNAME }}
-  TEST_PASSWORD: ${{ secrets.TEST_PASSWORD }}
 
 jobs:
-  smoke-tests:
+  test:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
-    steps:
-    - uses: actions/checkout@v4
-    - uses: actions/setup-node@v4
-      with:
-        node-version: lts/*
-    - name: Install dependencies
-      run: npm ci
-    - name: Install Playwright Browsers
-      run: npx playwright install --with-deps
-    - name: Run Smoke Tests
-      run: |
-        MILESTONE="${{ github.event.inputs.milestone || '' }}"
-        if [ "$MILESTONE" != "" ]; then
-          npx playwright test --grep "@smoke" --grep "@milestone-$MILESTONE"
-        else
-          npx playwright test --grep "@smoke"
-        fi
-    - uses: actions/upload-artifact@v4
-      if: always()
-      with:
-        name: smoke-test-results
-        path: playwright-report/
-        retention-days: 30
+    env:
+        E2E_USERNAME: ${{ secrets.E2E_USERNAME }}
+        E2E_PASSWORD: ${{ secrets.E2E_PASSWORD }}
+        BASE_URL: https://staging-2026-02-12.mex16.dev/
 
-  milestone-module-tests:
-    needs: smoke-tests
-    if: github.event_name == 'workflow_dispatch' && github.event.inputs.milestone != ''
-    runs-on: ubuntu-latest
-    outputs:
-      matrix: ${{ steps.set-matrix.outputs.matrix }}
     steps:
-      - id: set-matrix
-        run: |
-          MODULES="${{ github.event.inputs.modules || 'all' }}"
-          if [ "$MODULES" == "all" ]; then
-            echo 'matrix=["wo", "po", "asset"]' >> $GITHUB_OUTPUT
-          else
-            MODULES_JSON=$(echo "$MODULES" | jq -R -c 'split(",")')
-            echo "matrix=$MODULES_JSON" >> $GITHUB_OUTPUT
-          fi
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-  run-module-tests:
-    needs: milestone-module-tests
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        module: ${{ fromJson(needs.milestone-module-tests.outputs.matrix) }}
-      fail-fast: false
-    # environment: staging  # ← Remove or uncomment only if 'staging' is defined in repo settings
-    steps:
-    - uses: actions/checkout@v4
-    - uses: actions/setup-node@v4
-      with:
-        node-version: lts/*
-    - name: Install dependencies
-      run: npm ci
-    - name: Install Playwright Browsers
-      run: npx playwright install --with-deps
-    - name: Run Module Tests for Milestone
-      run: |
-        MILESTONE="${{ github.event.inputs.milestone || '' }}"
-        npx playwright test --grep "@milestone-$MILESTONE" --grep "@${{ matrix.module }}" --grep-invert "@smoke|@regression"
-    - uses: actions/upload-artifact@v4
-      if: always()
-      with:
-        name: milestone-${{ matrix.module }}-results
-        path: playwright-report/
-        retention-days: 30
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22.10.0
+          cache: 'npm'
 
-  regression:
-    needs: [smoke-tests, run-module-tests]
-    if: always() && needs.smoke-tests.result == 'success'
-    runs-on: ubuntu-latest
-    timeout-minutes: 120
-    steps:
-    - uses: actions/checkout@v4
-    - uses: actions/setup-node@v4
-      with:
-        node-version: lts/*
-    - name: Install dependencies
-      run: npm ci
-    - name: Install Playwright Browsers
-      run: npx playwright install --with-deps
-    - name: Run Regression Tests
-      run: |
-        MILESTONE="${{ github.event.inputs.milestone || '' }}"
-        if [ "$MILESTONE" != "" ]; then
-          npx playwright test --grep "@regression" --grep "@milestone-$MILESTONE"
-        else
-          npx playwright test --grep "@regression"
-        fi
-    - uses: actions/upload-artifact@v4
-      if: always()
-      with:
-        name: regression-results
-        path: playwright-report/
-        retention-days: 30
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps
+
+      # Run feature tests for work orders and assets
+      - name: Run feature tests (WO + Asset + Requests + Supplier)
+        run: npm run test:features
+       
+      # Always upload raw test-results if your tests output there (e.g. trace, screenshots)
+      - name: Upload Playwright test artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+            name: test-results
+            path: test-results
+            if-no-files-found: ignore
+
+      # Optional: Generate HTML report (for smoke subset)
+      - name: Upload HTML report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report             
+          path: playwright-report

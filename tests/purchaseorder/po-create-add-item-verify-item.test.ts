@@ -17,6 +17,7 @@ import { test } from '../fixtures'
 
 test('Add PO Item using fixture data @smoke @feature-po', async ({ poPage, poTestData}) => {
     console.log('🧪 Starting test: Create PO using fixture data');
+        poPage.goto(); // Navigate to PO Module  
         const rawPoNumber = await poPage.createPO(poTestData.createpo.SupplierCode);
         // Ensure we have a value and trim it
         const poNumber = rawPoNumber?.trim() ?? null;

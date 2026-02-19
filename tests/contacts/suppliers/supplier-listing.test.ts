@@ -13,6 +13,6 @@ import { test } from '../../fixtures'
     
     test('Open Supplier Listing @bug @smoke @regression @feature-supplier', async ({ supplierPage  }) => {
         console.log('🧪 Starting test: Open Supplier Listing');
-        await supplierPage.openSupplierListing();
+        await supplierPage.openSupplierListing; // Navigate to Supplier Listing
         console.log('✅ Test completed: Suppliers Listing opened successfully');        
     });

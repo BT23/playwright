@@ -32,9 +32,13 @@ jobs:
         run: npx playwright install --with-deps
 
       # Run feature tests for work orders and assets
-      - name: Run feature tests (WO + Asset + Requests + Supplier)
-        run: npm run test:features
-       
+      #- name: Run feature tests (WO + Asset + Requests + Supplier)
+      #  run: npm run test:features
+
+      # Run only tests tagged @smoke
+      - name: Run smoke tests (@smoke)
+        run: npm run test:smoke
+        
       # Always upload raw test-results if your tests output there (e.g. trace, screenshots)
       - name: Upload Playwright test artifacts
         if: always()

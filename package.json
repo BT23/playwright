@@ -8,7 +8,10 @@
     "test:features": "playwright test --grep \"@feature-(wo|asset|request|supplier|po)\" --project=chromium --reporter=html",
     "test:requests": "playwright test tests/requests --project=chromium --reporter=html",
     "test:report": "playwright show-report",
-    "install:browsers": "playwright install --with-deps"
+    "install:browsers": "playwright install --with-deps",
+
+    "test:smoke": "playwright test --grep \"@smoke\" --project=chromium --reporter=html"
+    
   },
   "keywords": [],
   "author": "",

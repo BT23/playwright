@@ -17,6 +17,7 @@ import { test } from '../fixtures'
 
 test('Fill in Asset Details Details tab using fixture data @smoke @feature-asset', async ({ assetPage, assetTestData }) => { 
     console.log('🧪 Starting test: Fill in an existing asset details - details tab using fixture data');
+    await assetPage.goto();
     await assetPage.createLevel1Asset(assetTestData.assetdetailstab.assetNumber, assetTestData.assetdetailstab.assetDesc);
     await assetPage.assetDetails_DetailsTab_FillAllFields(assetTestData.assetdetailstab);
     await assetPage.addWarrantyAndReadingType();

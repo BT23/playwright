@@ -101,40 +101,27 @@ export const test = baseTest.extend<MyFixtures>({
   },
 
   assetPage: async ({ page, loginPage}, use) => {
-    const assetPage = new AssetPage(page);
-    await assetPage.openAssetModule();
-    await use(assetPage);
+    await use(new AssetPage(page));
   },
 
   requestPage: async ({ page, loginPage}, use) => {
-    const requestPage = new RequestPage(page);
-    await requestPage.openRequestsModule();
-    await use(requestPage);
+    await use(new RequestPage(page));
   },
 
   woPage: async ({ page, loginPage }, use) => {
-    const woPage = new WoPage(page);
-    await woPage.openWOModule();
-    await use(woPage);
+    await use(new WoPage(page));    
   },
 
   cataloguePage: async ({ page, loginPage }, use) => {
-    const cataloguePage = new CataloguePage(page);
-    await cataloguePage.openCatalogueModule();
-    await use(cataloguePage);
+    await use(new CataloguePage(page));
   },
 
   poPage: async ({ page, loginPage }, use) => {
-    const poPage = new PoPage(page);
-    await poPage.openStoresMenu();
-    await poPage.openPOModule();
-    await use(poPage);
+    await use(new PoPage(page));
   },
 
   supplierPage: async ({ page, loginPage }, use) => {
-    const supplierPage = new SupplierPage(page);
-    await supplierPage.openSupplierListing();
-    await use(supplierPage);
+    await use(new SupplierPage(page));
   },
 
   assetTestData: async ({}, use) => {
@@ -157,6 +144,12 @@ export const test = baseTest.extend<MyFixtures>({
       createwo: createWorkOrderData,
       wodetails: woDetailsTabData,
       wospares: addWOSpareData,
+    });
+  },
+
+  catalogueTestData: async ({}, use) => {
+    await use({
+      createcatalogue: createCatalogueData
     });
   },
 

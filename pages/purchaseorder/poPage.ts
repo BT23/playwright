@@ -16,6 +16,11 @@ export class PoPage {
         helper.setPage(page);
     }
 
+    async goto() {
+        await this.openStoresMenu();
+        await this.openPOModule();
+    }
+
     /*
     ************************************
     * Open Purchase Order Listing

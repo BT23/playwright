@@ -12,5 +12,7 @@ import { test } from '../fixtures'
  */
 
 test('Open PO lising @smoke @feature-po', async ({ poPage }) => {
+        console.log('🧪 Starting test: Open Stores Menu and then open PO Listing');
+        await poPage.openStoresMenu();
         await poPage.openPOModule();
 });

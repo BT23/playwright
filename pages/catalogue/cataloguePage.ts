@@ -11,29 +11,32 @@ export class CataloguePage {
         helper.setPage(page);
     }
 
+     async goto() {
+        await this.openStoresMenu();
+        await this.openCatalogueModule();
+    }     
+
     /*
     ************************
     * Open Catalogue Module
     ************************
     */
-    async openCatalogueModule(): Promise<void> {
-        // Check if the "Stores" button is visible
-        const storesButton = this.page.locator('[automation-button="Stores"]');
-        if (!(await storesButton.isVisible())) {
-            await helper.addModuleToMenu("Stores");
-            await this.page.waitForTimeout(1000);
-        }
-
+     async openStoresMenu(): Promise<void> {
+        // Wait for the Purchasing button to become visible
+        await this.page.waitForSelector('[automation-button="NavItemStores"]', { state: 'visible', timeout: 5000 });        
         // Click on Stores button to open the Stores menu
-        await helper.clickButton("Stores");
+        await helper.clickButton("NavItemStores");
+    } 
+
+    async openCatalogueModule(): Promise<void> {
+        // Wait for the Purchasing button to become visible
+        await this.page.waitForSelector('[automation-button="Catalogue"]', { state: 'visible', timeout: 5000 });
 
         // Click on Stores button to open the Stores menu
         await helper.clickButton("Catalogue");
         
-        // Verify that the Work Order Listing header is displayed
-        await helper.checkHeader("CatalogueListingHeader");
-    
-        await this.page.waitForTimeout(1000);
+        // Wait for the Catalogue Listing header to appear
+        await this.page.waitForSelector('[automation-header="CatalogueListingHeader"] span', { state: 'visible', timeout: 5000 });        
     }
 
      /*
@@ -42,28 +45,36 @@ export class CataloguePage {
     **********************
     */
     async createCatalogue(catalogueNumber: string, partName:string, soh:string, cost:string): Promise<void> {
-        await this.openCatalogueModule();
 
         await helper.clickButton("New");
-        await this.page.waitForTimeout(1000);
+
+        const createCatalogueHeader = this.page.locator('[automation-header="CreateCatalogue"]');
+        await createCatalogueHeader.waitFor({ state: 'visible', timeout: 5000 });
 
         await helper.enterValueInDialog("CreateCatalogue","Number",catalogueNumber);
-        await this.page.waitForTimeout(1000);
-
-        await helper.enterValueInDialog("CreateCatalogue","Description",partName);
-        await this.page.waitForTimeout(1000);
-
+        
+        await helper.enterValueInDialog("CreateCatalogue","PartName",partName);
+        
         await helper.enterValueInDialog("CreateCatalogue","StockonHand",soh);
-        await this.page.waitForTimeout(1000);
-
+        
         await helper.enterValueInDialog("CreateCatalogue","UnitPrice",cost);
-        await this.page.waitForTimeout(1000);    
-
+        
         // Click the Create button to save the new Work Order
         await helper.clickButtonInDialog("CreateCatalogue", "Create");
 
-        await this.page.waitForTimeout(1000);
+        // Wait for dialog to close or next action to complete
+        await this.page.waitForLoadState('domcontentloaded');  
     }   
+
+    /*
+    ***************************
+    * Click Back button
+    ***************************
+    */
+    async clickBackBtn(): Promise<void> {
+        await helper.closePage();
+        await this.page.waitForTimeout(1000);
+    }
 
     /*
     ************************

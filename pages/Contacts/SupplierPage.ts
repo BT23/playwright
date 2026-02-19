@@ -10,6 +10,14 @@ export class SupplierPage {
         helper.setPage(page);
     }
 
+    /*************************************
+    * Navigate to Supplier Listing
+    ************************************
+    */
+    async goto() {
+        await this.openSupplierListing();
+    }
+
     /*
     ************************************
     * Open Supplier Listing

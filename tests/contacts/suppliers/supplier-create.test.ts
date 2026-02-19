@@ -17,6 +17,7 @@ import { test } from '../../fixtures'
 
 test('Create new supplier using fixture data @smoke @regression @feature-supplier', async ({ supplierPage, supplierTestData  }) => {
     console.log('🧪 Starting test: Create new supplier using fixture data');
+    await supplierPage.goto(); // Navigate to Supplier Listing
     await supplierPage.createSupplier(supplierTestData.createsupplier.CompanyCode, supplierTestData.createsupplier.CompanyName);
     await supplierPage.clickBackBtn(); // Save and Back
     console.log('🧪 Starting test: Verify Supplier created and saved');

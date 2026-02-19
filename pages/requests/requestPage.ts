@@ -10,6 +10,10 @@ export class RequestPage {
         helper.setPage(page);
     }
 
+    async goto() {
+        await this.openRequestsModule();
+    }
+    
     /*
     *********************
     * Open Requests Module

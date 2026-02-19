@@ -13,6 +13,10 @@ export class WoPage {
 
     }
 
+    async goto() {
+        await this.openWOModule();
+    }
+
     /*
     ************************
     * Open Work Order Module

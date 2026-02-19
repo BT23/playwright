@@ -17,6 +17,7 @@ import { test } from '../fixtures';
 
 test('Create new level 1 asset using fixture data @smoke @feature-asset', async ({ assetPage, assetTestData }) => {
     console.log('🧪 Starting test: Create new level 1 asset using fixture data');
+    await assetPage.goto();
     await assetPage.createLevel1Asset(assetTestData.createasset.assetNumber, assetTestData.createasset.assetDesc);
     await assetPage.clickBackBtn(); // Save and Back
     console.log('🧪 Starting test: Verify New Level 1 asset showing on the tree using fixture data');

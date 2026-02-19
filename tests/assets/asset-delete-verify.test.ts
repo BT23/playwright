@@ -19,6 +19,7 @@ import { test } from '../fixtures';
 
 test('Delete new level 1 asset using fixture data @smoke @feature-asset', async ({ assetPage, assetTestData }) => {
     console.log('🧪 Starting test: Create new level 1 asset using fixture data');
+    await assetPage.goto();
     await assetPage.createLevel1Asset(assetTestData.deleteasset.assetNumber, assetTestData.deleteasset.assetDesc);
     // Click Save and Back button to return to Asset Register tree
     await assetPage.clickBackBtn();

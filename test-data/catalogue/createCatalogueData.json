@@ -1,6 +1,6 @@
 {
-  "catalogueNumber": "Chair",
-  "partName": "Office Chair",
+  "catalogueNumber": "Auto-001",
+  "partName": "Auto Part 001",
   "StockOnHand": "100",
   "UnitPrice": "200"
 }

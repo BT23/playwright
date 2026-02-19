@@ -13,6 +13,7 @@ import { test } from '../fixtures'
 
     test('Print WO on listing using fixture data @smoke @feature-wo', async ({ woPage, woTestData }) => {
         console.log('🧪 Starting test: Create WO using fixture data');
+        await woPage.goto(); // Open WO Module
         // Create the WO and capture the number instead of reading from file (as WO number does not exist when running the worker in parallel)
         const rawWoNumber = await woPage.createWO(woTestData.createwo.Asset, woTestData.createwo.Description);
         // Ensure we have a value and trim it
@@ -37,6 +38,7 @@ import { test } from '../fixtures'
 
     test('Print WO in Details form using fixture data @smoke @feature-wo', async ({ woPage,woTestData }) => {
         console.log('🧪 Starting test: Create WO using fixture data');
+        await woPage.goto(); // Open WO Module
         // Create the WO and capture the number instead of reading from file (as WO number does not exist when running the worker in parallel)
         const rawWoNumber = await woPage.createWO(woTestData.createwo.Asset, woTestData.createwo.Description);
         // Ensure we have a value and trim it

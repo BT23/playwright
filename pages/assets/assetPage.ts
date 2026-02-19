@@ -11,6 +11,10 @@ export class AssetPage {
 
         helper.setPage(page);
     }
+    
+     async goto() {
+        await this.openAssetModule();
+    }
 
    /*
     **************************************
@@ -298,20 +302,18 @@ export class AssetPage {
     */
     async verifyTreeNodeNotPresentByName(assetNumber: string): Promise<void> {
         console.log(`🔍 Verifying tree node not present: ${assetNumber}`);
-        
-        // Wait for tree nodes to populate
-        const treeNodes = this.page.locator('td[automation-col="Number"]');
-        await treeNodes.first().waitFor({ state: 'visible', timeout: 5000 });
 
-        // Use a timeout to prevent infinite waiting
-        const isPresent = await Promise.race([
-            this.isTreeNodePresent(assetNumber),
-            new Promise<boolean>(resolve => setTimeout(() => resolve(false), 10000)) // 10 second timeout
-        ]);
-        
-        if (isPresent) {
-            throw new Error(`❌ Asset ${assetNumber} should not be present in the tree but was found`);
-        }
+        // Ensure Asset Register has loaded
+        const header = this.page.locator('[automation-header="AssetRegisterHeader"] span');
+        await header.waitFor({ state: 'visible', timeout: 5000 });
+
+        // Use an exact-match locator for the number cell (case-insensitive)
+        const escapedName = escapeRegex(assetNumber);
+        const nodeLocator = this.page.locator('td[automation-col="Number"]')
+            .filter({ hasText: new RegExp(`^${escapedName}$`, 'i') });
+
+        // Wait up to 10s for it to be absent (count === 0)
+        await expect(nodeLocator).toHaveCount(0, { timeout: 10000 });
 
         console.log(`✅ Asset ${assetNumber} successfully deleted and removed in the tree`);
     }

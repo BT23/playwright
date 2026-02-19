@@ -15,6 +15,7 @@ import { test } from '../fixtures'
 
 test('Create PO using fixture data @smoke @feature-po', async ({ poPage, poTestData, poDataFilePath  }) => {
     console.log('🧪 Starting test: Create new PO  using fixture data');
+    await poPage.goto(); // Navigate to PO Module
     await poPage.createPO(poTestData.createpo.SupplierCode, poDataFilePath);
     await poPage.clickBackBtn(); // Save and Back
 });

@@ -14,7 +14,8 @@ import { test } from '../fixtures'
     * Custom tags: @smoke
     */    
     test('Verify WO Requester using fixture data @smoke @feature-wo', async ({ woPage, woTestData, woDataFilePath }) => {
-        //const specificWONumber = JSON.parse(readFileSync(woDataFilePath, 'utf-8'));  
+        console.log('🧪 Starting test: Create new WO, enter Requester and verify that the requester is retained.');
+        await woPage.goto(); // Open WO Module
 
         // Create the WO and capture the number instead of reading from file (as WO number does not exist when running the worker in parallel)
         const rawWoNumber = await woPage.createWO(woTestData.createwo.Asset, woTestData.createwo.Description);
