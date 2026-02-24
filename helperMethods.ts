@@ -361,90 +361,7 @@ class HelperMethods {
     return row;
   }
 
-async selectRowByFieldName(gridName: string, columnName: string, fieldName: string, shouldForce = true) {
-  if (!this.page) throw new Error('selectRowByFieldName: page not set');
-  const timeout = 10000;
-  const start = Date.now();
-  const poll = 200;
-
-  const writeDebug = async (reason: string) => {
-    try {
-      const fs = require('fs').promises;
-      await fs.mkdir('debug', { recursive: true });
-      await this.page.screenshot({ path: `debug/selectRow-${Date.now()}.png`, fullPage: true }).catch(()=>{});
-      await fs.writeFile(`debug/selectRow-${Date.now()}.reason.txt`, reason, 'utf-8').catch(()=>{});
-    } catch {}
-  };
-
-  const tryRecoverPage = async (): Promise<boolean> => {
-    try {
-      const ctx = this.page.context();
-      const pages = ctx.pages();
-      for (const p of pages) {
-        if (!p.isClosed?.() && p !== this.page) {
-          // prefer a non-blank page with a URL
-          const url = p.url?.() || '';
-          if (url && url !== 'about:blank') {
-            this.page = p;
-            return true;
-          }
-        }
-      }
-    } catch {}
-    return false;
-  };
-
-  while (Date.now() - start < timeout) {
-    // If page was closed, try to recover to another open page in the context
-    if (this.page.isClosed && this.page.isClosed()) {
-      const recovered = await tryRecoverPage();
-      if (!recovered) {
-        await writeDebug('page closed and no recovery page found');
-        // give caller information instead of throwing a generic stale error
-        throw new Error('selectRowByFieldName: page was closed and could not be recovered');
-      }
-      // continue with recovered page
-    }
-
-    try {
-      // re-query each loop to avoid stale locators across navigations
-      const grid = this.page.locator(`[automation-grid="${gridName}"]`).first();
-      const row = grid.locator('[automation-row]').filter({
-        has: this.page.locator(`[automation-col="${columnName}"]:has-text("${fieldName}")`)
-      }).first();
-
-      await row.waitFor({ state: 'visible', timeout: 2000 }).catch(()=>null);
-
-      // Protect against clicks that trigger navigation
-      const navPromise = this.page.waitForNavigation({ waitUntil: 'load', timeout: 5000 }).catch(()=>null);
-      await Promise.all([
-        row.click({ force: shouldForce }).catch(()=>{}),
-        navPromise
-      ]);
-
-      // confirm row exists and return
-      if (await row.count() > 0) return row;
-    } catch (err:any) {
-      // transient (navigation/stale) errors -> try to recover and retry
-      if (this.page.isClosed && this.page.isClosed()) {
-        const recovered = await tryRecoverPage();
-        if (!recovered) {
-          await writeDebug('page closed during selection and recovery failed');
-          throw new Error('selectRowByFieldName: page closed during retry');
-        }
-        // recovered, continue loop
-      }
-    }
-
-    await this.page.waitForTimeout(poll);
-  }
-
-  await writeDebug('timeout selecting row');
-  throw new Error(`selectRowByFieldName: timed out finding ${fieldName} in ${gridName}`);
-}
-
- /** Tyler Code 
-  async selectRowByFieldName(gridName: string, columnName: string, fieldName: string, shouldForce = false) {
+async selectRowByFieldName(gridName: string, columnName: string, fieldName: string, shouldForce = false) {
     const grid = this.page.locator(`[automation-grid="${gridName}"]`).first();
     const row = grid.locator('[automation-row]').filter({
       has: this.page.locator(`[automation-col="${columnName}"]:has-text("${fieldName}")`)
@@ -452,7 +369,7 @@ async selectRowByFieldName(gridName: string, columnName: string, fieldName: stri
     await row.click({ force: shouldForce, timeout: 0 });
     return row;
   }
-*/
+
   async selectRowByIndex(gridName: string, index: number, shouldForce = false) {
     const grid = this.page.locator(`[automation-grid="${gridName}"]`).first();
     const row = grid.locator(`[automation-row="${index}"]`);

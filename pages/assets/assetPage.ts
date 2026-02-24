@@ -111,6 +111,12 @@ export class AssetPage {
         //}
     }
 
+    async enterReadingType(readingType: string): Promise<void> {
+        // Set Reading Type to Hours
+        await helper.enterValue("ReadingType", readingType)
+        await helper.selectFirstListItem();
+    }
+
     /*****************************************
     * Create New Asset with Reading Type Test
     * ***************************************

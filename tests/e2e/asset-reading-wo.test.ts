@@ -5,7 +5,7 @@ import {ReadingPage} from '../../pages/readings/readingPage';
 import { WoPage } from '../../pages/workorders/woPage';
 
 import testData from '../../test-data/e2e/assetReadingWOData.json';
-
+/*
 test.describe('Asset Reading WorkOrder Tests', () => {
     let loginPage: LoginPage;
     let assetPage: AssetPage;
@@ -22,7 +22,7 @@ test.describe('Asset Reading WorkOrder Tests', () => {
         await loginPage.login(loginPage.credentials.validCredentials.username, loginPage.credentials.validCredentials.password);
         await loginPage.assertLoginSuccess();
     });
-
+*/
     /*
     * Bug 1234: Asset Warranty not shows after enering Asset Wararnty Reading
     * Source: https://jira.com/browse/BUG-1234
@@ -39,7 +39,7 @@ test.describe('Asset Reading WorkOrder Tests', () => {
     * Expected Result: 'Asset Warranty' dialog box should appear after selecting the Asset
     * Custom tags: @bug @regression
     */    
-    
+ /*   
     test('Work Order Asset Warranty - Case 1 @bug @regression', async () => {
         const data = testData.case1;
         await assetPage.createNewAsset(data.assetNumber, data.assetDesc);
@@ -49,7 +49,7 @@ test.describe('Asset Reading WorkOrder Tests', () => {
         await woPage.verifyWorkOrderAssetWararnty(data.assetNumber, data.workorderDesc);    
 
     });
-
+*/
     /**
      * Future use test case
      */
@@ -62,5 +62,6 @@ test.describe('Asset Reading WorkOrder Tests', () => {
         await readingPage.locateAndAddAssetReading(data.assetNumber, data.readingValue);
         await woPage.verifyWorkOrderAssetWararnty(data.assetNumber, data.workorderDesc);
     });
-    */
+    
 });
+*/

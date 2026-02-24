@@ -5,6 +5,7 @@ import { expect } from '@playwright/test';
 
 import { LoginPage } from '../pages/login/loginPage';
 import { AssetPage } from '../pages/assets/assetPage';
+import { ReadingPage } from '../pages/readings/readingPage';
 import { RequestPage } from '../pages/requests/requestPage';
 import { WoPage } from '../pages/workorders/woPage';
 import { PoPage } from '../pages/purchaseorder/poPage';
@@ -15,6 +16,7 @@ import createAssetData from '../test-data/assets/createAssetData.json';
 import deleteAssetData from '../test-data/assets/deleteAssetData.json';
 import assetDetailsTabData from '../test-data/assets/assetDetailsDetailsTabData.json';
 import assetExtendedTabData from '../test-data/assets/assetDetailsExtendedTabData.json';
+import createAssetReadingData from '../test-data/readings/createAssetReadingData.json';
 import createRequestData from '../test-data/requests/createRequestData.json';
 import createWorkOrderData from '../test-data/work-orders/createWorkOrderData.json';
 import woDetailsTabData from '../test-data/work-orders/woDetailsTabData.json';
@@ -26,11 +28,13 @@ import createSupplierData from '../test-data/contacts/suppliers/createSupplierDa
 type MyFixtures = {
   loginPage: LoginPage;
   assetPage: AssetPage;
+  readingPage: ReadingPage;
   requestPage: RequestPage;
   woPage: WoPage;
   cataloguePage: CataloguePage;
   poPage: PoPage;
   supplierPage: SupplierPage;
+
   poTestData: { createpo: typeof createPurchaseOrderData };
   assetTestData: {
     createasset: typeof createAssetData;
@@ -38,6 +42,7 @@ type MyFixtures = {
     assetdetailstab: typeof assetDetailsTabData;
     assetextendedtab: typeof assetExtendedTabData;
   };
+  readingTestData: { createreading: typeof createAssetReadingData };
   requestTestData: { createrequest: typeof createRequestData };
   woTestData: {
     createwo: typeof createWorkOrderData;
@@ -50,7 +55,7 @@ type MyFixtures = {
   supplierTestData: {createsupplier: typeof createSupplierData;};  
   assetDataFilePath: string;
   requestDataFilePath: string;
-  catalogueFilePath: string;
+  catalogueDataFilePath: string;
   poDataFilePath: string;
   woDataFilePath: string;
   supplierDataFilePath: string;
@@ -104,6 +109,10 @@ export const test = baseTest.extend<MyFixtures>({
     await use(new AssetPage(page));
   },
 
+  readingPage: async ({ page, loginPage}, use) => {
+    await use(new ReadingPage(page));
+  },
+
   requestPage: async ({ page, loginPage}, use) => {
     await use(new RequestPage(page));
   },
@@ -131,6 +140,10 @@ export const test = baseTest.extend<MyFixtures>({
       assetdetailstab: assetDetailsTabData,
       assetextendedtab: assetExtendedTabData,
     });
+  },
+
+  readingTestData: async ({}, use) => {
+    await use({ createreading: createAssetReadingData });
   },
 
   requestTestData: async ({}, use) => {

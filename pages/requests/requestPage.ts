@@ -109,8 +109,15 @@ export class RequestPage {
     
     async approveRequestAndClickOK(): Promise<void> {
         await helper.clickButton("Approve");
+
+        await helper.verifyDialogVisibleAndClickOk("RequestApproval");        
+
+        // Wait for the page to refresh and grid to reload
+        await this.page.waitForLoadState('networkidle');
         
-        await helper.verifyDialogVisibleAndClickOk("RequestApproval");
+        // Verify the grid listing is visible after refresh
+        const grid = this.page.locator('[automation-grid="RequestListingGrid"]');
+        await grid.waitFor({ state: 'visible', timeout: 5000 });        
     }
     
     /*
@@ -155,7 +162,20 @@ export class RequestPage {
     *************************************
     */
     async selectSpecificedRequest(requestNumber: string): Promise<void> {
-         await helper.selectRowByFieldName("RequestListingGrid", "RequestNumber", requestNumber.trim());
+        // Wait for grid to be fully visible
+        const grid = this.page.locator('[automation-grid="RequestListingGrid"]');
+        await grid.waitFor({ state: 'visible', timeout: 5000 });
+        
+        // Scroll grid to the top to ensure we're at the beginning
+        await grid.evaluate((element) => {
+            element.scrollTop = 0;
+        });
+        
+        // Wait for scroll and re-render
+        await this.page.waitForTimeout(500);
+        
+        // Now select the row
+        await helper.selectRowByFieldName("RequestListingGrid", "RequestNumber", requestNumber.trim());
         await this.page.waitForTimeout(1000);
     }
 

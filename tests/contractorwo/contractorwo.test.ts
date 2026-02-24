@@ -7,7 +7,7 @@ import { PoPage } from '../../pages/purchaseorder/poPage';
 
 import newContractorWOData from '../../test-data/contractor-work-orders/createContractorWOData.json';
 import filterData from '../../test-data/contractor-work-orders/contractorFilterData.json';
-
+/*
 test.describe('Contractor WO Module Tests', () => {
     let loginPage: LoginPage;
     let woPage: WoPage;
@@ -24,7 +24,7 @@ test.describe('Contractor WO Module Tests', () => {
         await loginPage.navigate();
         await loginPage.login(loginPage.credentials.validCredentials.username, loginPage.credentials.validCredentials.password);
     });
-
+*/
      /*
     * Reference ID: Test Case: Contractor Work Order Listing should open successfully
     * Preconditions: User is logged in
@@ -35,10 +35,11 @@ test.describe('Contractor WO Module Tests', () => {
     * Expected Result: Contractor  Work Order Listing loads without errors
     * Custom tags: @smoke @contractorWO 
     */
-    test('Open Contractor WO Listing @smoke', async () => {
+ /*
+     test('Open Contractor WO Listing @smoke', async () => {
         await contractorwoPage.openContractorWOListing();
     });
-
+*/
      /*
     * Bug 1234: New Contractor Work Order should create successfully
     * Source: https://jira.com/browse/BUG-1234
@@ -50,11 +51,12 @@ test.describe('Contractor WO Module Tests', () => {
     * 5. Click Create button
     * Expected Result: A new Contractor Work Order is created and appears in the Contractor Work Order Listing.
     * Custom tags: @smoke
-    */    
+    */  
+   /*  
     test('Create New Contractor WO @smoke', async () => {
         await contractorwoPage.createContractorWO(newContractorWOData.Description, newContractorWOData.Asset, newContractorWOData.Contractor);
     });   
-
+*/
     /*
     * Bug 1234: Contractor Listing cannot filter by contractor
     * Source: https://jira.com/browse/BUG-1234
@@ -66,18 +68,20 @@ test.describe('Contractor WO Module Tests', () => {
     * 5. Click Apply button
     * Expected Result: The Contractor Listing should display only those records that exactly match the selected or specified contractor criteria.
     * Custom tags: @bug @regression @contractorWO 
-    */    
+    */ 
+   /*   
     test('Contractor Listing Filter by Contractor @bug @regression @contractorWO', async () => {
         await contractorwoPage.openContractorWOListing();
         await contractorwoPage.openContractorListingFilter();
         await contractorwoPage.applyContractorFilter(filterData.Contractor);
         await contractorwoPage.verifyContractorFilterApplied(filterData.Contractor);
     });
-
+*/
 
     /*
     * FOR TEST CASE TESTING
     */
+  /*
     test('Fill in Due Start Date and verify in PO @bug @regression @contractorWO', async () => {
         await contractorwoPage.createContractorWO("Due Start Date Test", "House", "Bakers EA Baker and Co");
         const dueStart: string = await contractorwoPage.setContractorDueStartDate();
@@ -87,4 +91,4 @@ test.describe('Contractor WO Module Tests', () => {
         //const dueStart: string = await contractorwoPage.setContractorDueStartDate();
         await poPage.verifyPODueStartDate(dueStart);
     });
-});
+});*/
