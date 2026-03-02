@@ -464,7 +464,6 @@ async verifyDialogVisibleAndClickOk(dialogName: string): Promise<void> {
     await okButton.click();
 }
 
-
   /*******
    * Code to verify fields
     * This method verifies that the values of specified fields match the expected values.

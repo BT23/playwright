@@ -7,7 +7,9 @@ import { LoginPage } from '../pages/login/loginPage';
 import { AssetPage } from '../pages/assets/assetPage';
 import { ReadingPage } from '../pages/readings/readingPage';
 import { RequestPage } from '../pages/requests/requestPage';
+import { ContractorWOPage } from '../pages/contractorworkorders/contractorwoPage';
 import { WoPage } from '../pages/workorders/woPage';
+import { PmPage } from '../pages/pm/pmPage';
 import { PoPage } from '../pages/purchaseorder/poPage';
 import { CataloguePage } from '../pages/catalogue/cataloguePage';
 import { SupplierPage } from '../pages/Contacts/SupplierPage';
@@ -16,13 +18,25 @@ import createAssetData from '../test-data/assets/createAssetData.json';
 import deleteAssetData from '../test-data/assets/deleteAssetData.json';
 import assetDetailsTabData from '../test-data/assets/assetDetailsDetailsTabData.json';
 import assetExtendedTabData from '../test-data/assets/assetDetailsExtendedTabData.json';
+
 import createAssetReadingData from '../test-data/readings/createAssetReadingData.json';
+
 import createRequestData from '../test-data/requests/createRequestData.json';
+
 import createWorkOrderData from '../test-data/work-orders/createWorkOrderData.json';
+
+import createContractorWorkOrderData from '../test-data/contractor-work-orders/createContractorWOData.json';
+import filterContractorWOData from '../test-data/contractor-work-orders/contractorWOFilterData.json';
+
+import contractorWOPOData from '../test-data/e2e/contractorwo-po/contractorwoPOData.json';
+
 import woDetailsTabData from '../test-data/work-orders/woDetailsTabData.json';
 import addWOSpareData from '../test-data/work-orders/woSparesTabData.json';
+
 import createCatalogueData from '../test-data/catalogue/createCatalogueData.json';
+
 import createPurchaseOrderData from '../test-data/purchase-orders/createPurchaseOrderData.json';
+
 import createSupplierData from '../test-data/contacts/suppliers/createSupplierData.json';
 
 type MyFixtures = {
@@ -31,6 +45,8 @@ type MyFixtures = {
   readingPage: ReadingPage;
   requestPage: RequestPage;
   woPage: WoPage;
+  contractorWOPage: ContractorWOPage;
+  pmPage: PmPage;
   cataloguePage: CataloguePage;
   poPage: PoPage;
   supplierPage: SupplierPage;
@@ -49,6 +65,18 @@ type MyFixtures = {
     wodetails: typeof woDetailsTabData;
     wospares: typeof addWOSpareData;
   };
+  contractorWOTestData: 
+  { 
+    createcontractorwo: typeof createContractorWorkOrderData ;
+    filterontractorwolisting: typeof filterContractorWOData;
+  };
+  
+  cwoPoTestData: {
+    duestartdate: typeof contractorWOPOData;
+    quotenumber: typeof contractorWOPOData;
+    invoicetransaction: typeof contractorWOPOData;
+  };
+
   catalogueTestData: {
     createcatalogue: typeof createCatalogueData;
   };
@@ -121,6 +149,14 @@ export const test = baseTest.extend<MyFixtures>({
     await use(new WoPage(page));    
   },
 
+  contractorWOPage: async ({ page, loginPage }, use) => {
+    await use(new ContractorWOPage(page));    
+  },
+
+  pmPage: async ({ page, loginPage }, use) => {
+    await use(new PmPage(page));    
+  },
+
   cataloguePage: async ({ page, loginPage }, use) => {
     await use(new CataloguePage(page));
   },
@@ -157,6 +193,21 @@ export const test = baseTest.extend<MyFixtures>({
       createwo: createWorkOrderData,
       wodetails: woDetailsTabData,
       wospares: addWOSpareData,
+    });
+  },
+
+  contractorWOTestData: async ({}, use) => {
+    await use({
+      createcontractorwo: createContractorWorkOrderData,
+      filterontractorwolisting: filterContractorWOData
+    });
+  },
+
+  cwoPoTestData: async ({}, use) => {
+    await use({
+      duestartdate: contractorWOPOData,
+      quotenumber: contractorWOPOData,
+      invoicetransaction: contractorWOPOData
     });
   },
 

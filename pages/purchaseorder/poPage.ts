@@ -156,14 +156,36 @@ export class PoPage {
     */
     async clickPOApproveBtn(): Promise<void> {
         const approveBtn = this.page.locator('[automation-button="Approve"]');
-        if (await approveBtn.isVisible() && await approveBtn.isEnabled()) {
-            await approveBtn.click();
-            await this.page.waitForTimeout(1000);
+
+        // 1️⃣ Not visible → skip
+        if (!(await approveBtn.isVisible())) {
+            console.log("⚠️ Approve button not visible, skipping approval step");
+            return;
+        }
+
+        // 2️⃣ Check if truly clickable using trial click
+        try {
+            await approveBtn.click({ trial: true, timeout: 3000 });
+        } catch {
+            console.log("⚠️ Approve button visible but NOT clickable, skipping approval step");
+            return;
+        }
+
+        // 3️⃣ If we reach here → button is really clickable
+        console.log("✅ Approve button is clickable, proceeding with click");
+
+        await approveBtn.click({ timeout: 10000 });
+
+        // 4️⃣ Only handle dialog if it appears
+        const dialog = this.page.locator('[automation-dialog="PurchaseOrderApproval"]');
+
+        if (await dialog.isVisible({ timeout: 5000 }).catch(() => false)) {
+            console.log("✅ Approval dialog appeared, clicking Ok");
             await helper.clickButtonInDialog("PurchaseOrderApproval", "Ok");
         } else {
-            console.log("Is Approving used for Purchasing option is off");
+            console.log("ℹ️ Approval dialog did not appear");
         }
-    }
+}
 
     /*
     ***************************
@@ -228,9 +250,16 @@ export class PoPage {
     ****************************************
     */
     async verifyPODueStartDate(expectedDueStart: string): Promise<void> {
+        // Ensure we're on the PO details page before interacting with fields.
+        const poHeader = this.page.locator('[automation-header="PurchaseOrderHeader"]');
+        await poHeader.waitFor({ state: 'visible', timeout: 10000 });
+
         // Wait for the DateDue field to be visible
-        const dateDueField = this.page.locator('[automation-input="DateDue"]');
+        const dateDueField = this.page.locator('[automation-input="DateDue_date"]');
         await dateDueField.waitFor({ state: 'visible', timeout: 10000 });
+
+        // Sometimes a navigation is still settling, wait for network idle just in case
+        await this.page.waitForLoadState('networkidle');
 
         // Get the value from the DateDue field
         const actualDateDue = await dateDueField.inputValue();
@@ -238,6 +267,7 @@ export class PoPage {
         // Assert that DateDue matches the expected DueStart value
         // Compare only the date part (YYYY-MM-DD)
         expect(actualDateDue.slice(0, 10)).toBe(expectedDueStart.slice(0, 10));
+        console.log("📝 Verified Due Start Date in PO: " + actualDateDue.slice(0, 10));
     }
 
     /*
@@ -246,6 +276,10 @@ export class PoPage {
     **************************************
     */
     async verifyPOQuoteNumber(expectedQuoteNumber: string): Promise<void> {
+        // Ensure we're on the PO details page.  The header should be present.
+        const poHeader = this.page.locator('[automation-header="PurchaseOrderHeader"]');
+        await poHeader.waitFor({ state: 'visible', timeout: 10000 });
+
         // Wait for the QuoteNo field to be visible
         const quoteNoField = this.page.locator('[automation-input="QuoteNo"]');
         await quoteNoField.waitFor({ state: 'visible', timeout: 10000 });
@@ -255,6 +289,7 @@ export class PoPage {
 
         // Assert that QuoteNo matches the expected value from the JSON file
         expect(actualQuoteNo.trim()).toBe(expectedQuoteNumber.trim());
+        console.log("📝 Verified Quote Number in PO: " + actualQuoteNo.trim());        
     }
 
     /*

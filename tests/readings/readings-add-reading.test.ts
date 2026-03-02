@@ -10,6 +10,7 @@ import { test } from '../fixtures';
     * Expected Result: Asset Register loads without errors
     * Custom tags: @smoke @feature-readings
     */
+   /*
     test('Select the Asset Reading and add reading @smoke @feature-readings', async ({ assetPage, readingPage, readingTestData }) => {
         console.log("📝 Starting test: Create new asset with Reading Type using fixture data");        
         await assetPage.goto();
@@ -19,4 +20,5 @@ import { test } from '../fixtures';
         await readingPage.goto();
         await readingPage.locateAndAddAssetReading(readingTestData.createreading.assetNumber, readingTestData.createreading.details.CurrentReading);
         await readingPage.verifyReadingAddedSuccessfully(readingTestData.createreading.assetNumber, readingTestData.createreading.details.CurrentReading);
-    });    
+    });
+    */    

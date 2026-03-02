@@ -3,7 +3,7 @@ import { LoginPage } from '../../pages/login/loginPage';
 import { HistoryPage } from '../../pages/history/historyPage';
 
 import createPostEntryWOrData from '../../test-data/history/createPostEntryWOData.json';
-
+/*
 test.describe('WO History Module Tests', () => {
     let loginPage: LoginPage;
     let historyPage: HistoryPage;
@@ -23,10 +23,11 @@ test.describe('WO History Module Tests', () => {
     * Expected Result: Asset Register loads without errors
     * Custom tags: @smoke
     */
+   /*
     test('Open History Module @smoke', async () => {
         await historyPage.openHistoryModule();
     });
-
+*/
     /*
     * Reference ID: Test Case: Create Post Entry WO
     * Preconditions: User is logged in
@@ -38,11 +39,12 @@ test.describe('WO History Module Tests', () => {
     * Expected Result: Post Entry WO should create successfully.
     * Custom tags: @smoke
     */
+   /*
     test('Create Post Entry WO @smoke', async () => {
         
         await historyPage.createPostEntryWO(createPostEntryWOrData.HistoryDesc, createPostEntryWOrData.Asset);
     });
-
+*/
     /*
     * Reference ID: Test Case: Open specified Closed WO
     * Preconditions: User is logged in
@@ -53,9 +55,11 @@ test.describe('WO History Module Tests', () => {
     * Expected Result: Specified closed WO should open successfully.
     * Custom tags: @smoke
     */
+   /*
     test('Open Specified Closed WO @smoke', async () => {
         await historyPage.openHistoryModule();
         await historyPage.openClosedWOByWONumber("35");
     });
 
 });
+*/

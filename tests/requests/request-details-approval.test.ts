@@ -26,9 +26,11 @@ test('Request Details - Approve new request with asset using fixture data @smoke
         console.log(`Created Request Number: ${rawRequestNumber}`);
         // Ensure we have a value and trim it
         const requestNumber = rawRequestNumber?.trim() ?? null;
-        await requestPage.approveRequestAndClickOK();
+        await requestPage.approveRequestInDetailsAndClickOK();
+        console.log("📝 Starting test: Request Details - Verify Request Status in Details form");
         await requestPage.verifyRequestStatusEqualApprovedInDetailsForm("Approved");
         await requestPage.clickBackBtn();
+        console.log("📝 Starting test: Request Listing - Verify Request Status on listing");
         await requestPage.selectSpecificedRequest(requestNumber!);
         await requestPage.verifyRequestStatusEqualApprovedOnListing(requestNumber!, "Approved");
 });

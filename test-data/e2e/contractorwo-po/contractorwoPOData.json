@@ -1,0 +1,25 @@
+{
+  "CaseDueStartDateCheck": {
+    "Description": "Verify Contractor PO Due Start Date Autofill",
+    "Asset": "BES",
+    "contractor": "Bakers EA Baker and Co"
+  },
+  "CaseQuoteNoCheck": {
+    "Description": "Verify Contractor PO Quote Number Autofill",
+    "Asset": "BES",
+    "contractor": "Bakers EA Baker and Co"
+  },
+  "CaseInvoiceTransactionCheck": {
+    "Description": "Verify Contractor PO Invoice Transaction",
+    "Asset": "BES",
+    "contractor": "Bakers EA Baker and Co",
+    "QuoteAmount": "250.99"
+  },
+    "case4": {
+    "assetNumber": "PO 19",
+    "assetDesc": "Contractor WO PO Transactions Check",
+    "contractorworkOrderDesc": "Verify Contractor User Portal - unapproval Contractor WO ",
+    "contractor": "Contractor User Portal"
+  }  
+
+}

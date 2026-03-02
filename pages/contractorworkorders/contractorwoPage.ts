@@ -11,27 +11,8 @@ export class ContractorWOPage {
         helper.setPage(page);
     }
 
-    /*
-    ************************************
-    * Open Contractor Work Order Listing
-    ************************************
-    */
-    async openContractorWOListing(): Promise<void> {
-        // Check if the "History" button is visible
-        const woButton = this.page.locator('[automation-button="WorkOrders"]');
-        if (!(await woButton.isVisible())) {
-            await helper.addModuleToMenu("WorkOrders");
-            await this.page.waitForTimeout(1000);
-        }
-        
-        // Click on the Work Orders button to open the Work Order module
-        await helper.clickButton("WorkOrders");
-
-        // Verify that the Work Order Listing header is displayed
-        await helper.checkHeader("WorkOrderListingHeader");
-
-        // Click Contractor button
-        await helper.clickButton("Contractor");
+    async goto() {
+        await this.openContractorWOListing();
     }
 
     /*
@@ -39,16 +20,38 @@ export class ContractorWOPage {
     * Open Contractor Work Order Listing
     ************************************
     */
-    async createContractorWO(desc: string, assetNumber: string, vendor: string): Promise<void> {
-        // Click on the Work Orders button to open the Work Order module
-        await helper.clickButton("WorkOrders");
+    async openContractorWOListing(): Promise<void> {
+        // Wait for element visibility using smart wait
+        const navButton = this.page.locator('[automation-button="NavItemWorkOrders"]');
+        await navButton.waitFor({ state: 'visible', timeout: 5000 });
 
-        // Verify that the Work Order Listing header is displayed
-        await helper.checkHeader("WorkOrderListingHeader");
+        await helper.clickButton("NavItemWorkOrders");
+
+        // Wait for page to load after navigation
+        await this.page.waitForLoadState('networkidle');
+
+        // Verify header is displayed
+        const header = this.page.locator('[automation-header="WorkOrderListingHeader"] span');
+        await header.waitFor({ state: 'visible', timeout: 5000 });
+        
+        // Wait for element visibility using smart wait
+        const contractorButton = this.page.locator('[automation-button="Contractor"]');
+        await contractorButton.waitFor({ state: 'visible', timeout: 5000 });
 
         // Click Contractor button
         await helper.clickButton("Contractor");
 
+        // Verify header is displayed
+        const contractorColumnHeader = this.page.locator('[automation-column-header="Contractor"]');
+        await contractorColumnHeader.waitFor({ state: 'visible', timeout: 5000 });
+    }
+
+    /*
+    ************************************
+    * Create Contractor Work Order
+    ************************************
+    */
+    async createContractorWO(desc: string, assetNumber: string, vendor: string): Promise<void> {
         // Click New button
         await helper.clickButton("New");
 
@@ -67,11 +70,14 @@ export class ContractorWOPage {
         await helper.selectFirstListItem();
 
         // Click the Create button to save the new Work Order
-        await helper.clickButton("Create");        
-  
-        //await this.page.waitForTimeout(1000);
+        await helper.clickButton("Create");
 
-        //await helper.closePage();
+        // Wait for the CreateWorkOrder dialog to close
+        const createDialogElement = this.page.locator('[automation-dialog="CreateWorkOrder"]');
+        await createDialogElement.waitFor({ state: 'hidden', timeout: 10000 });
+
+        // Wait for the page to load after creating the Work Order
+        await this.page.waitForLoadState('networkidle');
     }
 
     /*
@@ -83,27 +89,23 @@ export class ContractorWOPage {
     * Otherwise, malformed format error throws
     **********************************************************************************
     */
-    async setContractorDueStartDate(): Promise<string> {
-        // Wait for the DueStart field to be visible and editable
-        const dueStartField = this.page.locator('[automation-input="DueStart"]');
-        await dueStartField.waitFor({ state: 'visible', timeout: 10000 });
-        await expect(dueStartField).toBeEditable();
-
-        // Set DueStart to a date 1 day in the future in "YYYY-MM-DDTHH:MM" format
+    async setContractorDueStartDate(daysAhead: number): Promise<string> {
         const futureDate = new Date();
-        futureDate.setDate(futureDate.getDate() + 1);
-        // Format as "YYYY-MM-DDTHH:MM"
+        futureDate.setDate(futureDate.getDate() + daysAhead);
+
         const year = futureDate.getFullYear();
         const month = String(futureDate.getMonth() + 1).padStart(2, '0');
         const day = String(futureDate.getDate()).padStart(2, '0');
         const hours = String(futureDate.getHours()).padStart(2, '0');
         const minutes = String(futureDate.getMinutes()).padStart(2, '0');
-        const futureDateStr = `${year}-${month}-${day}T${hours}:${minutes}`;
 
-        await helper.enterValue("DueStart", futureDateStr);
+        const dateOnly = `${year}-${month}-${day}`;
+        const timeOnly = `${hours}:${minutes}`;
 
-        // Return the value for verification
-        return futureDateStr;
+        await this.page.locator('[automation-input="DueStart_date"]').fill(dateOnly);
+        await this.page.locator('[automation-input="DueStart_time"]').fill(timeOnly);
+
+        return `${dateOnly}T${timeOnly}`;
     }
 
     /*
@@ -126,11 +128,33 @@ export class ContractorWOPage {
 
     /*
     **********************************
-    * Set Quote Number button
+    * Set Quote Number
     **********************************
     */
-    async setQuoteNumber(quoteNumber: string): Promise<void> {
+    async setQuoteNumber(quoteNumber: string): Promise<string> {
         await helper.enterValue("QuoteNo", quoteNumber)
+        await this.page.waitForTimeout(1000);
+        return quoteNumber;
+    }
+
+    /*
+    **********************************
+    * Set Quote $Inc. Tax Amount
+    **********************************
+    */
+    async setQuoteAmount(quoteAmount: string): Promise<string> {
+        await helper.enterValue("Quote$Inc.Tax", quoteAmount)
+        await this.page.waitForTimeout(1000);
+        return quoteAmount;
+    }
+
+    /*
+    ***************************
+    * Click Back button
+    ***************************
+    */
+    async clickBackBtn(): Promise<void> {
+        await helper.closePage();
         await this.page.waitForTimeout(1000);
     }
 
@@ -152,7 +176,9 @@ export class ContractorWOPage {
     */
     async clickEnterInvoiceBtn(): Promise<void> {
         await helper.clickButton("EnterInvoice");
-        await this.page.waitForTimeout(1000);
+        //await this.page.waitForTimeout(1000);
+        // Wait for page to load after navigation
+        await this.page.waitForLoadState('networkidle');        
 
     }
     
@@ -162,10 +188,18 @@ export class ContractorWOPage {
     **********************************
     */
     async clickPOHyperlink(): Promise<void> {
-        // Locate the input field by automation-input name
+        // Locate the input field by automation-input name and click it to open the PO details
         const poInput = this.page.locator('[automation-input="PurchaseOrderNo"]');
         await poInput.click();
-        await this.page.waitForTimeout(1000);
+
+        // After clicking the hyperlink we expect the Purchase Order details to load.
+        // Wait for the PO header to appear so subsequent verifications can operate on the correct page.
+        const poHeader = this.page.locator('[automation-header="PurchaseOrderHeader"]');
+        await poHeader.waitFor({ state: 'visible', timeout: 10000 });
+
+        // Give UI a moment to stabilise after navigation.
+        // Note: Details tab opening is handled by verification methods if needed.
+        await this.page.waitForTimeout(500);
     }
 
     /*
@@ -175,7 +209,9 @@ export class ContractorWOPage {
     */
       async clickInvoiceEntrySubmitBtn(): Promise<void> {
         await helper.clickButtonInDialog("ContractorInvoiceEntry", "Submit");
-        await this.page.waitForTimeout(1000);
+        //await this.page.waitForTimeout(1000);
+        //aWait for page to load after navigation
+        await this.page.waitForLoadState('networkidle');
     } 
 
     /*
@@ -185,7 +221,8 @@ export class ContractorWOPage {
     */
       async clickInvoiceEntryApproveBtn(): Promise<void> {
         await helper.clickButtonInDialog("ContractorInvoiceEntry", "Approve");
-        await this.page.waitForTimeout(1000);
+        //await this.page.waitForTimeout(1000);
+        await this.page.waitForLoadState('networkidle');
     } 
 
     /*
@@ -205,7 +242,8 @@ export class ContractorWOPage {
     */
       async closeContractorInvoiceEntryForm(): Promise<void> {
         await helper.clickButtonInDialog("ContractorInvoiceEntry", "closeDialog");
-        await this.page.waitForTimeout(1000);
+        //await this.page.waitForTimeout(1000);
+        await this.page.waitForLoadState('networkidle');
     } 
 
     /*
@@ -244,21 +282,24 @@ export class ContractorWOPage {
     *************************************************************
     */
     async verifyContractorFilterApplied(filterValue: string): Promise<void> {
-            
-    // After applying the filter
-    await helper.selectRowByFieldName("ContractorWorkOrderListingGrid", "Contractor", filterValue);
+        // Wait for element visibility using smart wait
+        // Verify header is displayed
+        const contractorColumnHeader = this.page.locator('[automation-column-header="Contractor"]');
+        await contractorColumnHeader.waitFor({ state: 'visible', timeout: 5000 });
 
-    // Optionally, verify all visible rows have the expected contractor name
-    const grid = this.page.locator('[automation-grid="ContractorWorkOrderListingGrid"]');
-    const rows = grid.locator('[automation-row]');
-    const count = await rows.count();
+        // After applying the filter
+        await helper.selectRowByFieldName("ContractorWorkOrderListingGrid", "Contractor", filterValue);
 
-    for (let i = 0; i < count; i++) {
-        const row = rows.nth(i);
-        const contractorCell = row.locator('[automation-col="Contractor"]');
-        const cellText = (await contractorCell.textContent())?.trim();
-        expect(cellText).toBe(filterValue);
-        }
+        // Optionally, verify all visible rows have the expected contractor name
+        const grid = this.page.locator('[automation-grid="ContractorWorkOrderListingGrid"]');
+        const rows = grid.locator('[automation-row]');
+        const count = await rows.count();
+
+        for (let i = 0; i < count; i++) {
+            const row = rows.nth(i);
+            const contractorCell = row.locator('[automation-col="Contractor"]');
+            const cellText = (await contractorCell.textContent())?.trim();
+            expect(cellText).toBe(filterValue);
+            }
     } 
-
 }

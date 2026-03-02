@@ -10,24 +10,27 @@ export class PmPage {
 
         helper.setPage(page);
     }
-
+    async goto() {
+        await this.openPMModule();
+    }
     /*
     *****************
     * Open PM Module
     *****************
     */
     async openPMModule(): Promise<void> {
-        // Check if the "History" button is visible
-        const pmButton = this.page.locator('[automation-button="PreventativeMaintenance"]');
-        if (!(await pmButton.isVisible())) {
-            await helper.addModuleToMenu("PreventativeMaintenance");
-            await this.page.waitForTimeout(1000);
-        }
+        // Wait for element visibility using smart wait
+        const navButton = this.page.locator('[automation-button="NavItemPreventativeMaintenance"]');
+        await navButton.waitFor({ state: 'visible', timeout: 5000 });
         
         // Click on the Work Orders button to open the Work Order module
-        await helper.clickButton("PreventativeMaintenance");
+        await helper.clickButton("NavItemPreventativeMaintenance");
 
-        // Verify that the Work Order Listing header is displayed
-        await helper.checkHeader("PreventativeMaintenanceListingHeader");
+        // Wait for page to load after navigation
+        await this.page.waitForLoadState('networkidle');
+
+        // Verify header is displayed
+        const header = this.page.locator('[automation-header="PreventativeMaintenanceListingHeader"] span');
+        await header.waitFor({ state: 'visible', timeout: 5000 });
     }
 }

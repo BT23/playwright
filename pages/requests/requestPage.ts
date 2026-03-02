@@ -101,13 +101,13 @@ export class RequestPage {
 
     /*
     ***************************************************************************************
-    * Approve Request and Confirm
-    * This method clicks the "Approve" button to approve the request,
+    * Request Listing - Approve Request and Confirm
+    * This method clicks the "Approve" button on the Request Listing to approve the request,
     * then waits for the "RequestApproval" dialog box to appear and clicks "OK" to confirm.
-    ***************************************************************************************
-    */
+     ***************************************************************************************
+     */
     
-    async approveRequestAndClickOK(): Promise<void> {
+    async approveRequestOnListingAndClickOK(): Promise<void> {
         await helper.clickButton("Approve");
 
         await helper.verifyDialogVisibleAndClickOk("RequestApproval");        
@@ -119,7 +119,28 @@ export class RequestPage {
         const grid = this.page.locator('[automation-grid="RequestListingGrid"]');
         await grid.waitFor({ state: 'visible', timeout: 5000 });        
     }
+
+     /*
+    ***************************************************************************************
+     * Request Details Form - Approve Request and Confirm
+     * This method clicks the "Approve" button in the Request Details form to approve the request,
+     * then waits for the "RequestApproval" dialog box to appear and clicks "OK" to confirm.
+     ***************************************************************************************
+     */
     
+    async approveRequestInDetailsAndClickOK(): Promise<void> {
+        await helper.clickButton("Approve");
+
+        await helper.verifyDialogVisibleAndClickOk("RequestApproval");        
+
+        // Wait for the page to refresh and grid to reload
+        await this.page.waitForLoadState('networkidle');
+        
+        // Verify the grid listing is visible after refresh
+        const grid = this.page.locator('[automation-header="RequestHeader"]');
+        await grid.waitFor({ state: 'visible', timeout: 5000 });        
+    }
+
     /*
     ************************************************************************************************
     * Create Request Work Order

@@ -31,7 +31,7 @@ test('Request Listing - Approve new request with asset using fixture data @smoke
 
         await requestPage.clickBackBtn();
         await requestPage.selectSpecificedRequest(requestNumber!);
-        await requestPage.approveRequestAndClickOK();
+        await requestPage.approveRequestOnListingAndClickOK();
         //await requestPage.clickRefreshBtn();
         // Re-select the request to verify status after approval
         await requestPage.selectSpecificedRequest(requestNumber!);
