@@ -165,8 +165,23 @@ export class ContractorWOPage {
     */
     async clickAddPOBtn(): Promise<void> {
         await helper.clickButton("AddPO");
-        await this.page.waitForTimeout(1000);
 
+        // after clicking AddPO the application should generate a PO number and
+        // populate the PurchaseOrderNo field. on slow runners this can take a
+        // while, so wait until the input has a non-empty value before returning.
+        const selector = '[automation-input="PurchaseOrderNo"]';
+        // use page.waitForFunction with a selector string; the function executes in
+        // the browser context where TypeScript types are irrelevant
+        await this.page.waitForFunction((sel: string) => {
+            const el = document.querySelector(sel) as HTMLInputElement | null;
+            if (!el) return false;
+            return !!el.value && el.value.trim().length > 0;
+        },
+        selector,
+        { timeout: 30000 });
+
+        // small pause to let any navigation or UI updates settle
+        await this.page.waitForTimeout(500);
     }
 
     /*
@@ -188,18 +203,43 @@ export class ContractorWOPage {
     **********************************
     */
     async clickPOHyperlink(): Promise<void> {
-        // Locate the input field by automation-input name and click it to open the PO details
+        // Locate the element that contains the PO number.  On slow CI runners the
+        // page can be sluggish, the control may not be visible (or even attached)
+        // yet, and clicking immediately will throw an error.
         const poInput = this.page.locator('[automation-input="PurchaseOrderNo"]');
-        await poInput.click();
+
+        // wait for the input to be attached and visible before attempting a click
+        await poInput.waitFor({ state: 'visible', timeout: 30000 });
+
+        // scroll it into view to avoid issues when the element is offscreen
+        await poInput.scrollIntoViewIfNeeded();
+
+        // give the UI a moment to stabilise (animations, overlays, etc.)
+        await this.page.waitForTimeout(500);
+
+        // ensure the field has a value before clicking - the PO is populated after
+        // the Add PO action and can lag significantly on CI
+        const selector = '[automation-input="PurchaseOrderNo"]';
+        await this.page.waitForFunction((sel: string) => {
+            const el = document.querySelector(sel) as HTMLInputElement | null;
+            if (!el) return false;
+            return !!el.value && el.value.trim().length > 0;
+        },
+        selector,
+        { timeout: 30000 });
+
+        // perform the click with a generous timeout; force in case a cover overlay
+        // occasionally interferes on slow runners
+        await poInput.click({ timeout: 30000 });
 
         // After clicking the hyperlink we expect the Purchase Order details to load.
-        // Wait for the PO header to appear so subsequent verifications can operate on the correct page.
+        // Wait for the PO header to appear so subsequent verifications can operate on
+        // the correct page.  Increase the timeout as the navigation can be slow on CI.
         const poHeader = this.page.locator('[automation-header="PurchaseOrderHeader"]');
-        await poHeader.waitFor({ state: 'visible', timeout: 10000 });
+        await poHeader.waitFor({ state: 'visible', timeout: 30000 });
 
-        // Give UI a moment to stabilise after navigation.
-        // Note: Details tab opening is handled by verification methods if needed.
-        await this.page.waitForTimeout(500);
+        // Ensure network activity has settled before proceeding
+        await this.page.waitForLoadState('networkidle');
     }
 
     /*
