@@ -8,11 +8,13 @@ import { AssetPage } from '../pages/assets/assetPage';
 import { ReadingPage } from '../pages/readings/readingPage';
 import { RequestPage } from '../pages/requests/requestPage';
 import { ContractorWOPage } from '../pages/contractorworkorders/contractorwoPage';
+import { ContractorPortalPage } from '../pages/contractoruserportal/contractorportalPage';
 import { WoPage } from '../pages/workorders/woPage';
 import { PmPage } from '../pages/pm/pmPage';
 import { PoPage } from '../pages/purchaseorder/poPage';
 import { CataloguePage } from '../pages/catalogue/cataloguePage';
 import { SupplierPage } from '../pages/Contacts/SupplierPage';
+import { UsersPage } from '../pages/Contacts/userPage';
 
 import createAssetData from '../test-data/assets/createAssetData.json';
 import deleteAssetData from '../test-data/assets/deleteAssetData.json';
@@ -46,10 +48,12 @@ type MyFixtures = {
   requestPage: RequestPage;
   woPage: WoPage;
   contractorWOPage: ContractorWOPage;
+  contractorPortalPage: ContractorPortalPage;
   pmPage: PmPage;
   cataloguePage: CataloguePage;
   poPage: PoPage;
   supplierPage: SupplierPage;
+  usersPage: UsersPage;
 
   poTestData: { createpo: typeof createPurchaseOrderData };
   assetTestData: {
@@ -75,6 +79,7 @@ type MyFixtures = {
     duestartdate: typeof contractorWOPOData;
     quotenumber: typeof contractorWOPOData;
     invoicetransaction: typeof contractorWOPOData;
+    pocontractorportal: typeof contractorWOPOData;
   };
 
   catalogueTestData: {
@@ -169,6 +174,11 @@ export const test = baseTest.extend<MyFixtures>({
     await use(new SupplierPage(page));
   },
 
+   usersPage: async ({ page, loginPage }, use) => {
+    await use(new UsersPage(page));
+  },
+
+
   assetTestData: async ({}, use) => {
     await use({
       createasset: createAssetData,
@@ -207,7 +217,8 @@ export const test = baseTest.extend<MyFixtures>({
     await use({
       duestartdate: contractorWOPOData,
       quotenumber: contractorWOPOData,
-      invoicetransaction: contractorWOPOData
+      invoicetransaction: contractorWOPOData,
+      pocontractorportal: contractorWOPOData
     });
   },
 

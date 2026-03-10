@@ -266,16 +266,6 @@ export class ContractorWOPage {
     } 
 
     /*
-    **********************************
-    * Close Contractor WO Details Form
-    **********************************
-    */
-      async closeContractorWODetailsForm(): Promise<void> {
-        await helper.closePage();
-        await this.page.waitForTimeout(1000);
-    } 
-
-    /*
     ************************************************
     * Click Contractor Invoice Entry - Close button
     ************************************************

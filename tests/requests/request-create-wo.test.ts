@@ -27,7 +27,7 @@ test('Create Request WO using fixture data @smoke @feature-request', async ({ wo
         // Ensure we have a value and trim it
         const requestNumber = rawRequestNumber?.trim() ?? null;
         console.log(`Trimmed Request Number: ${requestNumber}`);
-        await requestPage.approveRequestAndClickOK();
+        await requestPage.approveRequestInDetailsAndClickOK();
         await requestPage.verifyRequestStatusEqualApprovedInDetailsForm("Approved");
         const requester = await requestPage.createRequestWorkOrder();
         await woPage.verifyWORequester(requester!);
