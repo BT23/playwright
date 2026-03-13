@@ -1,0 +1,35 @@
+{
+  "CaseNewMEXUser": {
+    "FirstName": "MEX User",
+    "LastName": "Automation",
+    "UserName": "mex",
+    "Type": "MEX",
+    "Password": "Admin123!",
+    "ConfirmPassword": "Admin123!"
+  },
+  "CaseNewOpsUser": {
+    "FirstName": "Ops User",
+    "LastName": "Automation",
+    "UserName": "ops",
+    "Type": "Ops",
+    "Password": "Admin123!",
+    "ConfirmPassword": "Admin123!"
+  },
+  "CaseNewContractorUser": {
+    "FirstName": "Contractor User",
+    "LastName": "Portal Automation",
+    "UserName": "cup",
+    "Type": "Contractor",
+    "Password": "Admin123!",
+    "ConfirmPassword": "Admin123!"
+  },
+    "CaseNewPrestartUser": {
+    "FirstName": "Prestart User",
+    "LastName": "Automation",
+    "UserName": "prestart",
+    "Type": "Prestart",
+    "Password": "Admin123!",
+    "ConfirmPassword": "Admin123!"
+  }  
+
+}

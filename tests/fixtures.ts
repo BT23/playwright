@@ -40,6 +40,7 @@ import createCatalogueData from '../test-data/catalogue/createCatalogueData.json
 import createPurchaseOrderData from '../test-data/purchase-orders/createPurchaseOrderData.json';
 
 import createSupplierData from '../test-data/contacts/suppliers/createSupplierData.json';
+import createUsersData from '../test-data/contacts/users/createNewUser.json';
 
 type MyFixtures = {
   loginPage: LoginPage;
@@ -86,12 +87,15 @@ type MyFixtures = {
     createcatalogue: typeof createCatalogueData;
   };
   supplierTestData: {createsupplier: typeof createSupplierData;};  
+  usersTestData: {createusers: typeof createUsersData;};
+
   assetDataFilePath: string;
   requestDataFilePath: string;
   catalogueDataFilePath: string;
   poDataFilePath: string;
   woDataFilePath: string;
   supplierDataFilePath: string;
+  usersDataFilePath: string;
 };
 
 export const test = baseTest.extend<MyFixtures>({  
@@ -178,7 +182,6 @@ export const test = baseTest.extend<MyFixtures>({
     await use(new UsersPage(page));
   },
 
-
   assetTestData: async ({}, use) => {
     await use({
       createasset: createAssetData,
@@ -234,6 +237,10 @@ export const test = baseTest.extend<MyFixtures>({
 
   supplierTestData: async ({}, use) => {
     await use({ createsupplier: createSupplierData });
+  },
+
+  usersTestData: async ({}, use) => {
+    await use({ createusers: createUsersData });
   },
   
   assetDataFilePath: async ({}, use) => {
