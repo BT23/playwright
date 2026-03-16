@@ -19,7 +19,13 @@
     "Description": "Verify Contractor PO appears in Contractor User Portal",
     "Asset": "BES",
     "QuoteAmount": "250.99",
-    "contractor": "CUP - Contractor User Portal"
+    "FirstName": "Portal",
+    "LastName": "Contractor User",
+    "UserName": "portal",
+    "Type": "Contractor",
+    "Password": "Admin123!",
+    "ConfirmPassword": "Admin123!",
+    "contractor": "Portal Contractor User"
   }  
 
 }

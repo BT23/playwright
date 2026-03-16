@@ -152,26 +152,30 @@ export class LoginPage {
     await this.selectLanguage();
   }
   
-  async contractorUserLogin() {
-    await helper.enterValue("userName", this.credentials.contractorCredentials.username);
-    console.log("Enter: userName" + this.credentials.contractorCredentials.username);
-    await helper.enterValue("password", this.credentials.contractorCredentials.password);
-    console.log("Enter: password" + this.credentials.contractorCredentials.password);
-
-    // Grecaptcha handling
-    await this.page.waitForFunction(() => typeof grecaptcha.execute !== 'undefined');
+  async contractorUserLogin(username:string, password:string) {
+    await this.page.waitForSelector('[automation-input="userName"]', { timeout: 10000 }).catch(()=>{});
+    await this.page.waitForSelector('[automation-input="password"]', { timeout: 10000 }).catch(()=>{});    
+    await helper.enterValue("userName", username);
+    console.log("Enter: userName" + username);
+    await helper.enterValue("password", password);
+    console.log("Enter: password" + password);
 
     await helper.clickButton("login");
     console.log("Login button is clicked");
   }
 
   async logout() {
-    await helper.clickUserActionsContextMenu("Logout");
-    //await helper.clickButton("logout");
-    await this.page.waitForTimeout(1000);
-    // Verify the login form is shown by checking the login button appears
-    await expect(this.page.locator('[automation-button="login"]')).toBeVisible();    
+    const DEFAULT_TIMEOUT = 10_000;
+    await helper.clickButton("userOptions");
+
+    // Open User Action Menu
+    const userActionMenu = this.page.locator('[automation-context-menu="UserActions"]');
+    await expect(userActionMenu, 'User Action Menu should be visible').toBeVisible({ timeout: DEFAULT_TIMEOUT });
+    await userActionMenu.click({ timeout: DEFAULT_TIMEOUT });
     
+    const logoutOption = this.page.locator('div[automation-context-menu-item="Logout"]');
+    await expect(logoutOption, 'Logout menu item should be visible').toBeVisible({ timeout: DEFAULT_TIMEOUT });
+    await logoutOption.click({ timeout: DEFAULT_TIMEOUT }); 
   }
   
   //async assertLoginSuccess(): Promise<void> {

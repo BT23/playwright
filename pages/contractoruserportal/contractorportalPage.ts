@@ -26,7 +26,7 @@ export class ContractorPortalPage {
     * Verify Specific Contractor WO PO appears
     ******************************************
     */
-    async verifyPONumberNotInContractorPortalListing(poNumber: string): Promise<void> {
+    async verifyPONumberNotOnContractorPortalListing(poNumber: string): Promise<void> {
         // Locate the grid and all rows
         const grid = this.page.locator('[automation-grid="ContractorPortalListingGrid"]');
         const rows = grid.locator('[automation-row]');
