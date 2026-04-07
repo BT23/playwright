@@ -24,10 +24,10 @@ export class WoPage {
     */
     async openWOModule(): Promise<void> {
         // Wait for the Work Orders button to become visible
-        await this.page.waitForSelector('[automation-button="NavItemWorkOrders"]', { state: 'visible', timeout: 10000 });
+        await this.page.waitForSelector('[automation-button="NavItemWork Orders"]', { state: 'visible', timeout: 10000 });
 
         // Click on the Work Orders button to open the Work Order module
-        await helper.clickButton("NavItemWorkOrders");
+        await helper.clickButton("NavItemWork Orders");
 
         // Verify that the Work Order Listing header is displayed
         await this.page.waitForSelector('[automation-header="WorkOrderListingHeader"] span', { state: 'visible', timeout: 10000 });        
