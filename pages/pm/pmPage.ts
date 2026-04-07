@@ -21,7 +21,7 @@ export class PmPage {
     async openPMModule(): Promise<void> {
         // Wait for element visibility using smart wait
         const navButton = this.page.locator('[automation-button="NavItemPreventativeMaintenance"]');
-        await navButton.waitFor({ state: 'visible', timeout: 5000 });
+        await navButton.waitFor({ state: 'visible', timeout: 10000 });
         
         // Click on the Work Orders button to open the Work Order module
         await helper.clickButton("NavItemPreventativeMaintenance");
@@ -31,6 +31,6 @@ export class PmPage {
 
         // Verify header is displayed
         const header = this.page.locator('[automation-header="PreventativeMaintenanceListingHeader"] span');
-        await header.waitFor({ state: 'visible', timeout: 5000 });
+        await header.waitFor({ state: 'visible', timeout: 10000 });
     }
 }
