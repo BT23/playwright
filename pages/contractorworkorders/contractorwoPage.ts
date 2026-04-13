@@ -22,10 +22,10 @@ export class ContractorWOPage {
     */
     async openContractorWOListing(): Promise<void> {
         // Wait for element visibility using smart wait
-        const navButton = this.page.locator('[automation-button="NavItemWorkOrders"]');
+        const navButton = this.page.locator('[automation-button="NavItemWork Orders"]');
         await navButton.waitFor({ state: 'visible', timeout: 5000 });
 
-        await helper.clickButton("NavItemWorkOrders");
+        await helper.clickButton("NavItemWork Orders");
 
         // Wait for page to load after navigation
         await this.page.waitForLoadState('networkidle');
