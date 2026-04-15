@@ -56,7 +56,11 @@ export class WoPage {
 
         // Wait until the WO Header is visible before clicking
         const woHeader = this.page.locator('[automation-header="WorkOrderHeader"]');
-        await woHeader.waitFor({ state: 'visible', timeout: 5000 });        
+        await woHeader.waitFor({ state: 'visible', timeout: 10000 });        
+
+        // Wait until the WO Header is visible before clicking
+        const assetLabel = this.page.locator('[automation-label="lblAsset"]');
+        await assetLabel.waitFor({ state: 'visible', timeout: 10000 });    
 
         // Locate the element using its class
         const workOrderElement = await this.page.locator('div.ml-2.text-5\\.5.text-secondary');
