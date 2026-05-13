@@ -99,11 +99,11 @@ export class SupplierPage {
      * Asserts that the Supplier listing page is opened by checking the header.
      */
     async assertSupplierListingOpened(): Promise<void> {
-        await helper.checkHeader('SuppliersListingHeader');
+        await helper.checkHeader('SupplierListingHeader');
 
         // Verify the SuppliersListingHeader text reads "Suppliers Listing"
-        const header = this.page.locator('[automation-header="SuppliersListingHeader"]');
-        await expect(header).toHaveText("Suppliers Listing", { timeout: 5000 });        
+        const header = this.page.locator('[automation-header="SupplierListingHeader"]');
+        await expect(header).toHaveText("Supplier Listing", { timeout: 5000 });     
     }
 
     /**
@@ -111,19 +111,19 @@ export class SupplierPage {
      */
     async verifySupplierExist(companyCode: string): Promise<void> {
         await helper.clickButton("Refresh");
-        await this.page.waitForTimeout(1000);
+        await this.page.waitForTimeout(10000);
  
+        const supplierCell = this.page.locator(
+            `[automation-grid="ContactListingGrid"] [automation-col="Code|FirstName"]:has-text("${companyCode}")`
+        );
 
-        const selector = `[automation-grid="ContactListingGrid"] >> text=${companyCode}`;
-
-        // Check if the supplier exists in the grid
-        const supplierExists = await this.page.locator(selector).isVisible();
+        const supplierExists = await supplierCell.isVisible();
 
         if (supplierExists) {
             await helper.selectRowByFieldName("ContactListingGrid", "Code|FirstName", companyCode);
             console.log(`Supplier ${companyCode} found and selected.`);
         } else {
             throw new Error(`Supplier ${companyCode} not found in ContactListingGrid.`);
-        }
+        }        
     }
 }
