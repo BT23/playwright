@@ -35,6 +35,8 @@ import contractorWOPOData from '../test-data/e2e/contractorwo-po/contractorwoPOD
 import woDetailsTabData from '../test-data/work-orders/woDetailsTabData.json';
 import addWOSpareData from '../test-data/work-orders/woSparesTabData.json';
 
+import createPMData from '../test-data/pm/createPMData.json';
+
 import createCatalogueData from '../test-data/catalogue/createCatalogueData.json';
 
 import createPurchaseOrderData from '../test-data/purchase-orders/createPurchaseOrderData.json';
@@ -76,6 +78,10 @@ type MyFixtures = {
     filterontractorwolisting: typeof filterContractorWOData;
   };
   
+  pmTestData: {
+    createpm: typeof createPMData;
+  };
+
   cwoPoTestData: {
     duestartdate: typeof contractorWOPOData;
     quotenumber: typeof contractorWOPOData;
@@ -94,6 +100,7 @@ type MyFixtures = {
   catalogueDataFilePath: string;
   poDataFilePath: string;
   woDataFilePath: string;
+  pmDataFilePath: string;
   supplierDataFilePath: string;
   usersDataFilePath: string;
 };
@@ -225,6 +232,12 @@ export const test = baseTest.extend<MyFixtures>({
     });
   },
 
+  pmTestData: async ({}, use) => {
+    await use({
+      createpm: createPMData
+    });
+  },
+
   catalogueTestData: async ({}, use) => {
     await use({
       createcatalogue: createCatalogueData
@@ -253,6 +266,10 @@ export const test = baseTest.extend<MyFixtures>({
 
   woDataFilePath: async ({}, use) => {
     await use(path.resolve(__dirname, '../test-data/work-orders/woTempData.json'));
+  },
+
+  pmDataFilePath: async ({}, use) => {
+    await use(path.resolve(__dirname, '../test-data/assets/assetTempData.json'));
   },
 
   poDataFilePath: async ({}, use) => {
