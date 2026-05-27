@@ -13,15 +13,18 @@ export class LoginPage {
 
     helper.setPage(page);
 
-    // Tolerant handlers for headless runs: ignore the benign AppInsights console message - AppInsights not initialized - skipping telemetry for: authentication/login
+    // Tolerant handlers for headless runs: ignore known benign console messages
+    // - AppInsights telemetry message
+    // - Permissions-Policy header warnings from the server (e.g. document-domain, web-share)
     this.page.on('console', msg => {
       try {
         const text = msg.text();
         if (text.includes('AppInsights not initialized')) return; // ignore harmless telemetry log
+        if (text.includes('Permissions-Policy') || text.includes('Unrecognized feature')) return; // ignore benign header warnings
         // keep other console messages visible for debugging
         console.log('PAGE LOG:', text);
       } catch {}
-    });    
+    });
   }
 
 /*
