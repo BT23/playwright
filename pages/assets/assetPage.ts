@@ -78,8 +78,10 @@ export class AssetPage {
         // Wait for page to load after navigation
         await this.page.waitForLoadState('networkidle');
 
-        // Verify header is displayed
-        const header = this.page.locator('[automation-header="AssetRegisterHeader"] span');
+        // Verify header is displayed and avoid strict mode issues when duplicate spans exist
+        const header = this.page.locator('[automation-header="AssetRegisterHeader"] span')
+            .filter({ hasText: 'Asset Register' })
+            .first();
         await header.waitFor({ state: 'visible', timeout: 5000 });
     }
 
@@ -256,7 +258,8 @@ export class AssetPage {
         const fillValueMapping: Record<string, (value: string) => string> = {
             // For Supplier, use the first word as the short name for filling
             Contractor: (value: string) => value.split(' ')[0],
-            Customer: (value: string) => value.split(' ')[0]
+            Customer: (value: string) => value.split(' ')[0],
+            Criticality: (value: string) => value.split(' ')[0]
         };
 
         // Only these fields require selectFirstListItem
