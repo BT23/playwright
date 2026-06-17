@@ -259,19 +259,20 @@ export class AssetPage {
             // For Supplier, use the first word as the short name for filling
             Contractor: (value: string) => value.split(' ')[0],
             Customer: (value: string) => value.split(' ')[0],
-            Criticality: (value: string) => value.split(' ')[0]
+            //Criticality: (value: string) => value.split(' ')[0]
         };
 
         // Only these fields require selectFirstListItem
         const selectListFields = [
             "Contractor",
-            "Customer",
-            "Criticality"
+            "Customer"
         ];
 
         // Fill in the form fields using the helper method
         // This method will handle the mapping and filling of values
         await helper.fillFormFields(details, undefined, fillValueMapping, selectListFields);
+
+        await helper.enterValue("Criticality", details.Criticality);
     }
 
     /***************************
@@ -313,7 +314,7 @@ export class AssetPage {
         console.log(`🔍 Verifying tree node not present: ${assetNumber}`);
 
         // Ensure Asset Register has loaded
-        const header = this.page.locator('[automation-header="AssetRegisterHeader"] span');
+        const header = this.page.locator('[automation-header="AssetRegisterHeader"] span', { hasText: 'Asset Register' }).first();
         await header.waitFor({ state: 'visible', timeout: 5000 });
 
         // Use an exact-match locator for the number cell (case-insensitive)

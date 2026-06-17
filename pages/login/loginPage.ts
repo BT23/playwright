@@ -207,9 +207,9 @@ export class LoginPage {
     //For GitHub only - Required wait to stabilize the Home page after selecting language (Github is slow).
     await this.page.waitForTimeout(20000);
 
-    // Wait for the Home header to appear to confirm successful login
-    const homeHeader = this.page.locator('[automation-header="HomeHeader"]');
-    await expect(homeHeader).toBeVisible(); 
+    // Wait for the Dashboard header to appear to confirm successful login
+    const dashboardHeader = this.page.locator('[automation-header="DashboardHeader"]');
+    await expect(dashboardHeader).toBeVisible(); 
     
     await this.page.waitForTimeout(500).catch(()=>null);
   }
