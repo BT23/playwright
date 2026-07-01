@@ -31,7 +31,7 @@ export class PmPage {
         await this.page.waitForLoadState('networkidle');
 
         // Verify header is displayed
-        const header = this.page.locator('[automation-header="PreventativeMaintenanceListingHeader"] span');
+        const header = this.page.locator('[automation-header="PreventativeMaintenanceListingHeader"] span', { hasText: 'Preventative Maintenance Listing' }).first();
         await header.waitFor({ state: 'visible', timeout: 10000 });
     }
 

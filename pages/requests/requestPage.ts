@@ -32,7 +32,7 @@ export class RequestPage {
         await this.page.waitForLoadState('networkidle');
 
         // Verify header is displayed
-        const header = this.page.locator('[automation-header="RequestListingHeader"] span');
+        const header = this.page.locator('[automation-header="RequestListingHeader"] span', { hasText: 'Request Listing' }).first();
         await header.waitFor({ state: 'visible', timeout: 5000 });
     }
 

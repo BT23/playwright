@@ -31,7 +31,7 @@ export class ContractorWOPage {
         await this.page.waitForLoadState('networkidle');
 
         // Verify header is displayed
-        const header = this.page.locator('[automation-header="WorkOrderListingHeader"] span');
+        const header = this.page.locator('[automation-header="WorkOrderListingHeader"] span', { hasText: 'Work Order Listing' }).first();
         await header.waitFor({ state: 'visible', timeout: 5000 });
         
         // Wait for element visibility using smart wait
