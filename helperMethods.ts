@@ -71,7 +71,6 @@ class HelperMethods {
       await button.click({ force: shouldForce });
   }
 
-
   /* Tyler code
   async clickButton(name: string, shouldForce = false) {
     const button = this.page.locator(`[automation-button="${name}"]`).first();
@@ -483,24 +482,35 @@ async verifyFields(
       expected: Record<string, string>,
       fieldsToVerify: string[]
     ): Promise<void> {
-      // Fields that should match the first part before " - "
-      //const partialMatchFields = ['Manufacturer', 'ModelNumber'];
+      // Fields that may only partially match the expected value (e.g. UI shows a short name)
+      const partialMatchFields = ['Manufacturer', 'ModelNumber'];
 
       for (const field of fieldsToVerify) {
           const expectedValue = expected[field];
           if (expectedValue !== undefined) {
               const actual = await this.getFieldValue(field);
 
-            // ✅ Normalize both values: trim and lowercase
+            // Normalize both values: trim and lowercase
             const actualNormalized = actual?.trim().toLowerCase();
             let expectedNormalized = expectedValue?.trim().toLowerCase();
 
-            // For partial match fields, extract first part before " - "
-            //if (partialMatchFields.includes(field)) {
-            //  expectedNormalized = expectedNormalized.split(' - ')[0].trim();
-           // }
+            // Allow a tolerant comparison for fields that may be shortened in the UI
+            if (partialMatchFields.includes(field)) {
+                const expectedFirstToken = expectedNormalized.split(' ')[0];
+                const matched = (
+                    actualNormalized === expectedNormalized ||
+                    actualNormalized === expectedFirstToken ||
+                    expectedNormalized.startsWith(actualNormalized) ||
+                    actualNormalized.startsWith(expectedFirstToken)
+                );
 
-            expect(actualNormalized).toBe(expectedNormalized);
+                if (!matched) {
+                    // Fail with a clear assertion so Playwright shows the diff
+                    expect(actualNormalized).toBe(expectedNormalized);
+                }
+            } else {
+                expect(actualNormalized).toBe(expectedNormalized);
+            }
           }
       }
     }

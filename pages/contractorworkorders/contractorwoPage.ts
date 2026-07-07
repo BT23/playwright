@@ -60,14 +60,14 @@ export class ContractorWOPage {
         await helper.enterValueInDialog("CreateWorkOrder","Asset", assetNumber);
 
         // Select the first item from the supplier list
-        await helper.selectFirstListItem();
+        await this.selectFirstListItemInDialog();
 
         // Enter the supplier short name in the dialog/list
         const vendorShortName = vendor.split(' ')[0];
         await helper.enterValueInDialog("CreateWorkOrder", "Contractor", vendorShortName);
 
         // Select the first item from the supplier list
-        await helper.selectFirstListItem();
+        await this.selectFirstListItemInDialog();
 
         // Click the Create button to save the new Work Order
         await helper.clickButton("Create");
@@ -106,6 +106,24 @@ export class ContractorWOPage {
         await this.page.locator('[automation-input="DueStart_time"]').fill(timeOnly);
 
         return `${dateOnly}T${timeOnly}`;
+    }
+
+    private async selectFirstListItemInDialog() {
+        const item = this.page.locator('[automation-list-item]').first();
+        await expect(item).toBeVisible({ timeout: 10000 });
+        await item.scrollIntoViewIfNeeded();
+        await this.page.waitForTimeout(150);
+
+        try {
+            await item.click({ timeout: 10000 });
+        } catch (error: any) {
+            const message = error?.message ?? '';
+            if (/intercept.*pointer/i.test(message)) {
+                await item.click({ force: true, timeout: 10000 });
+                return;
+            }
+            throw error;
+        }
     }
 
     /*

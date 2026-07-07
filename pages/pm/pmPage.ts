@@ -54,7 +54,8 @@ export class PmPage {
         // Enter PM Frequency Type
         const freqTypeShortName = pmFrequencyType.trim().substring(0, 2);
         await helper.enterValueInDialog("CreatePreventativeMaintenance", "FrequencyType", freqTypeShortName);
-        await helper.selectFirstListItem();
+        await this.openFrequencyTypeDropdown();
+        await this.selectFirstListItemFromList();
         await this.page.waitForTimeout(1000);
 
         // Click the Create button to save the new Purchase Order
@@ -90,6 +91,31 @@ export class PmPage {
     async clickBackBtn(): Promise<void> {
         await helper.closePage();
         await this.page.waitForTimeout(1000);
+    }
+
+    private async openFrequencyTypeDropdown(): Promise<void> {
+        const input = this.page.locator('[automation-input="FrequencyType"]');
+        await expect(input).toBeVisible({ timeout: 5000 });
+        await input.click({ force: true });
+        await this.page.waitForTimeout(300);
+    }
+
+    private async selectFirstListItemFromList(): Promise<void> {
+        const item = this.page.locator('[automation-list-item]').first();
+        await item.waitFor({ state: 'visible', timeout: 10000 });
+        await item.scrollIntoViewIfNeeded();
+        await this.page.waitForTimeout(150);
+
+        try {
+            await item.click({ timeout: 10000 });
+        } catch (error: any) {
+            const message = error?.message ?? '';
+            if (/intercept.*pointer/i.test(message)) {
+                await item.click({ force: true, timeout: 10000 });
+                return;
+            }
+            throw error;
+        }
     }
 
     /*

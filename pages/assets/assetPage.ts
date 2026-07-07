@@ -115,8 +115,9 @@ export class AssetPage {
 
     async enterReadingType(readingType: string): Promise<void> {
         // Set Reading Type to Hours
-        await helper.enterValue("ReadingType", readingType)
-        await helper.selectFirstListItem();
+        await helper.enterValue("ReadingType", readingType, true)
+        await this.openReadingTypeDropdown();
+        await this.selectFirstListItemFromList();
     }
 
     /*****************************************
@@ -131,8 +132,9 @@ export class AssetPage {
         await helper.clearInputField("ReadingType");
 
         // Set Reading Type to Hours
-        await helper.enterValue("ReadingType", "Hours")
-        await helper.selectFirstListItem();
+        await helper.enterValue("ReadingType", "Hours", true);
+        await this.openReadingTypeDropdown();
+        await this.selectFirstListItemFromList();
 
 
         // enter Warranty start date as today
@@ -154,6 +156,39 @@ export class AssetPage {
         // Click the X button to close Asset Details
         //await helper.closePage();
         //await this.page.waitForTimeout(1000);
+    }
+
+    private async selectFirstListItemFromList(): Promise<void> {
+        const item = this.page.locator('[automation-list-item]').first();
+        await item.waitFor({ state: 'visible', timeout: 10000 });
+        await item.scrollIntoViewIfNeeded();
+        await this.page.waitForTimeout(150);
+
+        try {
+            await item.click({ timeout: 10000 });
+        } catch (error: any) {
+            const message = error?.message ?? '';
+            if (/intercept.*pointer/i.test(message)) {
+                await item.click({ force: true, timeout: 10000 });
+                return;
+            }
+            throw error;
+        }
+    }
+
+    private async openReadingTypeDropdown(): Promise<void> {
+        const input = this.page.locator('[automation-input="ReadingType"]');
+        await expect(input).toBeVisible({ timeout: 5000 });
+        await input.click({ force: true });
+        await input.press('ArrowDown');
+        await this.page.waitForTimeout(300);
+    }
+
+    private async openCriticalityDropdown(): Promise<void> {
+        const input = this.page.locator('[automation-input="Criticality"]');
+        await expect(input).toBeVisible({ timeout: 5000 });
+        await input.click({ force: true });
+        await this.page.waitForTimeout(300);
     }
 
     /*
@@ -273,6 +308,8 @@ export class AssetPage {
         await helper.fillFormFields(details, undefined, fillValueMapping, selectListFields);
 
         await helper.enterValue("Criticality", details.Criticality);
+        await this.openCriticalityDropdown();
+        await this.selectFirstListItemFromList();
     }
 
     /***************************
