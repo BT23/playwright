@@ -265,9 +265,9 @@ export class AssetPage {
             "Manufacturer",
             "ModelNumber",
             "Department",
-            "ReadingType",
             "AssetStatus",
-            "WarrantySupplier"
+            "WarrantySupplier",
+            "ReadingType"
         ];
 
         // Fill in the form fields using the helper method

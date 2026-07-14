@@ -209,8 +209,9 @@ class HelperMethods {
               const fillValue = fillValueMapping[field] ? fillValueMapping[field](value) : value;
               await this.enterValue(uiField, fillValue);
               if (selectListFields.includes(uiField)) {
-                  await this.selectFirstListItem();
+                  //await this.selectFirstListItem();
                   await this.page.waitForTimeout(1000);
+                  await this.page.keyboard.press('Tab');
               }
               await this.page.waitForTimeout(500);
           }
