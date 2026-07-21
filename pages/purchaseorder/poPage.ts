@@ -106,6 +106,7 @@ export class PoPage {
 
         //Add Item line
         await helper.clickButton("Add");
+        await this.page.waitForTimeout(1000);
 
         // Enter the supplier short name in the dialog/list
         const newRow = await helper.selectLastRow("ItemsTabGrid");
