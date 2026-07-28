@@ -15,7 +15,7 @@ import { test } from '../fixtures'
     * Custom tags: @smoke @feature-asset
     */ 
 
-test.only('Fill in Asset Details Details tab using fixture data @smoke @feature-asset', async ({ assetPage, assetTestData }) => { 
+test('Fill in Asset Details Details tab using fixture data @smoke @feature-asset', async ({ assetPage, assetTestData }) => { 
     console.log('🧪 Starting test: Fill in an existing asset details - details tab using fixture data');
     await assetPage.goto();
     await assetPage.createLevel1Asset(assetTestData.assetdetailstab.assetNumber, assetTestData.assetdetailstab.assetDesc);
