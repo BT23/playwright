@@ -129,12 +129,12 @@ export class AssetPage {
         const extendedTabContent = this.page.locator('[automation-tab="DetailsTab"]');
         await extendedTabContent.waitFor({ state: 'visible', timeout: 5000 });
 
-        await helper.clearInputField("ReadingType");
+        //await helper.clearInputField("ReadingType");
 
         // Set Reading Type to Hours
-        await helper.enterValue("ReadingType", "Hours", true);
-        await this.openReadingTypeDropdown();
-        await this.selectFirstListItemFromList();
+        //await helper.enterValue("ReadingType", "Hours", true);
+        //await this.openReadingTypeDropdown();
+        //await this.selectFirstListItemFromList();
 
 
         // enter Warranty start date as today

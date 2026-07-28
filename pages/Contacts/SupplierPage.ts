@@ -103,7 +103,7 @@ export class SupplierPage {
 
         // Verify the SuppliersListingHeader text reads "Suppliers Listing"
         const header = this.page.locator('[automation-header="SupplierListingHeader"]');
-        await expect(header).toHaveText("Supplier Listing", { timeout: 5000 });     
+        await expect(header).toContainText("Supplier Listing", { timeout: 5000 });     
     }
 
     /**

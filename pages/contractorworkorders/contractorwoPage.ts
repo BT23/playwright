@@ -184,12 +184,35 @@ export class ContractorWOPage {
     async clickAddPOBtn(): Promise<void> {
         await helper.clickButton("AddPO");
 
+        // Some suppliers show a selector with an option to create a new PO when
+        // existing POs are already present. Others go straight to PO creation.
+        // Handle either flow without blocking if the selector is not shown.
+        const createPoButton = this.page.locator('[automation-button="CreateNewPO"]').first();
+        const fallbackButton = this.page.getByText(/create\s+new\s+po|create\s+po/i).first();
+        const selectorHeader = this.page.locator('[automation-header="PurchaseOrderSelector"]').first();
+
+        try {
+            await createPoButton.waitFor({ state: 'visible', timeout: 5000 });
+            await createPoButton.scrollIntoViewIfNeeded();
+            await createPoButton.click({ force: true, timeout: 10000 });
+        } catch {
+            try {
+                await selectorHeader.waitFor({ state: 'visible', timeout: 5000 });
+                if (await fallbackButton.isVisible().catch(() => false)) {
+                    await fallbackButton.scrollIntoViewIfNeeded();
+                    await fallbackButton.click({ force: true, timeout: 10000 });
+                }
+            } catch {
+                // No selector was shown; continue and wait for the PO to be created.
+            }
+        }
+
+        await this.page.waitForTimeout(1000);
+
         // after clicking AddPO the application should generate a PO number and
         // populate the PurchaseOrderNo field. on slow runners this can take a
         // while, so wait until the input has a non-empty value before returning.
         const selector = '[automation-input="PurchaseOrderNo"]';
-        // use page.waitForFunction with a selector string; the function executes in
-        // the browser context where TypeScript types are irrelevant
         await this.page.waitForFunction((sel: string) => {
             const el = document.querySelector(sel) as HTMLInputElement | null;
             if (!el) return false;

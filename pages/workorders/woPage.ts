@@ -282,10 +282,10 @@ export class WoPage {
     async printWOReport(woNumber: string, fromDetailsForm: boolean): Promise<void> {
         // Determine the correct header based on the view
         const headerSelector = fromDetailsForm
-            ? '[automation-header="WorkOrderHeader"] span'
-            : '[automation-header="WorkOrderListingHeader"] span';
+            ? '[automation-header="WorkOrderHeader"]'
+            : '[automation-header="WorkOrderListingHeader"]';
 
-        const woHeader = this.page.locator(headerSelector);
+        const woHeader = this.page.locator(headerSelector).first();
         await expect(woHeader).toBeVisible();
         await this.page.waitForTimeout(1000);
 
@@ -301,7 +301,7 @@ export class WoPage {
         }
 
         // Confirm the Work Order Report header is visible
-        const reportHeader = this.page.locator('[automation-header="WorkOrderReport"] span');
+        const reportHeader = this.page.locator('[automation-header="WorkOrderReport"] span').first();
         await expect(reportHeader).toBeVisible();
     }
 
