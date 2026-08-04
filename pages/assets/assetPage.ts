@@ -115,9 +115,8 @@ export class AssetPage {
 
     async enterReadingType(readingType: string): Promise<void> {
         // Set Reading Type to Hours
-        await helper.enterValue("ReadingType", readingType, true)
-        await this.openReadingTypeDropdown();
-        await this.selectFirstListItemFromList();
+        await helper.enterValue("ReadingType", readingType, true);
+        await this.page.waitForTimeout(300);
     }
 
     /*****************************************
@@ -128,14 +127,6 @@ export class AssetPage {
          // Wait until the Items tab content is visible
         const extendedTabContent = this.page.locator('[automation-tab="DetailsTab"]');
         await extendedTabContent.waitFor({ state: 'visible', timeout: 5000 });
-
-        //await helper.clearInputField("ReadingType");
-
-        // Set Reading Type to Hours
-        //await helper.enterValue("ReadingType", "Hours", true);
-        //await this.openReadingTypeDropdown();
-        //await this.selectFirstListItemFromList();
-
 
         // enter Warranty start date as today
         // Get today's date in "YYYY-MM-DD" format "2025-06-16"
@@ -153,9 +144,6 @@ export class AssetPage {
         await helper.enterValue("WarrantyPeriodReading", "100");
 
         await this.page.waitForTimeout(1000);
-        // Click the X button to close Asset Details
-        //await helper.closePage();
-        //await this.page.waitForTimeout(1000);
     }
 
     private async selectFirstListItemFromList(): Promise<void> {

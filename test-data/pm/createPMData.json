@@ -1,8 +1,9 @@
 {
     "PMDescription": "PM - 31 Days Lead Time Test",
-    "Asset": "PM Lead Time Test Asset",
+    "PMAsset": "PM Lead Time Test Asset",
     "AssetDescription": "Asset used for PM Lead Time Test",
     "Frequency": "31",
     "FrequencyType": "Days",
-    "LeadTime": "31"
+    "LeadTime": "31",
+    "DaysinAdvance": "1"
 }

@@ -41,6 +41,8 @@ import createCatalogueData from '../test-data/catalogue/createCatalogueData.json
 
 import createPurchaseOrderData from '../test-data/purchase-orders/createPurchaseOrderData.json';
 
+import pmActivatorReadingLowAvgData from '../test-data/e2e/pm-reading/pmReadingData.json';
+
 import createSupplierData from '../test-data/contacts/suppliers/createSupplierData.json';
 import createUsersData from '../test-data/contacts/users/createNewUser.json';
 
@@ -58,6 +60,10 @@ type MyFixtures = {
   supplierPage: SupplierPage;
   usersPage: UsersPage;
 
+  e2eTestData: { 
+    pmactivator:{
+      pmactivatorreadinglowavg: typeof pmActivatorReadingLowAvgData}
+  };
   poTestData: { createpo: typeof createPurchaseOrderData };
   assetTestData: {
     createasset: typeof createAssetData;
@@ -187,6 +193,12 @@ export const test = baseTest.extend<MyFixtures>({
 
    usersPage: async ({ page, loginPage }, use) => {
     await use(new UsersPage(page));
+  },
+  e2eTestData: async ({}, use) => {
+    await use({
+      pmactivator: {
+        pmactivatorreadinglowavg: pmActivatorReadingLowAvgData}
+    });
   },
 
   assetTestData: async ({}, use) => {

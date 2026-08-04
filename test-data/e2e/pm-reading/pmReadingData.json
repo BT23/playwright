@@ -1,0 +1,14 @@
+{
+  "CasePmActivatorReadingLowAvg": {
+    "assetNumber": "Ticket 3910",
+    "assetDesc": "PM Activator Reading Low Average Test",
+    "readingType": "Hours",
+    "readingDate1": "2026-05-03 T09:00:00Z",
+    "readingValue1": "1",
+    "readingDate2": "2026-05-28 T10:30:00Z",
+    "readingValue2": "1.2",
+    "pmDesc": "PM Activator Reading Low Average Test",
+    "frequency": "50000",
+    "frequencyType": "Hours"
+  }
+}
