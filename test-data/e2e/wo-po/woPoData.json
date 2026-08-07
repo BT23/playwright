@@ -1,0 +1,12 @@
+{
+  "CaseWoSparesAddPo": {
+    "assetNumber": "5495T",
+    "assetDesc": "WO Auto Populate in PO Test",
+    "woDesc": "Ticket 5495 - WO Spares Add PO Test",
+    "accountCode": "REN-0777-00",
+    "SupplierCode": "Bakers",
+    "SupplierName": "EA Baker and Co",
+    "SupplierStockNumber": "LB100",
+    "Quantity": "2"
+  }
+}

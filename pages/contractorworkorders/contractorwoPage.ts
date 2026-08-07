@@ -232,7 +232,7 @@ export class ContractorWOPage {
     */
     async clickEnterInvoiceBtn(): Promise<void> {
         await helper.clickButton("EnterInvoice");
-        //await this.page.waitForTimeout(1000);
+        await this.page.waitForTimeout(1000);
         // Wait for page to load after navigation
         await this.page.waitForLoadState('networkidle');        
 
@@ -290,7 +290,7 @@ export class ContractorWOPage {
     */
       async clickInvoiceEntrySubmitBtn(): Promise<void> {
         await helper.clickButtonInDialog("ContractorInvoiceEntry", "Submit");
-        //await this.page.waitForTimeout(1000);
+        await this.page.waitForTimeout(1000);
         //aWait for page to load after navigation
         await this.page.waitForLoadState('networkidle');
     } 
@@ -302,7 +302,7 @@ export class ContractorWOPage {
     */
       async clickInvoiceEntryApproveBtn(): Promise<void> {
         await helper.clickButtonInDialog("ContractorInvoiceEntry", "Approve");
-        //await this.page.waitForTimeout(1000);
+        await this.page.waitForTimeout(1000);
         await this.page.waitForLoadState('networkidle');
     } 
 

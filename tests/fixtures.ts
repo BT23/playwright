@@ -31,6 +31,8 @@ import createContractorWorkOrderData from '../test-data/contractor-work-orders/c
 import filterContractorWOData from '../test-data/contractor-work-orders/contractorWOFilterData.json';
 
 import contractorWOPOData from '../test-data/e2e/contractorwo-po/contractorwoPOData.json';
+import pmReadingData from '../test-data/e2e/pm-reading/pmReadingData.json';
+import woPOData from '../test-data/e2e/wo-po/woPoData.json';
 
 import woDetailsTabData from '../test-data/work-orders/woDetailsTabData.json';
 import addWOSpareData from '../test-data/work-orders/woSparesTabData.json';
@@ -40,8 +42,6 @@ import createPMData from '../test-data/pm/createPMData.json';
 import createCatalogueData from '../test-data/catalogue/createCatalogueData.json';
 
 import createPurchaseOrderData from '../test-data/purchase-orders/createPurchaseOrderData.json';
-
-import pmActivatorReadingLowAvgData from '../test-data/e2e/pm-reading/pmReadingData.json';
 
 import createSupplierData from '../test-data/contacts/suppliers/createSupplierData.json';
 import createUsersData from '../test-data/contacts/users/createNewUser.json';
@@ -61,8 +61,8 @@ type MyFixtures = {
   usersPage: UsersPage;
 
   e2eTestData: { 
-    pmactivator:{
-      pmactivatorreadinglowavg: typeof pmActivatorReadingLowAvgData}
+    pmactivator:{pmReadingData: typeof pmReadingData}
+    woPo: { woPOData: typeof woPOData };
   };
   poTestData: { createpo: typeof createPurchaseOrderData };
   assetTestData: {
@@ -197,7 +197,11 @@ export const test = baseTest.extend<MyFixtures>({
   e2eTestData: async ({}, use) => {
     await use({
       pmactivator: {
-        pmactivatorreadinglowavg: pmActivatorReadingLowAvgData}
+        pmReadingData: pmReadingData
+      },
+      woPo: {
+        woPOData: woPOData
+      }
     });
   },
 

@@ -17,7 +17,7 @@ import { test } from '../../fixtures';
     * Custom tags: @smoke @bug @regression @feature-contractorWO @feature-po
     */
 
-    test('Fill in Due Start Date and verify in PO @smoke @bug @regression @feature-contractorWO @feature-po', async ({ contractorWOPage, poPage, cwoPoTestData }) => {
+    test('Fill in Due Start Date and verify in PO @smoke @bug @feature-contractorWO @feature-po', async ({ contractorWOPage, poPage, cwoPoTestData }) => {
         console.log("📝 Starting test: Create a new Contractor Work Order on Contractor WO Listing");
         await contractorWOPage.goto();  
         await contractorWOPage.createContractorWO(cwoPoTestData.duestartdate.CaseDueStartDateCheck.Description, cwoPoTestData.duestartdate.CaseDueStartDateCheck.Asset, cwoPoTestData.duestartdate.CaseDueStartDateCheck.contractor);

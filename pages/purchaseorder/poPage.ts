@@ -1,4 +1,4 @@
-import { expect, Page } from '@playwright/test';
+import { expect, Locator, Page } from '@playwright/test';
 import { helper } from '../../helperMethods';
 
 import { writeFileSync, readFileSync } from 'fs';
@@ -84,6 +84,22 @@ export class PoPage {
     }
 
     /***************************
+    * Enter PO Supplier on Create PO Dialog
+    ***************************
+    */
+  
+    async enterPOSupplier(poSupplier: string): Promise<void> {
+        // Wait until the PO Header is visible before clicking
+        const createPOHeader = this.page.locator('[automation-header="CreatePurchaseOrder"]');
+        await createPOHeader.waitFor({ state: 'visible', timeout: 5000 });    
+
+        // Enter the supplier short name in the dialog/list
+        const supplierShortName = poSupplier.split(' ')[0].substring(0, 2);
+        await helper.enterEllipseValueInDialog("CreatePurchaseOrder", "Supplier", supplierShortName);      
+        await this.page.waitForTimeout(1000);
+    }
+
+    /***************************
     * Add Catalogue Item to PO
     ***************************
     */
@@ -98,23 +114,27 @@ export class PoPage {
         await itemsTab.waitFor({ state: 'visible', timeout: 5000 });
 
         // Click the Items tab
-        this.clickPOItemTab();
+        await this.clickPOItemTab();
 
         // Wait until the Items tab content is visible
-        const itemsTabContent = this.page.locator('[automation-tab="ItemsTab"]'); // Adjust selector if needed
+        const itemsTabContent = this.page.locator('[automation-tab="ItemsTab"]');
         await itemsTabContent.waitFor({ state: 'visible', timeout: 5000 });
 
-        //Add Item line
+        // Add item line
         await helper.clickButton("Add");
         await this.page.waitForTimeout(1000);
 
-        // Enter the supplier short name in the dialog/list
         const newRow = await helper.selectLastRow("ItemsTabGrid");
-        const stockNumberShortName = SupplierStockNumber.split(' ')[0].substring(0, 2);     
-        await helper.enterValueInCell(newRow, "SupplierStockNumber", stockNumberShortName);
+        const stockNumberShortName = SupplierStockNumber.split(' ')[0].substring(0, 2);
+
+        await this.enterGridCellValue(newRow, "SupplierStockNumber", stockNumberShortName);
         await helper.selectFirstListItem();
+        await this.page.waitForTimeout(500);
+        await this.page.keyboard.press('Tab');
         await this.page.waitForTimeout(1000);
-        await helper.enterValueInCell(newRow, "Quantity", Quantity);
+
+        await this.enterGridCellValue(newRow, "Quantity", Quantity, true);
+        await this.page.keyboard.press('Tab');
         await this.page.waitForTimeout(1000);
     }
 
@@ -149,6 +169,24 @@ export class PoPage {
         await this.page.waitForTimeout(1000);
     }
 
+        /*
+    ***************************
+    * Click Create button on Create PO Dialog
+    ***************************
+    */
+    async clickCreateBtn(): Promise<String> {
+        await helper.clickButton("Create");
+        await this.page.waitForTimeout(1000);
+
+        // Wait until the PO Header is visible before clicking
+        const poHeader = this.page.locator('[automation-header="PurchaseOrderHeader"]');
+        await poHeader.waitFor({ state: 'visible', timeout: 5000 });        
+
+        const poNumber = await helper.getFieldValue("PurchaseOrderNo");
+        console.log(`Created PO Number: ${poNumber}`);
+
+        return poNumber;        
+    }
 
     /*
     ***************************
@@ -177,13 +215,14 @@ export class PoPage {
 
         await approveBtn.click({ timeout: 10000 });
 
-        // 4️⃣ Only handle dialog if it appears
+        // 4️⃣ Only handle dialog if it appears. Use waitFor with try/catch
+        //    because `locator.isVisible()` does not accept a timeout option.
         const dialog = this.page.locator('[automation-dialog="PurchaseOrderApproval"]');
-
-        if (await dialog.isVisible({ timeout: 5000 }).catch(() => false)) {
+        try {
+            await dialog.waitFor({ state: 'visible', timeout: 5000 });
             console.log("✅ Approval dialog appeared, clicking Ok");
             await helper.clickButtonInDialog("PurchaseOrderApproval", "Ok");
-        } else {
+        } catch (e) {
             console.log("ℹ️ Approval dialog did not appear");
         }
 }
@@ -311,8 +350,73 @@ export class PoPage {
      *
     */
     async verifyPOItemRow(expectedValues: Record<string, string>): Promise<void> {
-    const firstRow = await helper.selectFirstRow("ItemsTabGrid");
-    await helper.verifyRowCellValues(firstRow, expectedValues);
+        const firstRow = await helper.selectFirstRow("ItemsTabGrid");
+        await firstRow.waitFor({ state: 'visible', timeout: 10000 });
+
+        const deadline = Date.now() + 15000;
+        let lastMismatch: string[] = [];
+
+        while (Date.now() < deadline) {
+            const mismatches: string[] = [];
+
+            for (const [columnName, expectedValue] of Object.entries(expectedValues)) {
+                const actualValue = await this.getGridCellValue(firstRow, columnName);
+                const actualNormalized = this.normalizeComparableValue(actualValue);
+                const expectedNormalized = this.normalizeComparableValue(expectedValue);
+
+                if (actualNormalized.numeric !== undefined && expectedNormalized.numeric !== undefined) {
+                    if (Math.abs(actualNormalized.numeric - expectedNormalized.numeric) > 0.0001) {
+                        mismatches.push(`❌ Column "${columnName}": Expected ${expectedValue}, but got ${actualValue}`);
+                    }
+                } else if (actualNormalized.text !== expectedNormalized.text) {
+                    mismatches.push(`❌ Column "${columnName}": Expected "${expectedValue}", but got "${actualValue}"`);
+                }
+            }
+
+            if (mismatches.length === 0) {
+                return;
+            }
+
+            lastMismatch = mismatches;
+            await this.page.waitForTimeout(1000);
+        }
+
+        throw new Error(`PO Item Cell Verification Failed:\n${lastMismatch.join('\n')}`);
+    }
+
+    private async enterGridCellValue(row: Locator, columnName: string, value: string, shouldPressTab = false): Promise<void> {
+        const cell = row.locator(`[automation-col="${columnName}"]`).first();
+        await cell.waitFor({ state: 'visible', timeout: 10000 });
+        await cell.scrollIntoViewIfNeeded();
+
+        for (let attempt = 0; attempt < 3; attempt++) {
+            try {
+                await cell.click({ force: true });
+                await this.page.waitForTimeout(500);
+                await helper.enterValue(columnName, value, shouldPressTab);
+                return;
+            } catch (error) {
+                if (attempt === 2) {
+                    throw error;
+                }
+                await this.page.waitForTimeout(1000);
+            }
+        }
+    }
+
+    private async getGridCellValue(row: Locator, columnName: string): Promise<string> {
+        const cell = row.locator(`[automation-col="${columnName}"]`).first();
+        await cell.waitFor({ state: 'visible', timeout: 10000 });
+        return (await cell.textContent())?.trim() ?? '';
+    }
+
+    private normalizeComparableValue(value: string): { text: string; numeric?: number } {
+        const raw = (value ?? '').trim();
+        const noCurrency = raw.replace(/[$£€₹¥₩₽¢]/g, '').replace(/\u00A0/g, ' ').trim();
+        const noSeparators = noCurrency.replace(/,/g, '').trim();
+        const match = noSeparators.match(/-?\d+(?:\.\d+)?/);
+        const numeric = match ? parseFloat(match[0]) : undefined;
+        return { text: noSeparators.toLowerCase(), numeric };
     }
 
     /*

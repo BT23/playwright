@@ -19,9 +19,9 @@ import { test } from '../../fixtures';
     * 13. Open 'Transactions' tab in PO details page
     * 14. Verify that the Contractor Invoice Transaction is listed with correct details
     * Expected Result: PO Quote No should autofill
-    * Custom tags: @smoke @bug @regression @feature-contractorwo @feature-po
+    * Custom tags: @smoke @bug @feature-contractorwo @feature-po
     */  
-    test('Contractor WO PO Transaction after subimitting and approving invoice @smoke @bug @regression @feature-contractorwo @feature-po',  async ({ contractorWOPage, poPage, cwoPoTestData }) => {
+    test('Contractor WO PO Transaction after subimitting and approving invoice @smoke @bug @feature-contractorwo @feature-po',  async ({ contractorWOPage, poPage, cwoPoTestData }) => {
         console.log("📝 Starting test: Create a new Contractor Work Order on Contractor WO Listing");
         await contractorWOPage.goto();  
         await contractorWOPage.createContractorWO(cwoPoTestData.invoicetransaction.CaseInvoiceTransactionCheck.Description, cwoPoTestData.invoicetransaction.CaseInvoiceTransactionCheck.Asset, cwoPoTestData.invoicetransaction.CaseInvoiceTransactionCheck.contractor);

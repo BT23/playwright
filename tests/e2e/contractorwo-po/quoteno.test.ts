@@ -14,10 +14,10 @@ import { test } from '../../fixtures';
     * 9. Click on the PO hyperlink to open the PO details
     * 10. Verify that the Quote Number in the PO matches the Quote Number set in the Contractor WO
     * Expected Result: Quote Number set in Contractor WO should be correctly reflected in the associated PO
-    * Custom tags: @smoke @bug @regression @feature-contractorWO @feature-po
+    * Custom tags: @smoke @bug @feature-contractorWO @feature-po
     */
 
-    test('Fill in Quote Number and verify in PO @smoke @bug @regression @feature-contractorWO @feature-po', async ({ contractorWOPage, poPage, cwoPoTestData }) => {
+    test('Fill in Quote Number and verify in PO @smoke @bug @feature-contractorWO @feature-po', async ({ contractorWOPage, poPage, cwoPoTestData }) => {
         console.log("📝 Starting test: Create a new Contractor Work Order on Contractor WO Listing");
         await contractorWOPage.goto();  
         await contractorWOPage.createContractorWO(cwoPoTestData.quotenumber.CaseQuoteNoCheck.Description, cwoPoTestData.quotenumber.CaseQuoteNoCheck.Asset, cwoPoTestData.quotenumber.CaseQuoteNoCheck.contractor);

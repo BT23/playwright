@@ -18,25 +18,28 @@ import { test } from '../../fixtures';
     * Expected Result: Able to view activator.
     * Custom tags: @regression @feature-pm @feature-reading
     */
-   /*
+   
     test('Create New PM with a high Frequency using fixture data @regression @feature-pm @feature-reading', async ({ assetPage, pmPage, readingPage, e2eTestData }) => {
         console.log("📝 Starting test: Create New PM with a high Frequency");
         console.log("📝 Create New Asset with Reading Type = Hours");
         await assetPage.goto();
-        await assetPage.createLevel1Asset(e2eTestData.pmactivator.pmactivatorreadinglowavg.CasePmActivatorReadingLowAvg.assetNumber, e2eTestData.pmactivator.pmactivatorreadinglowavg.CasePmActivatorReadingLowAvg.assetDesc);
-        await assetPage.enterReadingType(e2eTestData.pmactivator.pmactivatorreadinglowavg.CasePmActivatorReadingLowAvg.readingType);
+        await assetPage.createLevel1Asset(e2eTestData.pmactivator.pmReadingData.CasePmActivatorReadingLowAvg.assetNumber, e2eTestData.pmactivator.pmReadingData.CasePmActivatorReadingLowAvg.assetDesc);
+        await assetPage.enterReadingType(e2eTestData.pmactivator.pmReadingData.CasePmActivatorReadingLowAvg.readingType);
         await assetPage.clickBackBtn();
         console.log("📝 Create two readings for the asset");
         await readingPage.goto();
-        await readingPage.locateAndAddAssetReading(e2eTestData.pmactivator.pmactivatorreadinglowavg.CasePmActivatorReadingLowAvg.assetNumber, e2eTestData.pmactivator.pmactivatorreadinglowavg.CasePmActivatorReadingLowAvg.readingValue1, e2eTestData.pmactivator.pmactivatorreadinglowavg.CasePmActivatorReadingLowAvg.readingDate1);
-        await readingPage.locateAndAddAssetReading(e2eTestData.pmactivator.pmactivatorreadinglowavg.CasePmActivatorReadingLowAvg.assetNumber, e2eTestData.pmactivator.pmactivatorreadinglowavg.CasePmActivatorReadingLowAvg.readingValue2, e2eTestData.pmactivator.pmactivatorreadinglowavg.CasePmActivatorReadingLowAvg.readingDate2);
+        await readingPage.locateAndAddAssetReading(e2eTestData.pmactivator.pmReadingData.CasePmActivatorReadingLowAvg.assetNumber, e2eTestData.pmactivator.pmReadingData.CasePmActivatorReadingLowAvg.readingValue1, e2eTestData.pmactivator.pmReadingData.CasePmActivatorReadingLowAvg.readingDate1);
+        await readingPage.locateAndAddAssetReading(e2eTestData.pmactivator.pmReadingData.CasePmActivatorReadingLowAvg.assetNumber, e2eTestData.pmactivator.pmReadingData.CasePmActivatorReadingLowAvg.readingValue2, e2eTestData.pmactivator.pmReadingData.CasePmActivatorReadingLowAvg.readingDate2);
         console.log("📝 Create a new PM with a high frequency");
         await pmPage.goto();
-        await pmPage.createPM(e2eTestData.pmactivator.pmactivatorreadinglowavg.CasePmActivatorReadingLowAvg.pmDesc, e2eTestData.pmactivator.pmactivatorreadinglowavg.CasePmActivatorReadingLowAvg.frequency, e2eTestData.pmactivator.pmactivatorreadinglowavg.CasePmActivatorReadingLowAvg.frequencyType);
-        await pmPage.addPMAsset(e2eTestData.pmactivator.pmactivatorreadinglowavg.CasePmActivatorReadingLowAvg.assetNumber);
+        const pmNumber = await pmPage.createPM(e2eTestData.pmactivator.pmReadingData.CasePmActivatorReadingLowAvg.pmDesc, e2eTestData.pmactivator.pmReadingData.CasePmActivatorReadingLowAvg.frequency, e2eTestData.pmactivator.pmReadingData.CasePmActivatorReadingLowAvg.frequencyType);
+        await pmPage.addPMAsset(e2eTestData.pmactivator.pmReadingData.CasePmActivatorReadingLowAvg.assetNumber);
+        await pmPage.enterLastDoneDate(e2eTestData.pmactivator.pmReadingData.CasePmActivatorReadingLowAvg.LastDoneDate);
+        await pmPage.enterLastDoneReading(e2eTestData.pmactivator.pmReadingData.CasePmActivatorReadingLowAvg.LastDoneReading);
         await pmPage.clickBackBtn();
         console.log("📝 Open the PM Activator");
         await pmPage.clickActivatorBtn();
-        console.log("📝 Test completed: PM WO raised");
+        await pmPage.selectSpecificedPM(pmNumber!);
+        console.log("📝 Test completed" + pmNumber + "appears on Activator.");
     });
-    */
+    

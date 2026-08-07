@@ -275,6 +275,16 @@ export class WoPage {
     }
 
     /*
+    ***************************
+    * Click Back button
+    ***************************
+    */
+    async clickAddPOBtn(): Promise<void> {
+        await helper.clickButton("AddPurchaseOrder");
+        await this.page.waitForTimeout(1000);
+    }
+    
+    /*
     ******************
     * Print WO Report
     ******************

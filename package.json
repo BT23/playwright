@@ -6,6 +6,7 @@
     "test": "playwright test",
     "@playwright/test": "^1.49.0",
     "test:smoke": "playwright test --grep \"@smoke\" --project=chromium --reporter=html",
+    "test:regression": "playwright test --grep \"@regression\" --project=chromium --reporter=html",
     "test:features": "playwright test --grep \"@feature-(wo|asset|request|supplier|po)\" --project=chromium --reporter=html",
     "test:requests": "playwright test tests/requests --project=chromium --reporter=html",
     "test:report": "playwright show-report",

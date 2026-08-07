@@ -283,8 +283,31 @@ export class PmPage {
         await this.page.waitForTimeout(1000);
         const field = this.page.locator('[automation-input="Asset"]');
         await field.press('Tab');
-        await this.page.waitForTimeout(1000);
+        await this.page.waitForTimeout(1000);     
     }        
+
+    /*
+     * Enter LastDoneDate
+     */
+    async enterLastDoneDate(lastDoneDate: string): Promise<void> {
+        const dateOnly = lastDoneDate.split('T')[0]; // "2025-06-12"
+        const LDDField = this.page.locator('[automation-input="LastDoneDateTime_date"]');
+        LDDField.fill(dateOnly);
+        await this.page.waitForTimeout(1000);  
+        await LDDField.press('Tab');
+        await this.page.waitForTimeout(1000);
+    }
+
+    /*
+     * Enter LastDoneReading
+     */
+    async enterLastDoneReading(lastDoneReading: string): Promise<void> {
+        const LDRField = this.page.locator('[automation-input="LastDoneReading"]');
+        await LDRField.fill(lastDoneReading);
+        await this.page.waitForTimeout(1000);
+        await LDRField.press('Tab');
+        await this.page.waitForTimeout(1000);        
+    }
 
     /*
     *********************************

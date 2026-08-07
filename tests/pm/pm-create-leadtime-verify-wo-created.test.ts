@@ -12,9 +12,9 @@ import { test } from '../fixtures';
     * 7. Open WO Listing
     * 8. Verify that the work order appears in the listing
     * Expected Result: A work order is created.
-    * Custom tags: @smoke @feature-pm
+    * Custom tags: @regression @feature-pm
     */
-    test('Create New PM using fixture data @smoke @feature-pm', async ({ assetPage, woPage, pmPage, pmTestData }) => {
+    test('Create New PM using fixture data @regression @feature-pm', async ({ assetPage, woPage, pmPage, pmTestData }) => {
         console.log("📝 Starting test: Create New PM Asset");
         await assetPage.goto();
         await assetPage.createLevel1Asset(pmTestData.createpm.PMAsset, pmTestData.createpm.AssetDescription);

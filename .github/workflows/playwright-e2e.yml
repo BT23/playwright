@@ -38,6 +38,10 @@ jobs:
       # Run only tests tagged @smoke
       - name: Run smoke tests (@smoke)
         run: npm run test:smoke
+
+      # Run only tests tagged @regression  
+      - name: Run regression tests (@regression)
+        run: npm run test:regression
         
       # Always upload raw test-results if your tests output there (e.g. trace, screenshots)
       - name: Upload Playwright test artifacts
