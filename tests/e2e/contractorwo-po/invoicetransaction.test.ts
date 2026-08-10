@@ -36,14 +36,9 @@ import { test } from '../../fixtures';
         await contractorWOPage.clickInvoiceEntrySubmitBtn();
         console.log("📝 Starting test: Approve Invoice");
         await contractorWOPage.clickInvoiceEntryApproveBtn();
-        // Give the app time to process the approval before closing the form
-        /*
-        console.log("📝 Starting test: Close Enter Invoice form");
         await contractorWOPage.closeContractorInvoiceEntryForm();
+        console.log("📝 Starting test: Verify Contractor Invoice Transaction in PO Transactions tab");
         await contractorWOPage.clickPOHyperlink();
-        console.log("📝 Starting test: Open PO Transactions tab");
         await poPage.clickPOTransactionsTab();
-        console.log("📝 Starting test: Verify PO Contractor Invoice Transactions");
         await poPage.verifyPOContractorInvoiceTransactions();
-        */
     });  

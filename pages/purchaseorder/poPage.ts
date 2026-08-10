@@ -132,8 +132,10 @@ export class PoPage {
         await this.page.waitForTimeout(500);
         await this.page.keyboard.press('Tab');
         await this.page.waitForTimeout(1000);
-
-        await this.enterGridCellValue(newRow, "Quantity", Quantity, true);
+        await this.page.keyboard.press('Tab');
+        await this.page.waitForTimeout(1000);
+        await this.enterGridCellValue(newRow, "Quantity", Quantity);
+        await this.page.waitForTimeout(500);
         await this.page.keyboard.press('Tab');
         await this.page.waitForTimeout(1000);
     }
