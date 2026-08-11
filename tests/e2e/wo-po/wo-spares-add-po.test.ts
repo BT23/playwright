@@ -17,7 +17,7 @@ import { test } from '../../fixtures';
     * Custom tags: @regression @feature-wo @feature-po
     */
    
-    test.only('Click Add PO in WO Spares using fixture data @regression @feature-wo @feature-po', async ({ assetPage, woPage,poPage, e2eTestData }) => {
+    test('Click Add PO in WO Spares using fixture data @regression @feature-wo @feature-po', async ({ assetPage, woPage,poPage, e2eTestData }) => {
         console.log("📝 Starting test: WO Spares Add PO");
         await assetPage.goto();
         await assetPage.createLevel1Asset(e2eTestData.woPo.woPOData.CaseWoSparesAddPo.assetNumber, e2eTestData.woPo.woPOData.CaseWoSparesAddPo.assetDesc);
