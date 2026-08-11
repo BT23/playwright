@@ -12,10 +12,10 @@ import { test } from '../../fixtures'
     * 7. Click Save and Back button
     * 8. Verify Supplier exists in Supplier Listing
     * Expected Result: Supplier created successfully and appears in the Supplier Listing
-    * Custom tags: @smoke @regression @feature-supplier
+    * Custom tags: @smoke @feature-supplier
     */ 
 
-test('Create new supplier using fixture data @smoke @regression @feature-supplier', async ({ supplierPage, supplierTestData  }) => {
+test('Create new supplier using fixture data @smoke @feature-supplier', async ({ supplierPage, supplierTestData  }) => {
     console.log('🧪 Starting test: Create new supplier using fixture data');
     await supplierPage.goto(); // Navigate to Supplier Listing
     await supplierPage.createSupplier(supplierTestData.createsupplier.CompanyCode, supplierTestData.createsupplier.CompanyName);
