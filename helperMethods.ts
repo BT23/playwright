@@ -139,7 +139,7 @@ class HelperMethods {
 
     await input.click({ force: true });
     await input.fill(value);
-    await this.page.waitForTimeout(500); // Allow dropdown to populate
+    await this.page.waitForTimeout(1000); // Allow dropdown to populate
 
     // Optionally press Tab to move focus
     if (shouldPressTab) {
