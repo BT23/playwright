@@ -13,7 +13,7 @@ import { test } from '../fixtures'
     * Custom tags: @smoke @feature-wo
     * */
 
-    test('Fill in WO Details using fixture data @smoke @feature-wo', async ({ woPage, woTestData,woDataFilePath }) => {
+    test('Fill in WO Details using fixture data @smoke @feature-wo', async ({ woPage, woTestData }) => {
         console.log('🧪 Starting test: Create new WO, enter Details and verify that the details are retained.');
         await woPage.goto(); // Open WO Module
 

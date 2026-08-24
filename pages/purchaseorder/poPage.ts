@@ -128,14 +128,16 @@ export class PoPage {
         const stockNumberShortName = SupplierStockNumber.split(' ')[0].substring(0, 2);
 
         await this.enterGridCellValue(newRow, "SupplierStockNumber", stockNumberShortName);
-        await helper.selectFirstListItem();
-        await this.page.waitForTimeout(500);
+        const catalogueOption = this.page.locator('[automation-list-item]').first();
+        await catalogueOption.waitFor({ state: 'visible', timeout: 10000 });
+        await catalogueOption.click();
+        await this.page.waitForTimeout(1000);
         await this.page.keyboard.press('Tab');
         await this.page.waitForTimeout(1000);
         await this.page.keyboard.press('Tab');
         await this.page.waitForTimeout(1000);
         await this.enterGridCellValue(newRow, "Quantity", Quantity);
-        await this.page.waitForTimeout(500);
+        await this.page.waitForTimeout(1000);
         await this.page.keyboard.press('Tab');
         await this.page.waitForTimeout(1000);
     }

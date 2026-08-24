@@ -9,6 +9,7 @@ import { test } from '../fixtures';
     * Custom tags: @smoke @feature-pm
     */
     test('Open PM Module @smoke @feature-pm', async ({ pmPage }) => {
-        console.log("📝 Starting test: Open PM Module");
+        console.log("🧪 Starting test: Open PM Module");
         await pmPage.openPMModule();
+        console.log("📝 Test completed: PM Module opened successfully");
     });

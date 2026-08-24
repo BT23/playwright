@@ -2,7 +2,7 @@
 import { test } from '../fixtures'
 
     /*
-    * Test Case: Create New Work Order successfully
+    * Test Case: Create New PO and Add PO Item using fixture data
     * This test creates a new PO using the data from createPurchaseOrderData.json 
     * Preconditions: User is logged in and createPurchaseOrderData.json is available
     * Steps:
@@ -11,7 +11,7 @@ import { test } from '../fixtures'
     * 3. Enter Supplier
     * 4. Click Create button
     * 5. Add item with Quantity and Price
-    * Expected Result: New WO created successfully and appears in the WO Listing
+    * Expected Result: New PO created successfully and appears in the PO Listing
     * Custom tags: @smoke
     */ 
 
@@ -35,5 +35,6 @@ test('Add PO Item using fixture data @smoke @feature-po', async ({ poPage, poTes
             Quantity: poTestData.createpo.Quantity,
             UOM: poTestData.createpo.UOM,
             UnitPrice: poTestData.createpo.UnitPrice
-        });        
+        });
+    console.log("📝 Test completed: PO Item added and verified Successfully");
 });

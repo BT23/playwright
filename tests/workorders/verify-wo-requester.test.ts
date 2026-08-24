@@ -18,7 +18,7 @@ import { test } from '../fixtures'
         await woPage.goto(); // Open WO Module
 
         // Create the WO and capture the number instead of reading from file (as WO number does not exist when running the worker in parallel)
-        const rawWoNumber = await woPage.createWO(woTestData.createwo.Asset, woTestData.createwo.Description);
+        const rawWoNumber = await woPage.createWO(woTestData.createwo.caseNewWO.Asset, woTestData.createwo.caseNewWO.Description);
         // Ensure we have a value and trim it
         const woNumber = rawWoNumber?.trim() ?? null;
         await woPage.enterRequester(woTestData.wodetails.Requester);

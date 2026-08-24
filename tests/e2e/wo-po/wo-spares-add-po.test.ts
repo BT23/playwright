@@ -18,7 +18,7 @@ import { test } from '../../fixtures';
     */
    
     test('Click Add PO in WO Spares using fixture data @regression @feature-wo @feature-po', async ({ assetPage, woPage,poPage, e2eTestData }) => {
-        console.log("📝 Starting test: WO Spares Add PO");
+        console.log("🧪 Starting test: WO Spares Add PO");
         await assetPage.goto();
         await assetPage.createLevel1Asset(e2eTestData.woPo.woPOData.CaseWoSparesAddPo.assetNumber, e2eTestData.woPo.woPOData.CaseWoSparesAddPo.assetDesc);
         await assetPage.clickBackBtn();
@@ -30,8 +30,9 @@ import { test } from '../../fixtures';
         await woPage.clickAddPOBtn();
         await poPage.enterPOSupplier(e2eTestData.woPo.woPOData.CaseWoSparesAddPo.SupplierCode);
         const poNumber = await poPage.clickCreateBtn();
-        poPage.clickPOItemTab();
-        poPage.addPOItem(e2eTestData.woPo.woPOData.CaseWoSparesAddPo.SupplierStockNumber, e2eTestData.woPo.woPOData.CaseWoSparesAddPo.Quantity);
+        console.log(`🧪 Created PO Number: ${poNumber}`);
+        await poPage.clickPOItemTab();
+        await poPage.addPOItem(e2eTestData.woPo.woPOData.CaseWoSparesAddPo.SupplierStockNumber, e2eTestData.woPo.woPOData.CaseWoSparesAddPo.Quantity);
         console.log('🧪 Starting test: Verify WO and Account Code retained');        
         await poPage.verifyPOItemRow({
             SupplierStockNumber: e2eTestData.woPo.woPOData.CaseWoSparesAddPo.SupplierStockNumber,
@@ -39,7 +40,7 @@ import { test } from '../../fixtures';
             AccountCode: e2eTestData.woPo.woPOData.CaseWoSparesAddPo.accountCode,
             WorkOrder: woNumber
         });
-        poPage.clickBackBtn();
-        console.log(`📝 Test Completed. Created PO Number: ${poNumber}`);
+        await poPage.clickBackBtn();
+        console.log(`📝 Test Completed. WO Number and Account Code in WO are copied over to PO Item row.`);
     });
     

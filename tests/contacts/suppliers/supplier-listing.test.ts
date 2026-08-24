@@ -8,10 +8,10 @@ import { test } from '../../fixtures'
     * 2. Open Contacts Module
     * 3. Open Supplier Listing
     * Expected Result: Supplier Listing should open
-    * Custom tags: @bug @regression @smoke @feature-supplier
+    * Custom tags: @smoke @feature-supplier
     */    
     
-    test('Open Supplier Listing @bug @smoke @regression @feature-supplier', async ({ supplierPage  }) => {
+    test('Open Supplier Listing @smoke @feature-supplier', async ({ supplierPage  }) => {
         console.log('🧪 Starting test: Open Supplier Listing');
         await supplierPage.openSupplierListing; // Navigate to Supplier Listing
         console.log('✅ Test completed: Suppliers Listing opened successfully');        

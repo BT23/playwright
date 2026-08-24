@@ -15,11 +15,11 @@ import { test } from '../fixtures';
     * Custom tags: @regression @feature-pm
     */
     test('Create New PM using fixture data @regression @feature-pm', async ({ assetPage, woPage, pmPage, pmTestData }) => {
-        console.log("📝 Starting test: Create New PM Asset");
+        console.log("🧪 Starting test: Create New PM Asset");
         await assetPage.goto();
         await assetPage.createLevel1Asset(pmTestData.createpm.PMAsset, pmTestData.createpm.AssetDescription);
         await assetPage.clickBackBtn();
-        console.log("📝 Starting test: Create New PM");
+        console.log("🧪 Starting test: Create New PM");
         await pmPage.goto();
         const rawPmNumber = await pmPage.createPM(pmTestData.createpm.PMDescription,pmTestData.createpm.Frequency, pmTestData.createpm.FrequencyType);
         const pmNumber = rawPmNumber?.trim() ?? null;
@@ -30,9 +30,9 @@ import { test } from '../fixtures';
         await pmPage.enterActivatorDaysinAdvance(pmTestData.createpm.DaysinAdvance);
         await pmPage.selectSpecificedPM(pmNumber!);
         const workOrderNumber = await pmPage.clickRaiseWOBtn();
-        console.log("📝 Work Order Number:", workOrderNumber); 
+        console.log("🧪 Work Order Number:", workOrderNumber); 
         await woPage.goto();
         await woPage.selectSpecificedWO(workOrderNumber!);
-        console.log("📝 Raised PM WO appears on WO Listing");
-        console.log("📝 Test completed: PM WO raised");
+        console.log("🧪 Raised PM WO appears on WO Listing");
+        console.log("📝 Test completed: PM WO raised and appeared on WO listing");
     });

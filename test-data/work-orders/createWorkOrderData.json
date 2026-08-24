@@ -1,4 +1,14 @@
 {
+  "caseNewWO": {
     "Description": "Work Order Automation Test",
     "Asset": "Admin"
+  },
+  "caseWOTask": {
+    "Description": "Ticket 3385 - Work Order Tasks Reading",
+    "Asset": "Admin",
+    "TaskDescription": "Ticket 3385",
+    "TaskType": "Hours",
+    "TaskReading": "50",
+    "CompletedDate": "2026-08-21 T10:30:00Z"
+  }
 }

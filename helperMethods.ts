@@ -106,7 +106,8 @@ class HelperMethods {
   */
 
   async enterValue(fieldName: string, value: string, shouldPressTab = false) {
-    const input = this.page.locator(`[automation-input="${fieldName}"]`); 
+    const input = this.page.locator(`[automation-input="${fieldName}"]`).first();
+    await input.waitFor({ state: 'visible', timeout: 10000 });
     await input.click();
     await input.fill(value);
 

@@ -101,6 +101,15 @@ export class WoPage {
         await this.page.waitForTimeout(1000);
   }
 
+    /************************
+    * Click Tasks tab
+    ************************
+    */    
+  async clickTasksTab(): Promise<void> {
+        await helper.selectTab("TasksTab");
+        await this.page.waitForTimeout(1000);
+  }
+
     /*
     ************************
     * Enter Account Code
@@ -108,9 +117,9 @@ export class WoPage {
     */    
   async enterAccountCode(accountCode: string): Promise<void> {
         // Enter Account Code
-        const accountCodeShortName = accountCode.split(' ')[0].substring(0, 2);  
-        await helper.enterValue("AccountCode", accountCodeShortName);
-        await helper.selectFirstListItem();
+        //const accountCodeShortName = accountCode.split(' ')[0].substring(0, 2);  
+        await helper.enterValue("AccountCode", accountCode);
+        //await helper.selectFirstListItem();
         await this.page.waitForTimeout(1000);
   }
 
@@ -231,6 +240,90 @@ export class WoPage {
         await this.page.waitForTimeout(1000);
     }    
 
+   /*
+    ************************
+    * WO Tasks Tab
+    ************************
+    */
+
+    /*
+    ************************
+    * Add Work Order Task
+    ************************
+    */
+    async addWOTask(TaskDesc: string, TaskType: string): Promise<void> {
+        const woHeader = this.page.locator('[automation-header="WorkOrderHeader"]');
+        await woHeader.waitFor({ state: 'visible', timeout: 5000 });
+
+        // Wait until the ItemsTab button is visible before clicking
+        const itemsTab = this.page.locator('[automation-tab="TasksTab"]');
+        await itemsTab.waitFor({ state: 'visible', timeout: 5000 });
+
+        await helper.selectTab("TasksTab");
+        await this.page.waitForTimeout(1000);
+
+        const addBtn = this.page.locator('[automation-button="Add"]');
+        await addBtn.waitFor({ state: 'visible', timeout: 5000 });
+
+        await helper.clickButton("Add");
+        await this.page.waitForTimeout(1000);
+
+        /*
+        * Enter Task Description
+        */
+        const newRow = await helper.selectLastRow("TasksTabGrid");
+        const descriptionCell = newRow.locator('[automation-col="Description"]');
+        await descriptionCell.click();
+        await this.page.waitForTimeout(500);
+        const descriptionInput = descriptionCell.locator('[automation-input="Description"]');
+        await descriptionInput.fill(TaskDesc);
+        await descriptionInput.press('Tab');
+        await this.page.waitForTimeout(500);
+    }
+
+    /*
+    ************************
+    * Enter Task Reading Type
+    ************************
+    */    
+    async enterTaskReadingType(taskReadingType: string): Promise<void> {
+        const newRow = await helper.selectLastRow("TasksTabGrid");
+        // Enter Task Reading
+        await helper.enterValueInCell(newRow, "Type", taskReadingType);
+        await this.page.waitForTimeout(1000);
+    }
+
+    /*
+    ************************
+    * Enter Completed Date in History WO
+    ************************
+    */    
+    async enterCompletedDate(completedDate: string): Promise<void> {
+        const newRow = await helper.selectLastRow("TasksTabGrid");     
+        // Enter Completed Date
+        const dateOnly = completedDate.split('T')[0].trim(); // "2025-06-12"
+        const completedDateCell = newRow.locator('[automation-col="CompletedDate"]');
+        await completedDateCell.click();
+        const completedDateField = completedDateCell.locator('[automation-input="CompletedDate_date"]');
+        await completedDateField.fill(dateOnly);
+        await expect(completedDateField).toHaveValue(dateOnly);
+        await this.page.waitForTimeout(1000);
+        await newRow.locator('[automation-col="Reading"]').click();
+        await this.page.waitForTimeout(1000);
+    }
+
+    /*
+    ************************
+    * Enter Task Reading in History WO
+    ************************
+    */    
+    async enterTaskReading(taskReading: string): Promise<void> {
+        const newRow = await helper.selectLastRow("TasksTabGrid");
+        // Enter Task Reading
+        await helper.enterValueInCell(newRow, "Reading", taskReading);
+        await this.page.waitForTimeout(1000);
+    }
+
     /*
     ************************
     * WO Listing Operations
@@ -276,12 +369,34 @@ export class WoPage {
 
     /*
     ***************************
-    * Click Back button
+    * Click Add Purchase Order button
     ***************************
     */
     async clickAddPOBtn(): Promise<void> {
         await helper.clickButton("AddPurchaseOrder");
         await this.page.waitForTimeout(1000);
+    }
+    
+    /*
+    ***************************
+    * Click Close Work Order button
+    ***************************
+    */
+    async clickCloseWOBtn(): Promise<void> {
+        await helper.clickButton("CloseWorkOrder");
+        await this.page.waitForTimeout(1000);
+
+        await this.page.waitForSelector('[automation-dialog="CloseWorkOrderConfirmation"]', { state: 'visible', timeout: 5000 });
+        await helper.clickButtonInDialog("CloseWorkOrderConfirmation", "Yes");
+        await this.page.waitForTimeout(1000);
+
+        await this.page.waitForSelector('[automation-dialog="AddHistory"]', { state: 'visible', timeout: 5000 });
+        await helper.clickButtonInDialog("AddHistory", "Yes");
+        await this.page.waitForTimeout(1000);
+
+        // Wait until the History WO Header is visible before clicking
+        const historyWOHeader = this.page.locator('[automation-header="HistoryWorkOrderHeader"]');
+        await historyWOHeader.waitFor({ state: 'visible', timeout: 10000 });    
     }
     
     /*
@@ -388,6 +503,19 @@ export class WoPage {
 
    }  
 
+     /********************************
+    * Verify Reading Value Retained in History Work Orkder Task
+    **********************************
+    */
+   async verifyTaskReadingRetained(expectedReading: string): Promise<void>{
+        const newRow = await helper.selectLastRow("TasksTabGrid");
+        const taskReadingCell = newRow.locator('[automation-col="taskReading"]');
+        const actualReading = await taskReadingCell.inputValue();
+        if (actualReading.trim() !== expectedReading.trim()) {
+            throw new Error(`Expected Task Reading to be "${expectedReading}", but got "${actualReading}"`);
+        }
+   }
+   
     /**********************************
     * RMC and click Add Listing Columns
     ***********************************

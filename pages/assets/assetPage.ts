@@ -116,7 +116,7 @@ export class AssetPage {
     async enterReadingType(readingType: string): Promise<void> {
         // Set Reading Type to Hours
         await helper.enterValue("ReadingType", readingType, true);
-        await this.page.waitForTimeout(300);
+        await this.page.waitForTimeout(1000);
     }
 
     /*****************************************
