@@ -4,9 +4,8 @@
   "main": "index.js",
   "scripts": {
     "test": "playwright test",
-    "@playwright/test": "^1.49.0",
-    "test:smoke": "playwright test --grep \"@smoke\" --project=chromium --reporter=html",
-    "test:regression": "playwright test --grep \"@regression\" --project=chromium --reporter=html",
+    "test:smoke": "PLAYWRIGHT_HTML_OUTPUT_DIR=playwright-report-smoke playwright test --grep \"@smoke\" --project=chromium --reporter=html --output=smoke-test-report ",
+    "test:regression": "PLAYWRIGHT_HTML_OUTPUT_DIR=playwright-report-regression playwright test --grep \"@regression\" --project=chromium --reporter=html --output=regression-test-report",
     "test:features": "playwright test --grep \"@feature-(wo|asset|request|supplier|po)\" --project=chromium --reporter=html",
     "test:requests": "playwright test tests/requests --project=chromium --reporter=html",
     "test:report": "playwright show-report",

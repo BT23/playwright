@@ -37,27 +37,33 @@ jobs:
 
       # Run only tests tagged @smoke
       - name: Run smoke tests (@smoke)
+        id: smoke
         continue-on-error: true
         run: npm run test:smoke
 
       # Run only tests tagged @regression  
       - name: Run regression tests (@regression)
+        id: regression
         continue-on-error: true
         run: npm run test:regression
         
       # Always upload raw test-results if your tests output there (e.g. trace, screenshots)
-      - name: Upload Playwright test artifacts
-        if: always()
-        uses: actions/upload-artifact@v4.6.2
-        with:
-            name: test-results
-            path: test-results
-            if-no-files-found: ignore
-
-      # Optional: Generate HTML report (for smoke subset)
       - name: Upload HTML report
         if: always()
         uses: actions/upload-artifact@v4.6.2
         with:
-          name: playwright-report             
-          path: playwright-report
+          name: smoke-test-report             
+          path: playwright-report-smoke
+          if-no-files-found: ignore
+
+      - name: Upload HTML report
+        if: always()
+        uses: actions/upload-artifact@v4.6.2
+        with:
+          name: regression-test-report             
+          path: playwright-report-regression
+          if-no-files-found: ignore          
+
+      - name: Fail workflow if any test suite failed
+        if: steps.smoke.outcome == 'failure' || steps.regression.outcome == 'failure'
+        run: exit 1
