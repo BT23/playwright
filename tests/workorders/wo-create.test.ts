@@ -13,10 +13,10 @@ import { test } from '../fixtures'
     * Custom tags: @smoke @feature-wo
     */ 
 
-test('Create WO using fixture data @smoke @feature-wo', async ({ woPage, woTestData, woDataFilePath  }) => {
+test('Create WO using fixture data @smoke @feature-wo', async ({ woPage, woTestData  }) => {
     console.log('🧪 Starting test: Create new WO using fixture data');
     await woPage.goto(); // Open WO Module
-    await woPage.createWO(woTestData.createwo.caseNewWO.Asset, woTestData.createwo.caseNewWO.Description, woDataFilePath);
+    await woPage.createWO(woTestData.createwo.caseNewWO.Asset, woTestData.createwo.caseNewWO.Description);
     await woPage.clickBackBtn(); // Save and Back
 
 });

@@ -62,18 +62,18 @@ export class PmPage {
         await helper.clickButton("Create");
 
         // Wait until the WO Header is visible before clicking
-        const woHeader = this.page.locator('[automation-header="PolicyHeader"]');
-        await woHeader.waitFor({ state: 'visible', timeout: 10000 });        
+        const pmHeader = this.page.locator('[automation-header="PolicyHeader"]');
+        await pmHeader.waitFor({ state: 'visible', timeout: 10000 });        
 
         // Wait until the Asset button is visible
         const assetLabel = this.page.locator('[automation-button="Duplicate"]');
         await assetLabel.waitFor({ state: 'visible', timeout: 10000 });    
 
-        // Locate the element using its class
-        const pmElement = await this.page.locator('div.ml-2.text-5\\.5.text-secondary');
-        // Get the text content
-        const pmNumber = await pmElement.textContent();
-        console.log('📝 Preventative Maintenance Number:', pmNumber?.trim());
+        // The generated number is rendered in the Preventative Maintenance page title.
+        await expect(pmHeader).toContainText(/Preventative Maintenance\s*\S+/i, { timeout: 10000 });
+        const headerText = await pmHeader.innerText();
+        const pmNumber = headerText.match(/Preventative Maintenance\s*(\S+)/i)?.[1]?.trim() ?? '';
+        console.log('Preventative Maintenance Number:', pmNumber);
 
         // Write the PM number to a JSON file if filePath is provided in fixtures.ts
         if (filePath) {

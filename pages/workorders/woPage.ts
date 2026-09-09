@@ -62,18 +62,18 @@ export class WoPage {
         const assetLabel = this.page.locator('[automation-label="lblAsset"]');
         await assetLabel.waitFor({ state: 'visible', timeout: 10000 });    
 
-        // Locate the element using its class
-        const workOrderElement = await this.page.locator('div.ml-2.text-5\\.5.text-secondary');
-        // Get the text content
-        const woNumber = await workOrderElement.textContent();
-        console.log('Work Order Number:', woNumber?.trim());
+        // The generated number is rendered in the Work Order page title.
+        await expect(woHeader).toContainText(/Work Order\s*\S+/i, { timeout: 10000 });
+        const headerText = await woHeader.innerText();
+        const woNumber = headerText.match(/Work Order\s*(\S+)/i)?.[1]?.trim() ?? '';
+        console.log('Work Order Number:', woNumber);
 
         // Write the WO number to a JSON file if filePath is provided in fixtures.ts
         if (filePath) {
             // Save
             writeFileSync(filePath, JSON.stringify({ woNumber }, null, 2));
         }
-        return woNumber;
+        return woNumber || null;
     }
 
     /*
