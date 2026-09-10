@@ -63,18 +63,18 @@ export class RequestPage {
         const woHeader = this.page.locator('[automation-header="RequestHeader"]');
         await woHeader.waitFor({ state: 'visible', timeout: 5000 });        
 
-        // Locate the element using its class
-        const requestElement = await this.page.locator('div.ml-2.text-5\\.5.text-secondary');
-        // Get the text content
-        const requestNumber = await requestElement.textContent();
-        console.log('Request Number:', requestNumber?.trim());
+        // The generated number is rendered in the Request page title.
+        await expect(woHeader).toContainText(/Request\s*\S+/i, { timeout: 10000 });
+        const headerText = await woHeader.innerText();
+        const requestNumber = headerText.match(/Request\s*(\S+)/i)?.[1]?.trim() ?? '';
+        console.log('Request Number:', requestNumber);
 
         // Write the WO number to a JSON file if filePath is provided in fixtures.ts
         if (filePath) {
             // Save
             writeFileSync(filePath, JSON.stringify({ requestNumber }, null, 2));
         }
-        return requestNumber;    
+        return requestNumber || null;    
     }
 
     /*

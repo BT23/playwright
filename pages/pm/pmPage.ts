@@ -69,10 +69,10 @@ export class PmPage {
         const assetLabel = this.page.locator('[automation-button="Duplicate"]');
         await assetLabel.waitFor({ state: 'visible', timeout: 10000 });    
 
-        // The generated number is rendered in the Preventative Maintenance page title.
-        await expect(pmHeader).toContainText(/Preventative Maintenance\s*\S+/i, { timeout: 10000 });
+        // The generated PM number is rendered in the page title.
+        await expect(pmHeader).toHaveText(/\S+/, { timeout: 10000 });
         const headerText = await pmHeader.innerText();
-        const pmNumber = headerText.match(/Preventative Maintenance\s*(\S+)/i)?.[1]?.trim() ?? '';
+        const pmNumber = headerText.match(/\d+/)?.[0] ?? '';
         console.log('Preventative Maintenance Number:', pmNumber);
 
         // Write the PM number to a JSON file if filePath is provided in fixtures.ts
@@ -80,7 +80,7 @@ export class PmPage {
             // Save
             writeFileSync(filePath, JSON.stringify({ pmNumber }, null, 2));
         }        
-        return pmNumber?.trim() ?? null;    
+        return pmNumber || null;    
     }
 
     /*

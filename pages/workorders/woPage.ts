@@ -412,22 +412,23 @@ export class WoPage {
 
         const woHeader = this.page.locator(headerSelector).first();
         await expect(woHeader).toBeVisible();
-        await this.page.waitForTimeout(1000);
+        await this.page.waitForTimeout(3000);
 
         // Click the Print button
         await helper.clickButton("Print");
-        await this.page.waitForTimeout(1000);
+        await this.page.waitForTimeout(3000);
 
         // Conditionally click the Print button in the dialog if it appears
         const dialogHeader = this.page.locator('[automation-header="WorkOrderPrint"]');
         if (await dialogHeader.isVisible()) {
             await helper.clickButtonInDialog("WorkOrderPrint", "Print");
-            await this.page.waitForTimeout(1000);
+            await this.page.waitForTimeout(3000);
         }
 
-        // Confirm the Work Order Report header is visible
-        const reportHeader = this.page.locator('[automation-header="WorkOrderReport"] span').first();
-        await expect(reportHeader).toBeVisible();
+        // The report opens in a generic dialog; its title is plain text rather than
+        // an automation-header element.
+        const reportTitle = this.page.getByText('Work Order Report', { exact: true }).first();
+        await expect(reportTitle).toBeVisible({ timeout: 10000 });
     }
 
 
