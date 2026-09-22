@@ -148,10 +148,15 @@ export const test = baseTest.extend<MyFixtures>({
     await loginPage.navigate();
     // ✅ Perform login (UI interaction still happens)
     await loginPage.login(
+      process.env.E2E_USERNAME || loginPage.credentials.validCredentials.username,
+      process.env.E2E_PASSWORD || loginPage.credentials.validCredentials.password
+    );
+    /*
+    await loginPage.login(
       loginPage.credentials.validCredentials.username,
       loginPage.credentials.validCredentials.password
     );
-
+    */
     await use(loginPage);
   },
 
