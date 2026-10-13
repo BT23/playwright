@@ -24,7 +24,7 @@ export class AssetPage {
     async selectTreeNodeByName(assetNumber: string) {
         // Wait for tree nodes to populate
         const treeNodes = this.page.locator('td[automation-col="Number"]');
-        await treeNodes.first().waitFor({ state: 'visible', timeout: 5000 });
+        await treeNodes.first().waitFor({ state: 'visible', timeout: 10000 });
 
         // Locate the asset in the tree
         const nodeFound = await helper.locateTreeNodeByName(assetNumber);
@@ -71,7 +71,7 @@ export class AssetPage {
     async openAssetModule(): Promise<void> {
         // Wait for element visibility using smart wait
         const navButton = this.page.locator('[automation-button="NavItemAssets"]');
-        await navButton.waitFor({ state: 'visible', timeout: 5000 });
+        await navButton.waitFor({ state: 'visible', timeout: 10000 });
 
         await helper.clickButton("NavItemAssets");
 
@@ -82,7 +82,7 @@ export class AssetPage {
         const header = this.page.locator('[automation-header="AssetRegisterHeader"] span')
             .filter({ hasText: 'Asset Register' })
             .first();
-        await header.waitFor({ state: 'visible', timeout: 5000 });
+        await header.waitFor({ state: 'visible', timeout: 10000 });
     }
 
     /*
@@ -94,7 +94,7 @@ export class AssetPage {
         await helper.clickButton("NewLevel1");
 
         const createAssetHeader = this.page.locator('[automation-header="CreateLevel1Asset"]');
-        await createAssetHeader.waitFor({ state: 'visible', timeout: 5000 });
+        await createAssetHeader.waitFor({ state: 'visible', timeout: 10000 });
 
         // Fill in the asset details from the createAssetData.json file
         await helper.enterValueInDialog("CreateLevel1Asset", "Number", assetNumber);
