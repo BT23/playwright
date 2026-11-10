@@ -84,7 +84,7 @@ export class SupplierPage {
         await helper.clickButton("Create");
         await this.page.waitForTimeout(1000);
     }
-  
+    
      /*
     ***************************
     * Click Back button

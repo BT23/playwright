@@ -152,7 +152,7 @@ export class LoginPage {
     await expect(selectLanguageHeader).toBeVisible();
     console.log("Login method - wait for Select Language dialog is visible.");
 
-    await this.selectLanguage();
+    //await this.selectLanguage();
   }
   
   async contractorUserLogin(username:string, password:string) {
