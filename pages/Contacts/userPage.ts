@@ -53,11 +53,21 @@ export class UsersPage {
         await helper.enterValueInDialog("CreateUser", "UserName", username);
         await helper.enterValueInDialog("CreateUser", "Type", type);
         await helper.selectFirstListItem();
+        await this.page.waitForTimeout(500);
+        await this.clickEmailCheckbox();
         await helper.enterValueInDialog("CreateUser", "Password", password);
         await helper.enterValueInDialog("CreateUser", "ConfirmPassword", confirmPassword);
         await helper.clickButton("Create");
 
     }   
+
+   /**
+    * Click Back button to return to previous page
+    */    
+    async clickEmailCheckbox(): Promise<void> {
+        await this.page.locator('[automation-input="EmailInvite"]').uncheck();
+        await this.page.waitForTimeout(1000);
+    }
 
    /**
     * Click Back button to return to previous page
