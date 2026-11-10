@@ -148,11 +148,13 @@ export class LoginPage {
     console.log("Login button is clicked");
     
     await this.page.waitForTimeout(10000);
+    /*
     const selectLanguageHeader = this.page.locator('[automation-header="SelectLanguage"]');
     await expect(selectLanguageHeader).toBeVisible();
     console.log("Login method - wait for Select Language dialog is visible.");
 
-    //await this.selectLanguage();
+    await this.selectLanguage();
+    */
   }
   
   async contractorUserLogin(username:string, password:string) {
