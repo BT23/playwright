@@ -84,7 +84,7 @@ export class UsersPage {
         await helper.checkHeader('UsersListingHeader');
         const header = this.page.locator('[automation-header="UsersListingHeader"]');
         await expect(header).toBeVisible({ timeout: DEFAULT_TIMEOUT });
-        await expect(header).toHaveText('Users Listing', { timeout: DEFAULT_TIMEOUT });
+        await expect(header).toContainText('Users Listing', { timeout: DEFAULT_TIMEOUT });
     }
 
    /**

@@ -131,7 +131,7 @@ export class WoPage {
   async enterJobType(jobType: string): Promise<void> {
         // Enter Job Code
         const jobTypeShortName = jobType.split(' ')[0].substring(0, 2);
-        await helper.enterValueByIndex("JobType", jobTypeShortName);
+        await helper.enterValue("JobType", jobTypeShortName);
         await helper.selectFirstListItem();
         await this.page.waitForTimeout(1000);
   }
@@ -144,7 +144,7 @@ export class WoPage {
   async enterDepartment(department: string): Promise<void> {
         // Enter Department
         const deptShortName = department.split(' ')[0].substring(0, 2);  
-        await helper.enterValueByIndex("Department", deptShortName);
+        await helper.enterValue("Department", deptShortName);
         await helper.selectFirstListItem();
         await this.page.waitForTimeout(1000);//
   }
@@ -157,11 +157,11 @@ export class WoPage {
   async enterStartDateTime(startDate: string): Promise<void> {
         // Enter Start Date
         const dateOnly = startDate.split('T')[0]; // "2025-06-12"
-        await helper.enterValueByIndex("Started_date", dateOnly);
+        await helper.enterValue("Started_date", dateOnly);
         await this.page.waitForTimeout(1000);
 
         const timeOnly = startDate.split('T')[1].substring(0, 5); // "10:30"
-        await helper.enterValueByIndex("Started_time", timeOnly);
+        await helper.enterValue("Started_time", timeOnly);
         await this.page.waitForTimeout(1000);
   }
 
